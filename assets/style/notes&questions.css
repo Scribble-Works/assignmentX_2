@@ -1,0 +1,411 @@
+ /* General Styles */
+ body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+.workbook-card:nth-child(1) {
+    border: 2px solid rgb(196, 2, 2);
+}
+
+.workbook-card:nth-child(2) {
+    border: 2px solid rgb(5, 198, 205);
+}
+
+.workbook-card:nth-child(3) {
+    border: 2px solid green;
+}
+
+.workbook-card:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.workbook-card{
+    width: 80%;
+    border-radius: 10px;
+    margin: 20px auto;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7);
+    transition: background-color 0.3s ease; /* Added transition for hover effect */
+}
+
+.collapse{
+    margin-left: 40%;
+}
+
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    background-color: #ffffff;
+    padding: 10px 20px;
+    border-bottom: 3px solid #28a745; /* Green color */
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+    top: 0;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.75rem;
+    color: #000000; /* Green color */
+    margin: 0px 00px 0px 500px
+}
+
+.navbar-nav .nav-item {
+    margin-left: 15px;
+}
+
+.burger {
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: block; /* Always show the burger icon */
+    color: #060606; /* Green color */
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    height: 100%;
+    width: 280px;
+    background-color: #ffffff; /* White background */
+    transition: left 0.3s ease;
+    padding-top: 20px;
+    border-right: 1px solid #ddd;
+    z-index: 1100;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    overflow-y:auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+}
+
+.sidebar::-webkit-scrollbar{
+    display: none;
+    width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+.sidebar.active {
+    left: 0;
+    transition: left 0.5s ease-in-out; /* Smooth transition */
+}
+
+
+.sidebar h5 {
+    padding-left: 20px;
+    margin-top: 20px;
+    font-weight: bold;
+    color: #28a745; /* Green color */
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 auto;
+}
+
+.sidebar ul li {
+    padding: 10px 20px;
+}
+
+.sidebar ul li a {
+    color: #000;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.sidebar ul li:nth-child(1)a:hover {
+    background-color: #0485d5; 
+    color: white;
+}
+
+.sidebar ul li a:nth-child(2):hover {
+    background-color: #009b05; /* Green color on hover */
+    color: white;
+}
+
+.sidebar ul .dropdown-content {
+    display: none;
+    padding-left: 20px;
+}
+
+.sidebar ul .dropdown-content.show {
+    display: block;
+}
+
+.nav-button{
+    width: 80%;
+    text-align: center;
+    margin: 0 auto;
+}
+
+/* Main content */
+.main-content {
+    padding: 20px;
+    margin-top: 80px;
+}
+
+#concept-note-container {
+    width: 21cm;
+    height: auto;
+    max-width: 800px;
+    position: relative;
+    padding: 50px;
+    background-color: white;
+    margin: 20px auto;
+    width: 80%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1; /* Ensure content is above the background */
+    max-height: 29.7cm; /* A4 height in cm */
+    overflow: hidden; /* Prevent overflow issues */
+    overflow-y: auto; /* Allow scrolling if content exceeds the height */
+}
+
+#concept-note-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('Scribble monogram_color.png'); /* Watermark */
+    background-size: 500px 500px;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.1; /* Adjust the opacity here for the background image */
+    z-index: -1; /* Ensure the background is behind the content */
+    pointer-events: none; /* Ensure the background doesn't interfere with content interaction */
+}
+
+h1, h2, h3,h4,h5 {
+    color: #28a745; /* Green color */
+}
+
+h2, h3{
+    margin: 0 auto;
+    text-align: center;
+}
+p{
+    font-size: 14px;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+h2{
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 24px;
+}
+
+h3{
+    margin-bottom: 20px;
+    border-bottom: 3px solid;
+}
+
+h4{
+    font-size: 20px;
+    font-style: italic;
+}
+/* Footer */
+footer {
+    background-color: #ffffff; /* White background */
+    padding: 40px;
+    margin-top: 40px;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    margin-top: auto; /* Push footer to the bottom */
+}
+
+/* Styling the Download Button */
+#download {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #28a745; /* Green color */
+    transition: background-color 0.3s ease;
+  }
+
+#download:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.footer-social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.footer-social-icons a {
+    color: #000;
+    font-size: 20px;
+}
+
+.dropdown-item {
+    color: inherit; /* Retain the color styles */
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa; /* Optional hover effect */
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar-nav {
+        display: none;
+    }
+
+    .sidebar ul.navbar-nav {
+        display: block;
+        padding-top: 20px;
+    }
+
+    .sidebar ul li {
+        padding: 10px;
+    }
+
+    .sidebar h5 {
+        display: none;
+    }
+
+    .navbar-brand{
+        margin: 0 auto;
+    }
+
+    .navbar {
+        padding: 5px 10px;
+    }
+    .main-content {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 853px){
+    .navbar-nav{
+        display: none;
+    }
+
+    .navbar-brand{
+        margin: 0 auto;
+    }
+    
+
+    .sidebar ul.navbar-nav {
+        display: block;
+        padding-top: 20px;
+    }
+}
+
+@media(max-width: 820px) {
+    .navbar-nav{
+        display: none;
+    }
+
+    .navbar-brand{
+        margin: 0 auto;
+    }
+    .navbar-brand{
+        margin: 0 auto;
+    }
+
+    .sidebar ul.navbar-nav {
+        display: block;
+        padding-top: 20px;
+    }
+    
+}
+
+@media (max-width: 912px) {
+    .navbar-nav{
+        display: none;
+    }
+
+    .sidebar{
+        display: block;
+    }
+    
+    .navbar-brand{
+        margin: 0 auto;
+    }
+
+    .sidebar ul.navbar-nav {
+        display: block;
+        padding-top: 20px;
+    }
+}
+
+@media (max-width: 375px) and (max-width: 430px){
+    .sidebar{
+        display: block;
+    }
+
+    h2{
+        font-size: 1.6em;
+    }
+
+    h3{
+        font-size: 1.4em;
+    }
+
+    h4{
+        font-size: 1.2em;
+    }
+
+    p{
+        font-size: 1em;
+    }
+
+    .navbar-brand{
+        margin: 0 auto;
+    }
+
+    .navbar-brand{
+        margin: 0 auto;
+    }
+}
+
+@media print {
+    body {
+        margin: 0;
+        padding: 20px;
+        font-size: 12pt; /* Adjust font size for printing */
+    }
+    
+    .navbar, .sidebar, .footer, .burger {
+        display: none; /* Hide navbar, sidebar, and footer for the PDF */
+    }
+
+    #concept-note-container {
+        page-break-after: always; /* Ensure each section starts on a new page */
+        max-height: 29.7cm; /* Keep A4 size for print */
+        overflow-y: hidden; /* Enable scrolling for print */
+    }
+
+    h2, h3, h4 {
+        page-break-inside: avoid; /* Avoid breaking headings */
+    }
+}

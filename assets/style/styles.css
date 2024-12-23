@@ -1,0 +1,208 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.navbar {
+    background-color: #fff;
+    padding: 15px;
+    border-bottom: 3px solid green;
+}
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+.navbar input[type="search"] {
+    border-radius: 50px;
+    padding: 5px 15px;
+    width: 100%; /* Full-width for smaller screens */
+    max-width: 300px; /* Limit the search bar width for larger screens */
+}
+
+@media (max-width: 768px) {
+    .navbar input[type="search"] {
+        width: 100%; /* Full width on tablets and smaller */
+    }
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+}
+.workbook-card {
+    border-radius: 10px;
+    margin: 5px;
+    padding: 10px;
+}
+
+.workbook-card:nth-child(1) {
+    border: 2px solid red;
+}
+.workbook-card:nth-child(2) {
+    border: 2px solid blue;
+}
+.workbook-card:nth-child(3) {
+    border: 2px solid green;
+}
+
+/* Workbook Title Color to match Borders */
+.workbook-card:nth-child(1) a {
+    color: red;
+}
+.workbook-card:nth-child(2) a {
+    color: blue;
+}
+.workbook-card:nth-child(3) a {
+    color: green;
+}
+
+/* Sidebar */
+.sidebar {
+    position: relative;
+    top: 0;
+    left: -250px;
+    height: 100%;
+    width: 100%;/* Full width for smaller screens */
+    max-width: 250px; /* Standard sidebar width on larger screens */
+    background-color: #f8f9fa;
+    transition: left 0.3s ease;
+    padding-top: 20px;
+    border-right: 1px solid #ddd;
+}
+
+@media (min-width: 768px) {
+    .sidebar {
+        position: fixed; /* Sidebar sticks on larger screens */
+    }
+}
+
+/* Main content adjustments */
+.main-content {
+    display: flex;
+    flex-direction: column; /* Column stacking for smaller screens */
+    padding: 10px;
+}
+@media (min-width: 768px) {
+    .main-content {
+        flex-direction: row; /* Side-by-side layout on larger screens */
+    }
+}
+
+.sidebar.active {
+    left: 0;
+}
+.sidebar h5 {
+    padding-left: 20px;
+    margin-top: 20px;
+    font-weight: bold;
+}
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+.sidebar ul li {
+    padding: 10px 20px;
+}
+.sidebar ul li a {
+    color: #000;
+    text-decoration: none;
+}
+.sidebar ul li a:hover {
+    color: #007bff;
+}
+
+/* Burger menu */
+.burger {
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding-left: 20px;
+    display: inline-block;
+}
+
+/* Main content */
+.main-content {
+    display: flex;
+    padding: 20px;
+}
+
+.video-container {
+    background-color: #eee;
+    padding: 20px;
+    border-radius: 10px;
+    margin-right: 20px;
+    flex: 3;
+    position: sticky;
+    top: 0; /* Sticks the video container to the top when scrolling */
+}
+
+video {
+    width: 100%;
+    border-radius: 10px;
+}
+
+/* Related videos */
+.related-videos {
+    flex: 1;
+    padding-left: 20px;
+    height: 600px;
+    overflow-y: auto; /* Add scroll bar for related videos */
+    border-left: 1px solid #ddd;
+}
+.related-video-card {
+    margin-bottom: 15px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+}
+.related-video-card img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+/* Comment section */
+.comments-section {
+    margin-top: 20px;
+    max-height: 400px;
+    overflow-y: auto; /* Makes the comment section scrollable */
+    scrollbar-width: none; /* Hides scrollbar on Firefox */
+    -ms-overflow-style: none;  /* Hides scrollbar on IE and Edge */
+}
+.comments-section::-webkit-scrollbar {
+    display: none; /* Hides scrollbar on Chrome, Safari, and Opera */
+}
+.comments-section h5 {
+    font-weight: bold;
+}
+.comments-section .comment {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+.comments-section textarea {
+    width: 100%;
+    height: 100px;
+    margin-bottom: 10px;
+}
+.comment-author {
+    font-weight: bold;
+}
+
+/* Footer */
+footer {
+    background-color: #f8f9fa;
+    padding: 40px;
+    margin-top: 40px;
+}
+footer .footer-social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+footer .footer-social-icons a {
+    color: #000;
+    font-size: 20px;
+}

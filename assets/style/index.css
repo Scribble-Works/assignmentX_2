@@ -1,0 +1,200 @@
+/* General Styles */
+body, html {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f8f9fa; /* Light background */
+}
+
+/* Navbar */
+.navbar {
+    position: fixed;
+    background-color: #ffffff; /* White background */
+    border-bottom: 3px solid #28a745; /* Green border */
+    z-index: 1;
+    width: 100%;
+    max-width: 100%;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    color: #007bff; /* Blue */
+    font-weight: bold;
+}
+
+.nav-link {
+    color: #6c757d; /* Gray links */
+    transition: color 0.3s ease-in-out;
+}
+
+.nav-link:hover {
+    color: #007bff; /* Hover Blue */
+}
+
+.btn-outline-primary {
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+/* Hero Section */
+.hero {
+    background-color: #007bff; /* Blue background */
+    color: white;
+    padding: 100px 0;
+    background-blend-mode: overlay;
+    background-position: center;
+    background-size: cover;
+    position: relative;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    margin-top: 15px;
+}
+
+.hero .btn-primary {
+    background-color: #ffc107; /* Yellow */
+    border-color: #ffc107;
+    font-size: 1.25rem;
+    padding: 10px 30px;
+}
+
+.hero .btn-primary:hover {
+    background-color: #28a745; /* Green on hover */
+    border-color: #28a745;
+}
+
+/* Features Section */
+.features {
+    background-color: #f8f9fa; /* Light gray background */
+    padding: 60px 0;
+}
+
+.features h2 {
+    color: #007bff; /* Blue */
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 50px;
+}
+
+.card {
+    border: none;
+    background-color: #ffffff;
+    transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-10px); /* Subtle hover effect */
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.card-icon {
+    color: #007c32; /* Yellow icon */
+}
+
+#teckwiseblue{
+    color: turquoise;
+}
+
+.card-title {
+    color: #000000; /* Green title */
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.card-text {
+    color: #6c757d; /* Gray text */
+}
+
+.btn-outline-primary, .btn-outline-success, .btn-outline-warning {
+    border-width: 2px;
+    border-radius: 50px;
+    padding: 10px 30px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Button colors based on card */
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+.btn-outline-success:hover {
+    background-color: #007c32;
+    color: #ffffff;
+}
+
+.btn-outline-warning:hover {
+    background-color: #ffc107;
+    color: #ffffff;
+}
+
+/* Call-to-Action Section */
+.cta {
+    background-color: #28a745; /* Green background */
+    padding: 50px 0;
+}
+
+.cta h2 {
+    color: #ffffff;
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.cta .btn-outline-light {
+    color: #ffffff;
+    border-color: #ffffff;
+    font-size: 1.25rem;
+    padding: 10px 30px;
+    border-radius: 50px;
+}
+
+.cta .btn-outline-light:hover {
+    background-color: #ffc107; /* Yellow hover */
+    border-color: #ffc107;
+}
+
+/* Footer */
+footer {
+    background-color: #f8f9fa; /* Light gray */
+    padding: 20px 0;
+    color: #6c757d; /* Gray text */
+}
+
+footer p {
+    margin-bottom: 0;
+    font-size: 0.875rem;
+}
+
+
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    .cta h2 {
+        font-size: 2rem;
+    }
+
+    .features h2 {
+        font-size: 2rem;
+    }
+}
