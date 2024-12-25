@@ -2,15 +2,20 @@
 definePageMeta({
     layout: 'dashboard'
 });
+
+const {client} = useSupabaseClient();
+const user = useSupabaseUser();
+
+
 </script>
 <template>
-    <div>
+    <div class="bg-gray-50 font-sans">
         <div class="p-8 overflow-auto">
             <div class="space-y-6">
                 <!-- Header -->
                 <div class="flex items-center justify-between">
                     <div>
-                        <h1 class="text-4xl font-semibold text-gray-800">Welcome back, User</h1>
+                        <h1 class="text-4xl font-semibold text-gray-800">Welcome back, {{user.email}}</h1>
                         <p class="text-lg text-gray-600">Let's continue your learning journey!</p>
                     </div>
                     <div class="flex items-center space-x-4">
