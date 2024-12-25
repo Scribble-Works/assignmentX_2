@@ -10,5 +10,18 @@ export default defineNuxtConfig({
       redirect: false
     }]
   ],
+  css: [
+    // '~/assets/style/styles.css', 
+    // '~/assets/style/profile.css', 
+    // '~/assets/style/pc.css', 
+    // '~/assets/style/notes&questions.css', 
+    // '~/assets/style/myBooks.css', 
+    // '~/assets/style/index.css', 
+    // '~/assets/style/forms.css', 
+    // '~/assets/style/form.css', 
+    // '~/assets/style/bece1.css', 
+    // '~/assets/style/algebra.css', 
+    // '~/assets/style/about.css'
+  ],
   devtools: { enabled: true }
 });
