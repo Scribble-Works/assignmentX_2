@@ -5,7 +5,7 @@ definePageMeta({
 </script>
 <template>
     <div>
-        <div class="flex-1 p-8 overflow-auto">
+        <div class="p-8 overflow-auto">
             <div class="space-y-6">
                 <!-- Header -->
                 <div class="flex items-center justify-between">

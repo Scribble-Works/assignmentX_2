@@ -4,13 +4,13 @@
     <div>
         <!-- Hero Section -->
         <section class="hero flex items-center justify-center min-h-screen bg-cover bg-center relative"
-            style="background-image: url('Scribble monogram_color.png');">
+            style="background-image: url('/img/Scribble monogram_color.png');">
             <div class="absolute inset-0 bg-black opacity-50"></div>
             <div class="text-center text-white relative z-10 p-4 max-w-lg mx-auto">
                 <h1 class="text-4xl md:text-6xl font-bold">Unlock Learning with AssignmentX</h1>
                 <p class="mt-4 text-lg md:text-xl">Scan your workbook QR code to access an abundance of learning
                     resources.</p>
-                <a href="login.html" class="mt-6 inline-block bg-blue-500 text-white py-2 px-4 rounded">Get Started</a>
+                <NuxtLink to="/login" class="mt-6 inline-block bg-blue-500 text-white py-2 px-4 rounded">Get Started</NuxtLink>
             </div>
         </section>
 
@@ -55,7 +55,7 @@
         <section class="cta bg-blue-500 text-white py-12 text-center">
             <div class="container mx-auto">
                 <h2 class="text-3xl font-bold mb-4">Ready to take your learning to the next level?</h2>
-                <a href="forms.html" class="bg-white text-blue-500 py-2 px-4 rounded">Sign Up/Login Now</a>
+                <NuxtLink to="/login" class="bg-white text-blue-500 py-2 px-4 rounded">Sign Up/Login Now</NuxtLink>
             </div>
         </section>
     </div>

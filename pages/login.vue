@@ -28,7 +28,7 @@ const login = async () => {
 
 </script>
 <template>
-    <div>
+    <div class="container mx-auto p-4 flex justify-center items-center min-h-screen">
         <form @submit.prevent="login" class="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
             <h2 class="text-2xl text-center font-bold mb-6" id="formTitle">Sign In</h2>
             <div id="loginFields">

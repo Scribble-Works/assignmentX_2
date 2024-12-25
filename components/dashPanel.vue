@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="bg-gradient-to-b from-blue-600 to-blue-500 w-64 p-6 flex flex-col justify-between text-white">
+        <div class="bg-gradient-to-b from-blue-600 to-blue-500 w-64 p-6 justify-between text-white">
             <div>
                 <h2 class="text-3xl font-bold mb-8">AssignmentX</h2>
                 <ul class="space-y-4">
