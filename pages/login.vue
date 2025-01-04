@@ -18,7 +18,7 @@ const login = async () => {
             return;
         }else{
             router.push('/user/');
-            console.log(user.value.email)
+            console.log(user.value)
         }
     } catch (error) {
         alert('An error occurred. Please try again later.');

@@ -1,19 +1,25 @@
 <script setup>
-const client = useSupabaseClient();
+const { auth } = useSupabaseClient();
 const user = useSupabaseUser();
 const router = useRouter();
+const email = ref('');
+const password = ref('');
+const confPassword = ref('');
 
 const signUp = async () => {
     try {
         if (password.value !== confPassword.value) {
             alert('Passwords do not match');
             return;
-        } else {
-            const { data, error } = await client.auth.signUp({
+        } else if (user.value && email.value !== user.value.email) {
+            const { data, error } = await auth.signUp({
                 email: email.value,
                 password: password.value
             });
-            router.push('/user/');
+            router.push('/login');
+        } else {
+            alert('User already exists');
+            router.push('/login');
         }
     } catch (error) {
         console.error(error);
