@@ -18,10 +18,10 @@ const logout = async () => {
             <div>
                 <h2 class="text-3xl font-bold mb-8">AssignmentX</h2>
                 <ul class="space-y-10">
-                    <li><a href="#home" class="hover:bg-blue-700 p-3 rounded-lg block">Home</a></li>
-                    <li><a href="#profile" class="hover:bg-blue-700 p-3 rounded-lg block">Profile</a></li>
-                    <li><a href="#resources" class="hover:bg-blue-700 p-3 rounded-lg block">Learning Resources</a></li>
-                    <li><a href="#progress" class="hover:bg-blue-700 p-3 rounded-lg block">Progress</a></li>
+                    <li><NuxtLink to="/user/" class="hover:bg-blue-700 p-3 rounded-lg block">Home</NuxtLink></li>
+                    <li><NuxtLink to="/user/profile" class="hover:bg-blue-700 p-3 rounded-lg block">Profile</NuxtLink></li>
+                    <li><NuxtLink to="/user/resources" class="hover:bg-blue-700 p-3 rounded-lg block">Learning Resources</NuxtLink></li>
+                    <li><NuxtLink to="/user/progress" class="hover:bg-blue-700 p-3 rounded-lg block">Progress</NuxtLink></li>
                     <li>
                         <button @click="logout" class="hover:bg-blue-700 p-3 rounded-lg block">Logout</button>
                     </li>
