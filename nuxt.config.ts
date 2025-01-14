@@ -2,6 +2,11 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
 
+  app: {
+    head: {
+      // script: [{src:'script.js'}]
+    }
+  },
   modules: [
     '@nuxtjs/tailwindcss',
     ['@nuxtjs/supabase', {

@@ -4,7 +4,7 @@ definePageMeta({
 });
 
 const user = useSupabaseUser();
-const {client} = useSupabaseClient();
+const { client } = useSupabaseClient();
 
 </script>
 <template>
