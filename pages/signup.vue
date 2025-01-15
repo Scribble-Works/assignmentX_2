@@ -1,26 +1,47 @@
 <script setup>
 const { auth } = useSupabaseClient();
+const client = useSupabaseClient();
 const user = useSupabaseUser();
 const router = useRouter();
 const email = ref('');
 const password = ref('');
 const confPassword = ref('');
+const fullName = ref('');
 
 const signUp = async () => {
     try {
         if (password.value !== confPassword.value) {
             alert('Passwords do not match');
             return;
-        } else if (user.value && email.value !== user.value.email) {
-            const { data, error } = await auth.signUp({
-                email: email.value,
-                password: password.value
-            });
-            router.push('/login');
-        } else {
-            alert('User already exists');
-            router.push('/login');
         }
+        const { data, error } = await auth.signUp({
+            email: email.value,
+            password: password.value
+        });
+        if (error) {
+            console.error(error);
+            alert(error.message || 'An error occurred. Please try again later.');
+            return;
+        }
+
+        // Wait for the user to be authenticated
+        const userId = data.user.id;
+
+        const { error: profileError } = await client.from('userProfile').insert({
+            Full_Name: fullName.value,
+            id: userId
+        });
+
+        if (profileError) {
+            console.error(profileError);
+            alert(profileError.message || 'An error occurred while creating the profile.');
+            return;
+        }
+
+        router.push('/login');
+
+
+
     } catch (error) {
         console.error(error);
     }
@@ -30,10 +51,12 @@ const signUp = async () => {
     <div class="container mx-auto p-4 flex justify-center items-center min-h-screen">
         <form @submit.prevent="signUp" id="signupForm">
             <div id="createAccountFields">
-                <!-- <div class="mb-4">
+                <div class="mb-4">
                     <label for="fullName" class="block text-sm font-medium">Full Name</label>
-                    <input type="text" id="fullName" class="w-full border-gray-800 border rounded mt-1 p-2 focus:ring-blue-500 focus:border-blue-500" required>
-                </div> -->
+                    <input type="text" id="fullName" v-model="fullName"
+                        class="w-full border-gray-800 border rounded mt-1 p-2 focus:ring-blue-500 focus:border-blue-500"
+                        required>
+                </div>
                 <div class="mb-4">
                     <label for="createEmail" class="block text-sm font-medium">Email address</label>
                     <input type="email" v-model="email" name="SignUpEmail" id="createEmail"

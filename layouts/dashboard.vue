@@ -1,6 +1,8 @@
 <template>
     <div class="flex h-screen">
         <dashPanel class="flex flex-col"/>
-        <slot class="flex-1"/>
+        <div class="flex-1">
+            <slot />
+        </div>
     </div>
 </template>

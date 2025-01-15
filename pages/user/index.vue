@@ -3,10 +3,11 @@ definePageMeta({
     layout: 'dashboard'
 });
 
-const {client} = useSupabaseClient();
+const client = useSupabaseClient();
 const user = useSupabaseUser();
 
-
+const profile = await client.from('userProfile').select('*').eq('id', user.value.id).single();
+console.log(profile);
 </script>
 <template>
     <div class="bg-gray-50 font-sans">
@@ -15,7 +16,7 @@ const user = useSupabaseUser();
                 <!-- Header -->
                 <div class="flex items-center justify-between">
                     <div>
-                        <h1 class="text-4xl font-semibold text-gray-800">Welcome back, {{user.email}}</h1>
+                        <h1 class="text-4xl font-semibold text-gray-800">Welcome back, {{profile.data?.Full_Name}}</h1>
                         <p class="text-lg text-gray-600">Let's continue your learning journey!</p>
                     </div>
                     <div class="flex items-center space-x-4">
