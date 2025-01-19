@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     }
   },
   modules: [
-    '@nuxtjs/tailwindcss',
+    // '@nuxtjs/tailwindcss',
     ['@nuxtjs/supabase', {
       url: process.env.SUPABASE_URL,
       key: process.env.SUPABASE_KEY,
@@ -16,17 +16,19 @@ export default defineNuxtConfig({
     }]
   ],
   css: [
-    // '~/assets/style/styles.css', 
-    // '~/assets/style/profile.css', 
-    // '~/assets/style/pc.css', 
-    // '~/assets/style/notes&questions.css', 
-    // '~/assets/style/myBooks.css', 
-    // '~/assets/style/index.css', 
-    // '~/assets/style/forms.css', 
-    // '~/assets/style/form.css', 
-    // '~/assets/style/bece1.css', 
-    // '~/assets/style/algebra.css', 
-    // '~/assets/style/about.css'
+    'vuetify/lib/styles/main.sass',
+    '@mdi/font/css/materialdesignicons.min.css',
+    'assets/style/bece1.css',
+    'assets/style/main.css',
   ],
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
+  build: {
+    transpile: ['vuetify']
+  },
   devtools: { enabled: true }
 });
