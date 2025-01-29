@@ -7,14 +7,12 @@ export default defineNuxtConfig({
       // script: [{src:'script.js'}]
     }
   },
-  modules: [
-    // '@nuxtjs/tailwindcss',
-    ['@nuxtjs/supabase', {
-      url: process.env.SUPABASE_URL,
-      key: process.env.SUPABASE_KEY,
-      redirect: false
-    }]
-  ],
+  modules: [// '@nuxtjs/tailwindcss',
+  ['@nuxtjs/supabase', {
+    url: process.env.SUPABASE_URL,
+    key: process.env.SUPABASE_KEY,
+    redirect: false
+  }]],
   css: [
     'vuetify/lib/styles/main.sass',
     '@mdi/font/css/materialdesignicons.min.css',

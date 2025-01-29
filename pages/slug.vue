@@ -1,10 +1,10 @@
 <script setup>
 definePageMeta({
-    layout: 'dashboard'
+    layout: 'dash',
 });
 </script>
 <template>
-    <div>
+    <div class="mt-15">
         
     </div>
 </template>
