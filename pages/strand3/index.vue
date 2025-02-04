@@ -4,7 +4,7 @@ definePageMeta({
 });
 </script>
 <template>
-    <div class="mt-15">
-        
+    <div>
+
     </div>
 </template>

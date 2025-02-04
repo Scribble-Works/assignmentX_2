@@ -1,0 +1,38 @@
+{
+    "records": [
+        {
+            "id": "recqwvUZo2SQ1KzHF",
+            "createdTime": "2025-02-01T16:53:09.000Z",
+            "fields": {
+                "Link 3": "https://www.youtube.com/watch?v=HlNtl7hOO3o&pp=ygUiTWVhc3VyaW5nIEFuZ2xlcyB8IFR5cGVzIG9mIEFuZ2xlcw%3D%3D",
+                "Strand": "3: GEOMETRY AND MEASUREMENT",
+                "Sub_strand": "Shape and Space 1",
+                "Indicator": "B7.3.1.1.1 Measure and classify angles according to their measured sizes – right, acute, obtuse and reflex.",
+                "Link 2": "https://www.youtube.com/watch?v=Jj8XhAb1-zA&pp=ygUvS2hhbiBBY2FkZW15OiBBY3V0ZSwgT2J0dXNlLCBhbmQgUmVmbGV4IEFuZ2xlcyA%3D",
+                "Link 1": "https://youtu.be/lxkqJc3P40E"
+            }
+        },
+        {
+            "id": "recPNCK0lxZi7LBtZ",
+            "createdTime": "2025-02-01T16:53:09.000Z",
+            "fields": {
+                "Link 3": "https://youtu.be/sz6bFfm4Iwo",
+                "Indicator": "B7.3.1.2.1 Construct a line segment perpendicular to another line segment.",
+                "Link 2": "https://youtu.be/CFefKshkSdI",
+                "Sub_strand": "Shape and Space 2",
+                "Link 1": "https://youtu.be/uL8V921v0BQ"
+            }
+        },
+        {
+            "id": "recsep64clr6xuh4j",
+            "createdTime": "2025-02-01T16:53:09.000Z",
+            "fields": {
+                "Link 3": "https://youtu.be/3v5HL5nmrJE",
+                "Indicator": "B7.3.1.2.2: Construct the perpendicular bisector of a line segment",
+                "Link 2": "https://youtu.be/5bvjnleMn5A",
+                "Sub_strand": "Shape and Space 3",
+                "Link 1": "https://www.youtube.com/watch?v=WR2R_wrdEVY&pp=ygUzS2hhbiBBY2FkZW15OiBDb25zdHJ1Y3RpbmcgYSBQZXJwZW5kaWN1bGFyIEJpc2VjdG9y"
+            }
+        }
+    ]
+}

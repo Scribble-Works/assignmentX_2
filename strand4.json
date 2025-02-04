@@ -1,0 +1,38 @@
+{
+    "records": [
+        {
+            "id": "recYIo6p6ouY0Ps25",
+            "createdTime": "2025-02-01T16:53:09.000Z",
+            "fields": {
+                "Link 1": "https://www.youtube.com/watch?v=dwFsRZv4oHA&pp=ygVdZXhwbGFpbmluZyBRdWFudGl0YXRpdmUgYW5kIHF1YWxpdGF0aXZlIHJlc2VhcmNoIG1ldGhvZHMgdG8gZ3JhZGUgOCBzdHVkZW50cyBpbiBhIE1hdGhzIGNsYXNz",
+                "Indicator": "B7.4.1.1.1- Select and justify a method to collect data (quantitative and qualitative) to answer a given question.",
+                "Link 2": "https://www.youtube.com/watch?v=5rUVYWfZOb8&pp=ygVxU2VsZWN0IGFuZCBqdXN0aWZ5IGEgbWV0aG9kIHRvIGNvbGxlY3QgZGF0YSAocXVhbnRpdGF0aXZlIGFuZCBxdWFsaXRhdGl2ZSkgdG8gYW5zd2VyIGEgZ2l2ZW4gcXVlc3Rpb24gfCA3dGggR3JhZGU%3D",
+                "Sub_strand": "Data 1",
+                "Strand": "4: HANDLING DATA",
+                "Link 3": "https://www.youtube.com/watch?v=69qP8kFJp_k&pp=ygVdZXhwbGFpbmluZyBRdWFudGl0YXRpdmUgYW5kIHF1YWxpdGF0aXZlIHJlc2VhcmNoIG1ldGhvZHMgdG8gZ3JhZGUgOCBzdHVkZW50cyBpbiBhIE1hdGhzIGNsYXNz"
+            }
+        },
+        {
+            "id": "recaMRcwUmBFrucbm",
+            "createdTime": "2025-02-01T16:53:09.000Z",
+            "fields": {
+                "Link 1": "https://youtu.be/VUMunLLVPkw",
+                "Sub_strand": "Data 2",
+                "Indicator": "B7.4.1.1.2- Design and administer a questionnaire for collecting data to answer questions and record the results",
+                "Link 2": "https://youtu.be/FkX-t0Pgzzs",
+                "Link 3": "https://www.youtube.com/watch?v=_zoIVE9PRTM&pp=ygV_IERlc2lnbmluZyBhbmQgYWRtaW5pc3RlcmluZyBhIHF1ZXN0aW9ubmFpcmUgZm9yIGNvbGxlY3RpbmcgZGF0YSB0byBhbnN3ZXIgcXVlc3Rpb25zIGFuZCByZWNvcmQgdGhlIHJlc3VsdHMgYnkgbWlkZGxlIHNjaG9vbGVycw%3D%3D"
+            }
+        },
+        {
+            "id": "rechdmMWd6Cm3pRGx",
+            "createdTime": "2025-02-01T16:53:09.000Z",
+            "fields": {
+                "Sub_strand": "Data 3",
+                "Link 1": "https://www.youtube.com/watch?v=hcgThf5mv38&pp=ygUwSG93IHRvIENyZWF0ZSBhIERhdGEgVGFibGUgYW5kIENoYXJ0IHwgOHRoIEdyYWRl",
+                "Indicator": "B7.4.1.1.3- Organise and present data from a survey into a table and/or chart, and analyse it to solve and/or pose problems.",
+                "Link 2": "https://www.youtube.com/watch?v=we2zw6H_FvU&pp=ygWJAUFuYWx5emluZyBTdXJ2ZXkgRGF0YSB3aXRoIENoYXJ0cyBhbmQgVGFibGVzIENvdmVyaW5nIHN0ZXAtYnktc3RlcCBpbnN0cnVjdGlvbnMgb24gaG93IHRvIGludGVycHJldCBkYXRhIGZyb20gdGFibGVzIGFuZCBncmFwaHMgfCBjbGFzcyA4",
+                "Link 3": "https://www.youtube.com/watch?v=AZd9CdTU8XU&pp=ygWJAUFuYWx5emluZyBTdXJ2ZXkgRGF0YSB3aXRoIENoYXJ0cyBhbmQgVGFibGVzIENvdmVyaW5nIHN0ZXAtYnktc3RlcCBpbnN0cnVjdGlvbnMgb24gaG93IHRvIGludGVycHJldCBkYXRhIGZyb20gdGFibGVzIGFuZCBncmFwaHMgfCBjbGFzcyA4"
+            }
+        }
+    ]
+}
