@@ -5,10 +5,13 @@ definePageMeta({
     layout: 'dash',
 });
 const route = useRoute();
-const config = useRuntimeConfig();  
-// const { data: strandVids } = await supabase.from('sub_strands').select('');
-// console.log(strandVids);
-console.log(strand1);
+const config = useRuntimeConfig();
+
+const id = route.params.id;
+const strand1Contents = strand1.records.filter((strand) => strand.id === id);
+const actualVid = strand1Contents[0].fields.Link1
+console.log(actualVid);
+console.log(strand1Contents);
 
 // const {data: relatedVis} = await supabase.from('')
 </script>
@@ -18,7 +21,7 @@ console.log(strand1);
             <h1 class="text-center text-uppercase text-bold" style="font-size: 3em;">Subject</h1>
             <v-row>
                 <v-col cols="auto" lg="8" sm="6" md="6">
-                    <!-- <iframe :src="strandVids.actual_video_link" height="500" width="800" frameborder="0"></iframe><br> -->
+                    <iframe :src="actualVid" height="500" width="800" frameborder="0"></iframe><br>
                     <v-row>
                         <v-col>
                             <v-btn color="primary">Concept Note</v-btn>
@@ -30,7 +33,7 @@ console.log(strand1);
                 </v-col>
                 <v-col cols="auto" lg="4" sm="6" md="6">
                     <v-sheet>
-                        <v-infinite-scroll mode="manual" :items="relatedVids" @load="load" :height="500">
+                        <v-infinite-scroll mode="manual"  :height="500">
 
                         </v-infinite-scroll>
                     </v-sheet>

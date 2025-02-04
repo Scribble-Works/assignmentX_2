@@ -17,7 +17,7 @@ const subStrand1Ls = strand1.records;
 const subStrand2Ls = strand2.records;
 const subStrand3Ls = strand3.records;
 const subStrand4Ls = strand4.records;
-console.log(subStrand2Ls);
+// console.log(subStrand2Ls);
 
 // const strands = await supabase.from('strands').select('*');
 // console.log(strands);
