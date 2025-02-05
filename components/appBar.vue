@@ -42,7 +42,7 @@ const subStrand4Ls = strand4.records;
         <v-menu activator="parent">
           <v-list>
             <v-list-item v-for="substrand in subStrand1Ls" :key="substrand">
-              <NuxtLink :to="substrand.id">{{ substrand.fields.sub_strand }}</NuxtLink>
+              <NuxtLink :to="'/strand1/'+substrand.id">{{ substrand.fields.sub_strand }}</NuxtLink>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -53,7 +53,7 @@ const subStrand4Ls = strand4.records;
         <v-menu activator="parent">
           <v-list>
             <v-list-item v-for="substrand2 in subStrand2Ls" :key="substrand2">
-              <NuxtLink :to="substrand2.id">{{ substrand2.fields.Sub_strand }}</NuxtLink>
+              <NuxtLink :to="'/strand2/'+substrand2.id">{{ substrand2.fields.Sub_strand }}</NuxtLink>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -64,7 +64,7 @@ const subStrand4Ls = strand4.records;
         <v-menu activator="parent">
           <v-list>
             <v-list-item v-for="substrand3 in subStrand3Ls" :key="substrand3">
-              <NuxtLink :to="substrand3.id">{{ substrand3.fields.Sub_strand }}</NuxtLink>
+              <NuxtLink :to="'/strand3/'+substrand3.id">{{ substrand3.fields.Sub_strand }}</NuxtLink>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -75,7 +75,7 @@ const subStrand4Ls = strand4.records;
         <v-menu activator="parent">
           <v-list>
             <v-list-item v-for="substrand4 in subStrand4Ls" :key="substrand4">
-              <NuxtLink :to="substrand4.id">{{ substrand4.fields.Sub_strand }}</NuxtLink>
+              <NuxtLink :to="'/strand4/'+substrand4.id">{{ substrand4.fields.Sub_strand }}</NuxtLink>
             </v-list-item>
           </v-list>
         </v-menu>
