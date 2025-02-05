@@ -1,6 +1,6 @@
 <script setup>
 // import airtable from 'airtable';
-import strand1 from '~/strand1.json';
+import strand2 from '~/strand2.json';
 definePageMeta({
     layout: 'dash',
 });
@@ -8,10 +8,10 @@ const route = useRoute();
 const config = useRuntimeConfig();
 
 const id = route.params.id;
-const strand1Contents = strand1.records.filter((strand) => strand.id === id);
-const actualVid = strand1Contents[0].fields.Link1.replace("watch?v=", "embed/");
-const sub_strand = strand1Contents[0].fields.sub_strand;
-const relatedVids = [strand1Contents[0].fields.Link2, strand1Contents[0].fields.Link3];
+const strand2Contents = strand2.records.filter((strand) => strand.id === id);
+const actualVid = strand2Contents[0].fields.Link1.replace("watch?v=", "embed/");
+const sub_strand = strand2Contents[0].fields.sub_strand;
+const relatedVids = [strand2Contents[0].fields.Link2, strand2Contents[0].fields.Link3];
 console.log(actualVid);
 console.log(strand1Contents);
 

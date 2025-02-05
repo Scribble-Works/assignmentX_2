@@ -1,30 +1,37 @@
 <script setup>
-import airtable from 'airtable';
-const route = useRoute();
-
-airtable.configure({
-  apiKey: config.public.airtableKey,
-  baseId: config.public.airtableBase,
-});
-const base = airtable.base(config.public.airtableBase)
-const tableBase = base(config.public.airtableTable1);
-
-const strands = await tableBase.select().all();
-console.log(strands);
-// const supabase = useSupabaseClient();
-
-// const { data: strands } = await supabase.from('strands').select('*');
-// console.log(strands);
+import strand2 from '~/strand2.json';
 definePageMeta({
     layout: 'dash',
 });
+const router = useRouter();
+const config = useRuntimeConfig();
+const strand2Contents = strand2.records;
+console.log(strand1Contents);
+// const { data: strandVids } = await supabase.from('sub_strands').select('');
+// console.log(strandVids);
+
+// const {data: relatedVis} = await supabase.from('')
 </script>
 <template>
     <div class="mt-15">
         <v-container>
-            <v-row>
-                <v-col v-for="strand in strands.data" :key="strand.id">
-                    <NuxtLink :to="strand.slug">{{ strand.title }}</NuxtLink>
+            <h1 class="text-center text-uppercase text-bold" style="font-size: 3em;">Strand 1</h1>
+            <v-row v-for="strand in strand2Contents" :key="strand.id">
+                <v-col>
+                    <NuxtLink :to="'/strand2/' + strand.id">
+                        <strong>{{ strand.fields.sub_strand }}</strong>
+                    </NuxtLink>
+                    <v-spacer></v-spacer>
+                    <v-row>
+                        <v-col>
+                            <v-btn color="primary">concept note</v-btn>
+                        </v-col>
+                        <v-col>
+                            <v-btn color="success">BECE Questions</v-btn>
+                        </v-col>
+                    </v-row>
+                    <v-divider></v-divider>
+                    <br>
                 </v-col>
             </v-row>
         </v-container>
