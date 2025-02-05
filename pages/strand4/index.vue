@@ -1,12 +1,12 @@
 <script setup>
-import strand3 from '~/strand3.json';
+import strand4 from '~/strand4.json';
 definePageMeta({
     layout: 'dash',
 });
 const router = useRouter();
 const config = useRuntimeConfig();
-const strand3Contents = strand3.records;
-console.log(strand3Contents);
+const strand4Contents = strand4.records;
+console.log(strand4Contents);
 // const { data: strandVids } = await supabase.from('sub_strands').select('');
 // console.log(strandVids);
 
@@ -15,10 +15,10 @@ console.log(strand3Contents);
 <template>
     <div class="mt-15">
         <v-container>
-            <h1 class="text-center text-uppercase text-bold" style="font-size: 3em;">Strand 3</h1>
-            <v-row v-for="strand in strand3Contents" :key="strand.id">
+            <h1 class="text-center text-uppercase text-bold" style="font-size: 3em;">Strand 4</h1>
+            <v-row v-for="strand in strand4Contents" :key="strand.id">
                 <v-col>
-                    <NuxtLink :to="'/strand3/' + strand.id">
+                    <NuxtLink :to="'/strand4/' + strand.id">
                         <strong>{{ strand.fields.Sub_strand }}</strong>
                     </NuxtLink>
                     <v-spacer></v-spacer>
