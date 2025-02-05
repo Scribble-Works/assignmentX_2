@@ -9,11 +9,11 @@ const config = useRuntimeConfig();
 
 const id = route.params.id;
 const strand2Contents = strand2.records.filter((strand) => strand.id === id);
-const actualVid = strand2Contents[0].fields.Link1.replace("watch?v=", "embed/");
-const sub_strand = strand2Contents[0].fields.sub_strand;
-const relatedVids = [strand2Contents[0].fields.Link2, strand2Contents[0].fields.Link3];
+const actualVid = strand2Contents[0].fields['Link 1'];
+const sub_strand = strand2Contents[0].fields.Sub_strand;
+const relatedVids = [strand2Contents[0].fields['Link 2'], strand2Contents[0].fields['Link 3']];
 console.log(actualVid);
-console.log(strand1Contents);
+// console.log(strand1Contents);
 
 // const {data: relatedVis} = await supabase.from('')
 </script>

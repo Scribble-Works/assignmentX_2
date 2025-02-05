@@ -6,7 +6,7 @@ definePageMeta({
 const router = useRouter();
 const config = useRuntimeConfig();
 const strand2Contents = strand2.records;
-console.log(strand1Contents);
+console.log(strand2Contents);
 // const { data: strandVids } = await supabase.from('sub_strands').select('');
 // console.log(strandVids);
 
@@ -15,11 +15,11 @@ console.log(strand1Contents);
 <template>
     <div class="mt-15">
         <v-container>
-            <h1 class="text-center text-uppercase text-bold" style="font-size: 3em;">Strand 1</h1>
+            <h1 class="text-center text-uppercase text-bold" style="font-size: 3em;">Strand 2</h1>
             <v-row v-for="strand in strand2Contents" :key="strand.id">
                 <v-col>
                     <NuxtLink :to="'/strand2/' + strand.id">
-                        <strong>{{ strand.fields.sub_strand }}</strong>
+                        <strong>{{ strand.fields.Sub_strand }}</strong>
                     </NuxtLink>
                     <v-spacer></v-spacer>
                     <v-row>
