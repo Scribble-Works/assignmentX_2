@@ -6,14 +6,40 @@ definePageMeta({
 });
 const route = useRoute();
 const config = useRuntimeConfig();
+const router = useRouter();
 
 const id = route.params.id;
 const strand1Contents = strand1.records.filter((strand) => strand.id === id);
 const actualVid = strand1Contents[0].fields.Link1.replace("watch?v=", "embed/");
 const sub_strand = strand1Contents[0].fields.sub_strand;
 const relatedVids = [strand1Contents[0].fields.Link1,strand1Contents[0].fields.Link2, strand1Contents[0].fields.Link3];
+const conceptNote = strand1Contents[0].fields.concept_notes;
+const bece = strand1Contents[0].fields.bece_questions;
 console.log(actualVid);
 console.log(strand1Contents);
+
+function openNotes(){
+    navigateTo(conceptNote, {
+        open:{
+            windowFeatures:{
+                width: 500,
+                height: 500,
+            }
+        }
+    })
+};
+
+function openBece(){
+    navigateTo(bece, {
+        open:{
+            windowFeatures:{
+                width: 500,
+                height: 500,
+            }
+        }
+    })
+};
+
 
 // const {data: relatedVis} = await supabase.from('')
 </script>
@@ -28,10 +54,10 @@ console.log(strand1Contents);
                         referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><br>
                     <v-row>
                         <v-col>
-                            <v-btn color="primary">Concept Note</v-btn>
+                            <v-btn @click="openNotes" color="primary">Concept Note</v-btn>
                         </v-col>
                         <v-col>
-                            <v-btn color="success">BECE Questions</v-btn>
+                            <v-btn @click="openBece" color="success">BECE Questions</v-btn>
                         </v-col>
                     </v-row>
                 </v-col>

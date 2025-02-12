@@ -23,7 +23,7 @@
             <div class="md:hidden" id="navbar-menu">
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/">Home</NuxtLink>
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/about">About Us</NuxtLink>
-                <NuxtLink class="block px-4 py-2 bg-blue-500 text-white rounded" to="login.html">Login / Sign Up</NuxtLink>
+                <NuxtLink class="block px-4 py-2 bg-blue-500 text-white rounded" to="/login">Login / Sign Up</NuxtLink>
             </div>
         </header>
     </div>

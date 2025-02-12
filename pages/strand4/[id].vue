@@ -13,9 +13,32 @@ const actualVid = strand4Contents[0].fields['Link 1'];
 const sub_strand = strand4Contents[0].fields.Sub_strand;
 const relatedVids = [strand4Contents[0].fields['Link 1'],strand4Contents[0].fields['Link 2'], strand4Contents[0].fields['Link 3']];
 console.log(actualVid);
-// console.log(strand1Contents);
+const conceptNote4 = strand4Contents[0].fields.concept_notes;
+const bece4 = strand4Contents[0].fields.bece_questions;
 
-// const {data: relatedVis} = await supabase.from('')
+function openNotes(){
+    navigateTo(conceptNote4, {
+        open:{
+            windowFeatures:{
+                width: 500,
+                height: 500,
+            }
+        }
+    })
+};
+
+function openBece(){
+    navigateTo(bece4, {
+        open:{
+            windowFeatures:{
+                width: 500,
+                height: 500,
+            }
+        }
+    })
+};
+
+
 </script>
 <template>
     <div class="mt-15">
@@ -28,10 +51,10 @@ console.log(actualVid);
                         referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><br>
                     <v-row>
                         <v-col>
-                            <v-btn color="primary">Concept Note</v-btn>
+                            <v-btn @click="openNotes" color="primary">Concept Note</v-btn>
                         </v-col>
                         <v-col>
-                            <v-btn color="success">BECE Questions</v-btn>
+                            <v-btn @click="openBece" color="success">BECE Questions</v-btn>
                         </v-col>
                     </v-row>
                 </v-col>

@@ -12,10 +12,34 @@ const strand2Contents = strand2.records.filter((strand) => strand.id === id);
 const actualVid = strand2Contents[0].fields['Link 1'];
 const sub_strand = strand2Contents[0].fields.Sub_strand;
 const relatedVids = [strand2Contents[0].fields['Link 1'],strand2Contents[0].fields['Link 2'], strand2Contents[0].fields['Link 3']];
+const conceptNote2 = strand2Contents[0].fields.concept_notes;
+const bece2 = strand2Contents[0].fields.bece_questions;
 console.log(actualVid);
-// console.log(strand1Contents);
 
-// const {data: relatedVis} = await supabase.from('')
+
+function openNotes(){
+    navigateTo(conceptNote2, {
+        open:{
+            windowFeatures:{
+                width: 500,
+                height: 500,
+            }
+        }
+    })
+};
+
+function openBece(){
+    navigateTo(bece2, {
+        open:{
+            windowFeatures:{
+                width: 500,
+                height: 500,
+            }
+        }
+    })
+};
+
+
 </script>
 <template>
     <div class="mt-15">
@@ -28,10 +52,10 @@ console.log(actualVid);
                         referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><br>
                     <v-row>
                         <v-col>
-                            <v-btn color="primary">Concept Note</v-btn>
+                            <v-btn @click="openNotes" color="primary">Concept Note</v-btn>
                         </v-col>
                         <v-col>
-                            <v-btn color="success">BECE Questions</v-btn>
+                            <v-btn @click="openBece" color="success">BECE Questions</v-btn>
                         </v-col>
                     </v-row>
                 </v-col>

@@ -7,10 +7,30 @@ const router = useRouter();
 const config = useRuntimeConfig();
 const strand2Contents = strand2.records;
 console.log(strand2Contents);
-// const { data: strandVids } = await supabase.from('sub_strands').select('');
-// console.log(strandVids);
+const conceptNote = strand2Contents[0].fields.concept_notes;
+const bece = strand2Contents[0].fields.bece_questions;
 
-// const {data: relatedVis} = await supabase.from('')
+function openNotes(){
+    navigateTo(conceptNote, {
+        open:{
+            windowFeatures:{
+                width: 500,
+                height: 500,
+            }
+        }
+    })
+};
+
+function openBece(){
+    navigateTo(bece, {
+        open:{
+            windowFeatures:{
+                width: 500,
+                height: 500,
+            }
+        }
+    })
+};
 </script>
 <template>
     <div class="mt-15">
@@ -24,10 +44,10 @@ console.log(strand2Contents);
                     <v-spacer></v-spacer>
                     <v-row>
                         <v-col>
-                            <v-btn color="primary">concept note</v-btn>
+                            <v-btn @click="openNotes" color="primary">concept note</v-btn>
                         </v-col>
                         <v-col>
-                            <v-btn color="success">BECE Questions</v-btn>
+                            <v-btn @click="openBece" color="success">BECE Questions</v-btn>
                         </v-col>
                     </v-row>
                     <v-divider></v-divider>

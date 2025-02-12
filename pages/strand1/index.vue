@@ -6,7 +6,31 @@ definePageMeta({
 const router = useRouter();
 const config = useRuntimeConfig();
 const strand1Contents = strand1.records;
+const conceptNote = strand1Contents[0].fields.concept_notes;
+const bece = strand1Contents[0].fields.bece_questions;
 console.log(strand1Contents);
+
+function openNotes(){
+    navigateTo(conceptNote, {
+        open:{
+            windowFeatures:{
+                width: 500,
+                height: 500,
+            }
+        }
+    })
+};
+
+function openBece(){
+    navigateTo(bece, {
+        open:{
+            windowFeatures:{
+                width: 500,
+                height: 500,
+            }
+        }
+    })
+};
 // const { data: strandVids } = await supabase.from('sub_strands').select('');
 // console.log(strandVids);
 
@@ -24,10 +48,10 @@ console.log(strand1Contents);
                     <v-spacer></v-spacer>
                     <v-row>
                         <v-col>
-                            <v-btn color="primary">concept note</v-btn>
+                            <v-btn @click="openNotes" color="primary">concept note</v-btn>
                         </v-col>
                         <v-col>
-                            <v-btn color="success">BECE Questions</v-btn>
+                            <v-btn @click="openBece" color="success">BECE Questions</v-btn>
                         </v-col>
                     </v-row>
                     <v-divider></v-divider>
