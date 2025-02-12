@@ -11,7 +11,7 @@ const id = route.params.id;
 const strand4Contents = strand4.records.filter((strand) => strand.id === id);
 const actualVid = strand4Contents[0].fields['Link 1'];
 const sub_strand = strand4Contents[0].fields.Sub_strand;
-const relatedVids = [strand4Contents[0].fields['Link 2'], strand4Contents[0].fields['Link 3']];
+const relatedVids = [strand4Contents[0].fields['Link 1'],strand4Contents[0].fields['Link 2'], strand4Contents[0].fields['Link 3']];
 console.log(actualVid);
 // console.log(strand1Contents);
 

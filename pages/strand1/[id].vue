@@ -11,7 +11,7 @@ const id = route.params.id;
 const strand1Contents = strand1.records.filter((strand) => strand.id === id);
 const actualVid = strand1Contents[0].fields.Link1.replace("watch?v=", "embed/");
 const sub_strand = strand1Contents[0].fields.sub_strand;
-const relatedVids = [strand1Contents[0].fields.Link2, strand1Contents[0].fields.Link3];
+const relatedVids = [strand1Contents[0].fields.Link1,strand1Contents[0].fields.Link2, strand1Contents[0].fields.Link3];
 console.log(actualVid);
 console.log(strand1Contents);
 

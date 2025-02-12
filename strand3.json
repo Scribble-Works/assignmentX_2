@@ -9,7 +9,9 @@
                 "Sub_strand": "Shape and Space 1",
                 "Indicator": "B7.3.1.1.1 Measure and classify angles according to their measured sizes – right, acute, obtuse and reflex.",
                 "Link 2": "https://www.youtube.com/embed/Jj8XhAb1-zA",
-                "Link 1": "https://www.youtube.com/embed/lxkqJc3P40E"
+                "Link 1": "https://www.youtube.com/embed/lxkqJc3P40E",
+                "concept_notes":"",
+                "bece_questions":""
             }
         },
         {
@@ -20,7 +22,9 @@
                 "Indicator": "B7.3.1.2.1 Construct a line segment perpendicular to another line segment.",
                 "Link 2": "https://www.youtube.com/embed/CFefKshkSdI",
                 "Sub_strand": "Shape and Space 2",
-                "Link 1": "https://www.youtube.com/embed/uL8V921v0BQ"
+                "Link 1": "https://www.youtube.com/embed/uL8V921v0BQ",
+                "concept_notes":"",
+                "bece_questions":""
             }
         },
         {
@@ -31,7 +35,9 @@
                 "Indicator": "B7.3.1.2.2: Construct the perpendicular bisector of a line segment",
                 "Link 2": "https://www.youtube.com/embed/5bvjnleMn5A",
                 "Sub_strand": "Shape and Space 3",
-                "Link 1": "https://www.youtube.com/embed/WR2R_wrdEVY"
+                "Link 1": "https://www.youtube.com/embed/WR2R_wrdEVY",
+                "concept_notes":"",
+                "bece_questions":""
             }
         }
     ]
