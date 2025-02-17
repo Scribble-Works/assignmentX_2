@@ -43,7 +43,7 @@ function openBece(){
             <v-row v-for="strand in strand1Contents" :key="strand.id">
                 <v-col>
                     <NuxtLink :to="'/strand1/' + strand.id">
-                        <strong>{{ strand.fields.sub_strand }}</strong>
+                        <strong>{{ strand.fields.Indicator }}</strong>
                     </NuxtLink>
                     <v-spacer></v-spacer>
                     <v-row>

@@ -11,10 +11,11 @@ const router = useRouter();
 const id = route.params.id;
 const strand1Contents = strand1.records.filter((strand) => strand.id === id);
 const actualVid = strand1Contents[0].fields.Link1.replace("watch?v=", "embed/");
-const sub_strand = strand1Contents[0].fields.sub_strand;
+const Indicator = strand1Contents[0].fields.Indicator;
 const relatedVids = [strand1Contents[0].fields.Link1,strand1Contents[0].fields.Link2, strand1Contents[0].fields.Link3];
 const conceptNote = strand1Contents[0].fields.concept_notes;
 const bece = strand1Contents[0].fields.bece_questions;
+// const actualVid = 'https://www.canva.com/design/DAGXGRK16aY/HAVinQOoHdx73tdLArObFA/view?embed'
 console.log(actualVid);
 console.log(strand1Contents);
 
@@ -46,12 +47,13 @@ function openBece(){
 <template>
     <div class="mt-15">
         <v-container>
-            <h1 class="text-center text-uppercase text-bold" style="font-size: 3em;">{{ sub_strand }}</h1>
+            <h1 class="text-center text-uppercase text-bold" style="font-size: 3em;">{{ Indicator }}</h1>
             <v-row>
                 <v-col cols="auto" lg="8" sm="6" md="6">
-                    <iframe height="500" width="700" :src="actualVid" frameborder="0"
+                    <iframe :src="actualVid " frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><br>
+                        
                     <v-row>
                         <v-col>
                             <v-btn @click="openNotes" color="primary">Concept Note</v-btn>

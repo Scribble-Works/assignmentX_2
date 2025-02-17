@@ -3,7 +3,7 @@
         <header class="bg-white shadow">
             <nav class="container mx-auto flex items-center justify-between p-4">
                 <NuxtLink class="flex items-center font-bold text-xl" to="/">
-                    <img src="/img/Scribble monogram_color.png" alt="Logo" class="w-12 mr-2">
+                    <img src="/img/logo.png" alt="Logo" class="w-12 mr-2">
                     AssignmentX
                 </NuxtLink>
                 <div class="hidden md:flex space-x-4">
