@@ -15,7 +15,6 @@ const Indicator = strand1Contents[0].fields.Indicator;
 const relatedVids = [strand1Contents[0].fields.Link1,strand1Contents[0].fields.Link2, strand1Contents[0].fields.Link3];
 const conceptNote = strand1Contents[0].fields.concept_notes;
 const bece = strand1Contents[0].fields.bece_questions;
-// const actualVid = 'https://www.canva.com/design/DAGXGRK16aY/HAVinQOoHdx73tdLArObFA/view?embed'
 console.log(actualVid);
 console.log(strand1Contents);
 
@@ -42,7 +41,7 @@ function openBece(){
 };
 
 
-// const {data: relatedVis} = await supabase.from('')
+
 </script>
 <template>
     <div class="mt-15">
@@ -50,7 +49,7 @@ function openBece(){
             <h1 class="text-center text-uppercase text-bold" style="font-size: 3em;">{{ Indicator }}</h1>
             <v-row>
                 <v-col cols="auto" lg="8" sm="6" md="6">
-                    <iframe :src="actualVid " frameborder="0"
+                    <iframe :src="conceptNote"  frameborder="0" height="80%" width="100%"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><br>
                         
@@ -64,11 +63,13 @@ function openBece(){
                     </v-row>
                 </v-col>
                 <v-col cols="auto" lg="4" sm="6" md="6">
-                    <v-row>
+                    <div class="mt-11">
+                        <v-row>
                         <v-col col="" v-for="relatedVid in relatedVids" :key="relatedVid">
                             <iframe :src="relatedVid" frameborder="0"></iframe>
                         </v-col>
                     </v-row>
+                    </div>
                 </v-col>
             </v-row>
         </v-container>

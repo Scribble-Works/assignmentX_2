@@ -46,7 +46,7 @@ function openBece(){
             <h1 class="text-center text-uppercase text-bold" style="font-size: 3em;">{{ sub_strand }}</h1>
             <v-row>
                 <v-col cols="auto" lg="8" sm="6" md="6">
-                    <iframe height="500" width="700" :src="actualVid" frameborder="0"
+                    <iframe height="80%" width="100%" :src="conceptNote4" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><br>
                     <v-row>
