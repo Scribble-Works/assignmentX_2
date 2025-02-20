@@ -13,10 +13,10 @@ watch(group, () => {
   drawer.value = false;
 });
 
-const subStrand1Ls = strand1.records;
-const subStrand2Ls = strand2.records;
-const subStrand3Ls = strand3.records;
-const subStrand4Ls = strand4.records;
+const subStrand1Ls = strand1.sub_strands;
+const subStrand2Ls = strand2.sub_strands;
+const subStrand3Ls = strand3.sub_strands;
+const subStrand4Ls = strand4.sub_strands;
 // console.log(subStrand2Ls);
 
 // const strands = await supabase.from('strands').select('*');
@@ -42,7 +42,7 @@ const subStrand4Ls = strand4.records;
         <v-menu activator="parent">
           <v-list>
             <v-list-item v-for="substrand in subStrand1Ls" :key="substrand">
-              <NuxtLink :to="'/strand1/'+substrand.id">{{ substrand.fields.Indicator }}</NuxtLink>
+              <NuxtLink :to="'/strand1/substrand-' + substrand.id + '/'">{{ substrand.title }}</NuxtLink>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -53,7 +53,7 @@ const subStrand4Ls = strand4.records;
         <v-menu activator="parent">
           <v-list>
             <v-list-item v-for="substrand2 in subStrand2Ls" :key="substrand2">
-              <NuxtLink :to="'/strand2/'+substrand2.id">{{ substrand2.fields.Indicator }}</NuxtLink>
+              <NuxtLink :to="'/strand2/substrand-' + substrand2.id + '/'">{{ substrand2.title }}</NuxtLink>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -64,7 +64,7 @@ const subStrand4Ls = strand4.records;
         <v-menu activator="parent">
           <v-list>
             <v-list-item v-for="substrand3 in subStrand3Ls" :key="substrand3">
-              <NuxtLink :to="'/strand3/'+substrand3.id">{{ substrand3.fields.Indicator }}</NuxtLink>
+              <NuxtLink :to="'/strand3/substrand-' + substrand3.id + '/'">{{ substrand3.title }}</NuxtLink>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -75,7 +75,7 @@ const subStrand4Ls = strand4.records;
         <v-menu activator="parent">
           <v-list>
             <v-list-item v-for="substrand4 in subStrand4Ls" :key="substrand4">
-              <NuxtLink :to="'/strand4/'+substrand4.id">{{ substrand4.fields.Indicator }}</NuxtLink>
+              <NuxtLink :to="'/strand4/substrand-' + substrand4.id + '/'">{{ substrand4.title }}</NuxtLink>
             </v-list-item>
           </v-list>
         </v-menu>

@@ -3,9 +3,11 @@ import strand1 from '~/strand1.json';
 definePageMeta({
     layout: 'dash',
 });
-const router = useRouter();
-const config = useRuntimeConfig();
-const strand1Contents = strand1.sub_strands;
+const route = useRoute();
+const id = route.params.id;
+const contentsSubStrand = strand1.sub_strands.filter((strand) => strand.id === id);
+const contents = contentsSubStrand[0].sub_strand_list;
+
 
 
 
@@ -27,7 +29,7 @@ const strand1Contents = strand1.sub_strands;
 //                 width: 500,
 //                 height: 500,
 //             }
-//         }
+//         
 //     })
 // };
 // const { data: strandVids } = await supabase.from('sub_strands').select('');
@@ -38,11 +40,11 @@ const strand1Contents = strand1.sub_strands;
 <template>
     <div class="mt-15" style="height: 100dvh;">
         <v-container>
-            <h1 class="text-center text-uppercase text-bold" style="font-size: 3em;">Strand 1</h1>
-            <v-row v-for="strand in strand1Contents" :key="strand.id">
+            <h1 class="text-center text-uppercase text-bold" style="font-size: 3em;">{{ contentsSubStrand.title }}</h1>
+            <v-row v-for="content in contents" :key="content.id">
                 <v-col>
-                    <NuxtLink :to="'/strand1/substrand-' + strand.id+'/'">
-                        <strong>{{ strand.title }}</strong>
+                    <NuxtLink :to="'/strand1/substrand-' + id + '/' + content.id">
+                        <strong>{{ content.fields.Indicator }}</strong>
                     </NuxtLink>
                     <v-spacer></v-spacer>
                     <!-- <v-row>

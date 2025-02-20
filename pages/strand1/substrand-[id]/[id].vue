@@ -5,18 +5,13 @@ definePageMeta({
     layout: 'dash',
 });
 const route = useRoute();
-const config = useRuntimeConfig();
-const router = useRouter();
 
 const id = route.params.id;
-const strand1Contents = strand1.records.filter((strand) => strand.id === id);
-const actualVid = strand1Contents[0].fields.Link1.replace("watch?v=", "embed/");
-const Indicator = strand1Contents[0].fields.Indicator;
-const relatedVids = [strand1Contents[0].fields.Link1,strand1Contents[0].fields.Link2, strand1Contents[0].fields.Link3];
-const conceptNote = strand1Contents[0].fields.concept_notes;
-const bece = strand1Contents[0].fields.bece_questions;
-console.log(actualVid);
-console.log(strand1Contents);
+const strand1Contents = strand1.sub_strands[0].sub_strand_list[0].fields;
+const conceptNote = strand1Contents.concept_notes;
+const bece = strand1Contents.bece_questions;
+const Indicator = strand1Contents.Indicator;
+const relatedVids = [strand1Contents.Link1,strand1Contents.Link2, strand1Contents.Link3];
 
 function openNotes(){
     navigateTo(conceptNote, {

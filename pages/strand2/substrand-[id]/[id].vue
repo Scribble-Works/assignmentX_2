@@ -1,23 +1,20 @@
 <script setup>
 // import airtable from 'airtable';
-import strand4 from '~/strand4.json';
+import strand2 from '~/strand2.json';
 definePageMeta({
     layout: 'dash',
 });
 const route = useRoute();
-const config = useRuntimeConfig();
 
 const id = route.params.id;
-const strand4Contents = strand4.records.filter((strand) => strand.id === id);
-const actualVid = strand4Contents[0].fields['Link 1'];
-const sub_strand = strand4Contents[0].fields.Indicator;
-const relatedVids = [strand4Contents[0].fields['Link 1'],strand4Contents[0].fields['Link 2'], strand4Contents[0].fields['Link 3']];
-console.log(actualVid);
-const conceptNote4 = strand4Contents[0].fields.concept_notes;
-const bece4 = strand4Contents[0].fields.bece_questions;
+const strand2Contents = strand2.sub_strands[0].sub_strand_list[0].fields;
+const conceptNote = strand2Contents.concept_notes;
+const bece = strand2Contents.bece_questions;
+const Indicator = strand2Contents.Indicator;
+const relatedVids = [strand2Contents['Link 1'],strand2Contents['Link 2'], strand2Contents['Link 3']];
 
 function openNotes(){
-    navigateTo(conceptNote4, {
+    navigateTo(conceptNote, {
         open:{
             windowFeatures:{
                 width: 500,
@@ -28,7 +25,7 @@ function openNotes(){
 };
 
 function openBece(){
-    navigateTo(bece4, {
+    navigateTo(bece, {
         open:{
             windowFeatures:{
                 width: 500,
@@ -39,16 +36,18 @@ function openBece(){
 };
 
 
+
 </script>
 <template>
     <div class="mt-15">
         <v-container>
-            <h1 class="text-center text-uppercase text-bold" style="font-size: 3em;">{{ sub_strand }}</h1>
+            <h1 class="text-center text-uppercase text-bold" style="font-size: 3em;">{{ Indicator }}</h1>
             <v-row>
                 <v-col cols="auto" lg="8" sm="6" md="6">
-                    <iframe height="80%" width="100%" :src="conceptNote4" frameborder="0"
+                    <iframe :src="conceptNote"  frameborder="0" height="80%" width="100%"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><br>
+                        
                     <v-row>
                         <v-col>
                             <v-btn @click="openNotes" color="primary">Concept Note</v-btn>
@@ -59,11 +58,13 @@ function openBece(){
                     </v-row>
                 </v-col>
                 <v-col cols="auto" lg="4" sm="6" md="6">
-                    <v-row>
+                    <div class="mt-11">
+                        <v-row>
                         <v-col col="" v-for="relatedVid in relatedVids" :key="relatedVid">
                             <iframe :src="relatedVid" frameborder="0"></iframe>
                         </v-col>
                     </v-row>
+                    </div>
                 </v-col>
             </v-row>
         </v-container>
