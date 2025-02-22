@@ -39,6 +39,7 @@ const strand1Contents = strand1.sub_strands;
     <div class="mt-15" style="height: 100dvh;">
         <v-container>
             <h1 class="text-center text-uppercase text-bold" style="font-size: 3em;">Strand 1</h1>
+            <h2 class="text-center text-uppercase text-bold" style="font-size: 2em;">number</h2>
             <v-row v-for="strand in strand1Contents" :key="strand.id">
                 <v-col>
                     <NuxtLink :to="'/strand1/substrand-' + strand.id+'/'">

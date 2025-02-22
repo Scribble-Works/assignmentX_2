@@ -38,7 +38,7 @@ const subStrand4Ls = strand4.sub_strands;
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" temporary>
       <v-btn variant="text" class="mt-5">
-        Strand 1 <v-icon>mdi-menu-down</v-icon>
+        Strand 1 - Number <v-icon>mdi-menu-down</v-icon>
         <v-menu activator="parent">
           <v-list>
             <v-list-item v-for="substrand in subStrand1Ls" :key="substrand">
@@ -49,7 +49,7 @@ const subStrand4Ls = strand4.sub_strands;
       </v-btn>
       <v-spacer></v-spacer>
       <v-btn variant="text" class="mt-5">
-        Strand 2 <v-icon>mdi-menu-down</v-icon>
+        Strand 2 - Algebra <v-icon>mdi-menu-down</v-icon>
         <v-menu activator="parent">
           <v-list>
             <v-list-item v-for="substrand2 in subStrand2Ls" :key="substrand2">
@@ -60,7 +60,7 @@ const subStrand4Ls = strand4.sub_strands;
       </v-btn>
       <v-spacer></v-spacer>
       <v-btn variant="text" class="mt-5">
-        Strand 3 <v-icon>mdi-menu-down</v-icon>
+        Strand 3 - Geometry <v-icon>mdi-menu-down</v-icon>
         <v-menu activator="parent">
           <v-list>
             <v-list-item v-for="substrand3 in subStrand3Ls" :key="substrand3">
@@ -71,7 +71,7 @@ const subStrand4Ls = strand4.sub_strands;
       </v-btn>
       <v-spacer></v-spacer>
       <v-btn variant="text" class="mt-5">
-        Strand 4 <v-icon>mdi-menu-down</v-icon>
+        Strand 4 - Handling Data <v-icon>mdi-menu-down</v-icon>
         <v-menu activator="parent">
           <v-list>
             <v-list-item v-for="substrand4 in subStrand4Ls" :key="substrand4">

@@ -11,12 +11,12 @@ const strand4Contents = strand4.sub_strands[0].sub_strand_list[0].fields;
 const conceptNote = strand4Contents.concept_notes;
 const bece = strand4Contents.bece_questions;
 const Indicator = strand4Contents.Indicator;
-const relatedVids = [strand4Contents['Link 1'],strand4Contents['Link 2'], strand4Contents['Link 3']];
+const relatedVids = [strand4Contents['Link 1'], strand4Contents['Link 2'], strand4Contents['Link 3']];
 
-function openNotes(){
+function openNotes() {
     navigateTo(conceptNote, {
-        open:{
-            windowFeatures:{
+        open: {
+            windowFeatures: {
                 width: 500,
                 height: 500,
             }
@@ -24,10 +24,10 @@ function openNotes(){
     })
 };
 
-function openBece(){
+function openBece() {
     navigateTo(bece, {
-        open:{
-            windowFeatures:{
+        open: {
+            windowFeatures: {
                 width: 500,
                 height: 500,
             }
@@ -41,29 +41,33 @@ function openBece(){
 <template>
     <div class="mt-15">
         <v-container>
-            <h1 class="text-center text-uppercase text-bold" style="font-size: 3em;">{{ Indicator }}</h1>
+            <h1 class="text-center text-uppercase text-bold" style="font-size: 1.5em; font-weight: bold;">{{ Indicator }}</h1>
             <v-row>
                 <v-col cols="auto" lg="8" sm="6" md="6">
-                    <iframe :src="conceptNote"  frameborder="0" height="80%" width="100%"
+                    <iframe :src="conceptNote" frameborder="0" height="80%" width="100%"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><br>
-                        
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                        style="border-style: solid; border-width: .5px;"></iframe><br>
+
                     <v-row>
-                        <v-col>
-                            <v-btn @click="openNotes" color="primary">Concept Note</v-btn>
+                        <v-col cols="auto" lg="8" sm="6" md="6">
+                            <v-btn @click="openNotes" color="primary">Download Concept Note</v-btn>
                         </v-col>
-                        <v-col>
-                            <v-btn @click="openBece" color="success">BECE Questions</v-btn>
+                        <v-col cols="auto" lg="4" sm="6" md="6">
+                            <v-btn @click="openBece" color="success">Sample BECE Questions</v-btn>
                         </v-col>
                     </v-row>
                 </v-col>
                 <v-col cols="auto" lg="4" sm="6" md="6">
-                    <div class="mt-11">
+                    <div class="mt-0">
                         <v-row>
-                        <v-col col="" v-for="relatedVid in relatedVids" :key="relatedVid">
-                            <iframe :src="relatedVid" frameborder="0"></iframe>
-                        </v-col>
-                    </v-row>
+                            <v-col col="" v-for="relatedVid in relatedVids" :key="relatedVid">
+                                <iframe :src="relatedVid" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    style="border-style: solid; border-width: .5px;"></iframe>
+                            </v-col>
+                        </v-row>
                     </div>
                 </v-col>
             </v-row>

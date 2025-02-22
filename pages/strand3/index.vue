@@ -38,6 +38,7 @@ const strand3Contents = strand3.sub_strands;
     <div class="mt-15" style="height: 100dvh;">
         <v-container>
             <h1 class="text-center text-uppercase text-bold" style="font-size: 3em;">Strand 3</h1>
+            <h2 class="text-center text-uppercase text-bold" style="font-size: 2em;">geometry & measurement</h2>
             <v-row v-for="strand in strand3Contents" :key="strand.id">
                 <v-col>
                     <NuxtLink :to="'/strand3/substrand-' + strand.id+'/'">
