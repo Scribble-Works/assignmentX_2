@@ -1,17 +1,21 @@
 <script setup>
-// import airtable from 'airtable';
 import strand1 from '~/strand1.json';
 definePageMeta({
     layout: 'dash',
 });
 const route = useRoute();
-
 const id = route.params.id;
-const strand1Contents = strand1.sub_strands[0].sub_strand_list[0].fields;
-const conceptNote = strand1Contents.concept_notes;
-const bece = strand1Contents.bece_questions;
-const Indicator = strand1Contents.Indicator;
-const relatedVids = [strand1Contents.Link1, strand1Contents.Link2, strand1Contents.Link3];
+const mapId = strand1.sub_strands[0].sub_strand_list.map((strand) => strand.id);
+const idIndex = mapId.indexOf(id);
+console.log(idIndex);
+const substrand = strand1.sub_strands.map((items, index) => ({ index, items }));
+const mapIndex = substrand.map((items, index) => ({ index, items }));
+const substrandContents = [substrand[0], substrand[1], substrand[2], substrand[3]];
+const contents = substrandContents[idIndex].items.sub_strand_list;
+
+const conceptNote = contents[mapIndex[idIndex].index].fields.concept_notes;
+const indicator = contents[mapIndex[idIndex].index].fields.Indicator;
+const relatedVids = [contents[mapIndex[idIndex].index].fields.Link1, contents[mapIndex[idIndex].index].fields.Link2, contents[mapIndex[idIndex].index].fields.Link3];
 
 function openNotes() {
     navigateTo(conceptNote, {
@@ -41,14 +45,13 @@ function openBece() {
 <template>
     <div class="mt-15">
         <v-container>
-            <h2 class="text-center text-uppercase text-bold mb-10" style="font-size: 1.5em; font-weight: bold;">{{ Indicator
+            <h2 class="text-center text-uppercase text-bold mb-10" style="font-size: 1.5em; font-weight: bold;">{{
+                Indicator
                 }}</h2>
             <v-row>
                 <v-col cols="auto" lg="8" sm="8" md="6">
-                    <iframe :src="conceptNote" frameborder="0" height="80%" width="100%"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
-                        style="border-style: solid; border-width: .5px;"></iframe><br>
+
+                    <conceptNotes :conceptNote="conceptNote" />
 
                     <v-row>
                         <v-col cols="auto" lg="8" sm="6" md="6">
@@ -61,13 +64,11 @@ function openBece() {
                 </v-col><br>
                 <v-col cols="auto" lg="4" sm="6" md="6">
                     <!-- <div class="mt-11"> -->
-                        <v-row>
-                            <v-col col="" v-for="relatedVid in relatedVids" :key="relatedVid">
-                                <iframe :src="relatedVid" frameborder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="border-style: solid; border-width: .5px;"></iframe>
-                            </v-col>
-                        </v-row>
+                    <v-row>
+                        <v-col col="12" v-for="relatedVid in relatedVids" :key="relatedVid">
+                            <related :relatedVid="relatedVid" />
+                        </v-col>
+                    </v-row>
                     <!-- </div> -->
                 </v-col>
             </v-row>

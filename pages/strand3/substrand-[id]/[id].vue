@@ -44,10 +44,7 @@ function openBece() {
             <h1 class="text-center text-uppercase text-bold" style="font-size: 1.5em; font-weight: bold;">{{ Indicator }}</h1>
             <v-row>
                 <v-col cols="auto" lg="8" sm="6" md="6">
-                    <iframe :src="conceptNote" frameborder="0" height="80%" width="100%"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
-                        style="border-style: solid; border-width: .5px;"></iframe><br>
+                   <ConceptNotes :conceptNote="conceptNote" />
 
                     <v-row>
                         <v-col cols="auto" lg="8" sm="6" md="6">
@@ -62,10 +59,7 @@ function openBece() {
                     <div class="mt-0">
                         <v-row>
                             <v-col col="" v-for="relatedVid in relatedVids" :key="relatedVid">
-                                <iframe :src="relatedVid" frameborder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
-                                    style="border-style: solid; border-width: .5px;"></iframe>
+                                <relatedVids :relatedVid="relatedVid" />
                             </v-col>
                         </v-row>
                     </div>
