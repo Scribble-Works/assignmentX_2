@@ -3,7 +3,7 @@
         <v-app>
             <appBar />
             <slot />
-            <appFooter />
+            <theFooter/>
         </v-app>
     </div>
 </template>

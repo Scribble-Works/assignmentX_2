@@ -1,9 +1,9 @@
 <script setup>
 const socials = [
-    { icon: 'mdi-youtube', link: '' },
-    { icon: 'mdi-facebook', link: '' },
-    { icon: 'mdi-linkedin', link: '' },
-    { icon: 'mdi-twitter', link: '' },
+    { icon: 'mdi-instagram', link: 'https://www.instagram.com/swphofficial?utm_source=qr&igsh=MWQwdzVsd3drZm5wZQ==' },
+    { icon: 'mdi-facebook', link: 'https://www.facebook.com/swphofficial?mibextid=ZbWKwL' },
+    { icon: 'mdi-linkedin', link: 'https://www.linkedin.com/company/93656967/admin/?lipi=urn%3Ali%3Apage%3Ad_flagship3_feed%3B8v%2FYCZmsTDOfEk1v387o%2Bg%3D%3D' },
+    { icon: 'mdi-twitter', link: 'https://x.com/swphofficial?t=ilOp8jMfAXcMkxh3DExhKw&s=08' },
 ];
 const yr = new Date().getFullYear();
 </script>
