@@ -15,6 +15,7 @@ const contents = substrandContents[idIndex].items.sub_strand_list;
 
 const conceptNote = contents[mapIndex[idIndex].index].fields.concept_notes;
 const indicator = contents[mapIndex[idIndex].index].fields.Indicator;
+const bece = contents[mapIndex[idIndex].index].fields.bece_questions;
 const relatedVids = [contents[mapIndex[idIndex].index].fields.Link1, contents[mapIndex[idIndex].index].fields.Link2, contents[mapIndex[idIndex].index].fields.Link3];
 
 function openNotes() {
@@ -29,14 +30,12 @@ function openNotes() {
 };
 
 function openBece() {
-    navigateTo(bece, {
-        open: {
-            windowFeatures: {
-                width: 500,
-                height: 500,
-            }
-        }
-    })
+    const link = document.createElement('a');
+    link.href = bece;
+    link.download = 'bece_questions.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 };
 
 
@@ -46,7 +45,7 @@ function openBece() {
     <div class="mt-15">
         <v-container>
             <h2 class="text-center text-uppercase text-bold mb-10" style="font-size: 1.5em; font-weight: bold;">{{
-                Indicator
+                indicator
                 }}</h2>
             <v-row>
                 <v-col cols="auto" lg="8" sm="8" md="6">
@@ -58,7 +57,7 @@ function openBece() {
                             <v-btn @click="openNotes" color="primary">Download Concept Note</v-btn>
                         </v-col>
                         <v-col cols="auto" lg="4" sm="6" md="6">
-                            <v-btn @click="openBece" color="success">Sample BECE Questions</v-btn>
+                            <v-btn @click="openBece" color="success">Download BECE Questions</v-btn>
                         </v-col>
                         <div class="mt-5" style="overflow: hidden;">
                             <questionaire/>
