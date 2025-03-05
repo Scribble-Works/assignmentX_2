@@ -52,7 +52,7 @@ function openBece() {
                 <v-col cols="auto" lg="8" sm="8" md="6">
 
                     <conceptNotes :conceptNote="conceptNote" />
-
+                    
                     <v-row>
                         <v-col cols="auto" lg="8" sm="6" md="6">
                             <v-btn @click="openNotes" color="primary">Download Concept Note</v-btn>
@@ -60,6 +60,10 @@ function openBece() {
                         <v-col cols="auto" lg="4" sm="6" md="6">
                             <v-btn @click="openBece" color="success">Sample BECE Questions</v-btn>
                         </v-col>
+                        <div class="mt-5" style="overflow: hidden;">
+                            <questionaire/>
+                        </div>
+                        
                     </v-row>
                 </v-col><br>
                 <v-col cols="auto" lg="4" sm="6" md="6">
@@ -71,7 +75,10 @@ function openBece() {
                     </v-row>
                     <!-- </div> -->
                 </v-col>
+                
             </v-row>
+            <br>
+            
         </v-container>
     </div>
 </template>
