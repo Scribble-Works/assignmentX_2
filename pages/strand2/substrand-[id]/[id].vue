@@ -5,13 +5,28 @@ definePageMeta({
     layout: 'dash',
 });
 const route = useRoute();
-
 const id = route.params.id;
-const strand2Contents = strand2.sub_strands[0].sub_strand_list[0].fields;
-const conceptNote = strand2Contents.concept_notes;
-const bece = strand2Contents.bece_questions;
-const Indicator = strand2Contents.Indicator;
-const relatedVids = [strand2Contents['Link 1'], strand2Contents['Link 2'], strand2Contents['Link 3']];
+
+var substrands = [strand2.sub_strands[0].sub_strand_list, strand2.sub_strands[1].sub_strand_list, strand2.sub_strands[2].sub_strand_list];
+const strand = substrands.filter((strand) => strand.id === id);
+
+const contents = substrands.flatMap((substrand) =>
+    substrand.filter((strand) => strand.id === id).map((strand) => {
+        const conceptNote = strand.fields.concept_notes;
+        const bece = strand.fields.bece_questions;
+        const indicator = strand.fields.Indicator;
+        const relatedVids = [strand.fields['Link 1'], strand.fields['Link 2'], strand.fields['Link 3']];
+
+        return {
+            conceptNote,
+            bece,
+            indicator,
+            relatedVids
+        };
+    })
+);
+
+const { conceptNote, bece, indicator, relatedVids } = contents[0] || {};
 
 function openNotes() {
     navigateTo(conceptNote, {
@@ -41,7 +56,7 @@ function openBece() {
 <template>
     <div class="mt-15">
         <v-container>
-            <h1 class="text-center text-uppercase text-bold" style="font-size: 1.5em; font-weight: bold;">{{ Indicator
+            <h1 class="text-center text-uppercase text-bold" style="font-size: 1.5em; font-weight: bold;">{{ indicator
             }}</h1>
             <v-row>
                 <v-col cols="auto" lg="8" sm="6" md="6">
@@ -54,13 +69,16 @@ function openBece() {
                         <v-col cols="auto" lg="4" sm="6" md="6">
                             <v-btn @click="openBece" color="success">Sample BECE Questions</v-btn>
                         </v-col>
+                        <div class="mt-5" style="overflow: hidden;">
+                            <questionaire />
+                        </div>
                     </v-row>
                 </v-col>
                 <v-col cols="auto" lg="4" sm="6" md="6">
                     <div class="mt-0">
                         <v-row>
-                            <v-col col="" v-for="relatedVid in relatedVids" :key="relatedVid">
-                                <relatedVids :relatedVid="relatedVid" />   
+                            <v-col col="12" v-for="relatedVid in relatedVids" :key="relatedVid">
+                                <related :relatedVid="relatedVid" />
                             </v-col>
                         </v-row>
                     </div>
