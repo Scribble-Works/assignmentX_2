@@ -16,6 +16,7 @@
     "@supabase/supabase-js": "^2.47.10",
     "@vueuse/core": "^12.8.1",
     "airtable": "^0.12.2",
+    "googleapis": "^146.0.0",
     "nuxt": "^3.14.1592",
     "vue": "latest",
     "vue-router": "latest"

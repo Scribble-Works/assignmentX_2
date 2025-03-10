@@ -10,10 +10,9 @@ export default defineNuxtConfig({
 
   runtimeConfig:{
     public:{
-      airtableKey: process.env.AIRTABLE_API_KEY,
-      airtableBase: process.env.AIRTABLE_BASE_ID,
-      airtableEndpointUrl: process.env.AIRTABLE_ENDPOINT_URL,
-      airtableTable1: process.env.AIRTABLE_TABLE1_KEY,
+      GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
+      SHEET_ID: process.env.SHEET_ID,
+      SHEET_URL: process.env.WEBSHEET_URL
     }
   },
   modules: [// '@nuxtjs/tailwindcss',

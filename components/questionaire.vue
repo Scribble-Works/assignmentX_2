@@ -1,21 +1,27 @@
 <script setup>
 import { useScroll } from '@vueuse/core';
 
+const config = useRuntimeConfig();
+import { appendRow } from '~/composables/useSheet';
 const { y, isScrolling } = useScroll();
 const { scrl } = ref(null);
 
+const url = config.public.SHEET_URL;
 const email = ref('');
 const role = ref('');
 const experience = ref('');
 const oXperience = ref('');
 
 const submitFeedback = async () => {
+
     const feedback = {
         email: email.value,
         role: role.value,
         experience: experience.value,
         oXperience: oXperience.value,
     };
+
+    await appendRow(url, feedback);
     console.log(feedback);
     email.value = '';
     role.value = '';
@@ -25,7 +31,7 @@ const submitFeedback = async () => {
 </script>
 <template>
     <div style="height: 40dvh; width:auto; overflow-y: auto;" ref="scrl">
-        <h3 class="text-justify">
+        <h3 class="text-left">
             <strong style="font-size: 2em;">Welcome to AssignmentX Beta!</strong><br>
             Thank you for participating in the AssignmentX beta test! AssignmentX is a web extension designed to
             enhance the Assignment Workbook Series with rich, interactive, and relevant content. Your feedback is
