@@ -15,10 +15,10 @@ const oXperience = ref('');
 const submitFeedback = async () => {
 
     const feedback = {
-        email: email.value,
-        role: role.value,
-        experience: experience.value,
-        oXperience: oXperience.value,
+        Email: email.value,
+        Role: role.value,
+        Experience: experience.value,
+        Other_Experience: oXperience.value,
     };
 
     await appendRow(url, feedback);

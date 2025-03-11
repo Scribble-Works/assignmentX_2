@@ -10,9 +10,9 @@ export default defineNuxtConfig({
 
   runtimeConfig:{
     public:{
+      APPLICATION_CREDENTIALS: process.env.APPLICATION_CREDENTIALS,
       GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
-      SHEET_ID: process.env.SHEET_ID,
-      SHEET_URL: process.env.WEBSHEET_URL
+      SHEET_ID: process.env.SHEET_ID
     }
   },
   modules: [// '@nuxtjs/tailwindcss',
