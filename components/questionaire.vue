@@ -1,7 +1,8 @@
 <script setup>
 import { useScroll } from '@vueuse/core';
-
+const client = useSupabaseClient();
 const config = useRuntimeConfig();
+
 import { appendRow } from '~/composables/useSheet';
 const { y, isScrolling } = useScroll();
 const { scrl } = ref(null);
@@ -14,15 +15,13 @@ const oXperience = ref('');
 
 const submitFeedback = async () => {
 
-    const feedback = {
-        Email: email.value,
-        Role: role.value,
-        Experience: experience.value,
-        Other_Experience: oXperience.value,
-    };
+    const {data, error} = await client.from('user_experience_data').insert({
+        email: email.value,
+        role: role.value,
+        experience: experience.value,
+        other_experience: oXperience.value
+    });
 
-    await appendRow(url, feedback);
-    console.log(feedback);
     email.value = '';
     role.value = '';
     experience.value = '';
