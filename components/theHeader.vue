@@ -1,16 +1,23 @@
+<script setup>
+const router = useRouter();
+const routeLogin = function(){
+    router.push('/login');
+};
+</script>
 <template>
     <div>
         <header class="bg-white shadow">
             <nav class="container mx-auto flex items-center justify-between p-4">
                 <NuxtLink class="flex items-center font-bold text-xl" to="/">
-                    <img src="/img/Scribble monogram_color.png" alt="Logo" class="w-12 mr-2">
+                    <img src="/img/logo.png" alt="Logo" class="w-12 mr-2">
                     AssignmentX
                 </NuxtLink>
                 <div class="hidden md:flex space-x-4">
-                    <NuxtLink class="hover:text-blue-500" to="/">Home</NuxtLink>
-                    <NuxtLink class="hover:text-blue-500" to="/about">About Us</NuxtLink>
-                    <NuxtLink class="btn btn-outline-primary ml-3 px-4 bg-blue-500 text-white rounded" to="login">Login
-                        / Sign Up</NuxtLink>
+                    <NuxtLink class="hover:text-blue-500 py-2" to="/">Home</NuxtLink>
+                    <NuxtLink class="hover:text-blue-500 py-2" href="https://scribbleworks.carrd.co/">About Us
+                    </NuxtLink>
+                    <button class="bg-blue-500 text-white py-2 px-4 rounded" :onclick="routeLogin">Get
+                        Started</button>
                 </div>
                 <button class="md:hidden text-gray-500 focus:outline-none" id="navbar-toggler">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -22,8 +29,9 @@
             </nav>
             <div class="md:hidden" id="navbar-menu">
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/">Home</NuxtLink>
-                <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/about">About Us</NuxtLink>
-                <NuxtLink class="block px-4 py-2 bg-blue-500 text-white rounded" to="login.html">Login / Sign Up</NuxtLink>
+                <NuxtLink class="block px-4 py-2 hover:bg-gray-200" href="https://scribbleworks.carrd.co/">About Us
+                </NuxtLink>
+                <button class="block px-4 py-2 bg-blue-500 text-white rounded" :onclick="routeLogin">Get Started</button>
             </div>
         </header>
     </div>
