@@ -7,14 +7,20 @@ export default defineNuxtConfig({
       // script: [{src:'script.js'}]
     }
   },
-  modules: [
-    // '@nuxtjs/tailwindcss',
-    ['@nuxtjs/supabase', {
-      url: process.env.SUPABASE_URL,
-      key: process.env.SUPABASE_KEY,
-      redirect: false
-    }]
-  ],
+
+  runtimeConfig:{
+    public:{
+      APPLICATION_CREDENTIALS: process.env.APPLICATION_CREDENTIALS,
+      GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
+      SHEET_ID: process.env.SHEET_ID
+    }
+  },
+  modules: [// '@nuxtjs/tailwindcss',
+  ['@nuxtjs/supabase', {
+    url: process.env.SUPABASE_URL,
+    key: process.env.SUPABASE_KEY,
+    redirect: false
+  }]],
   css: [
     'vuetify/lib/styles/main.sass',
     '@mdi/font/css/materialdesignicons.min.css',

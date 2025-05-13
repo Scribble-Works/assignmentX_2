@@ -1,3 +1,6 @@
+<script setup>
+const yr = new Date().getFullYear();
+</script>
 <template>
     <div>
         <footer class="bg-gray-800 text-white py-6">
@@ -12,8 +15,11 @@
                     <a href="https://www.linkedin.com/company/swphofficial/" class="mx-2"><i
                             class="fab fa-linkedin"></i></a>
                 </div>
-                <p>&copy; 2024 AssignmentX. All rights reserved.</p>
-                <p>Contact us: info@AssignmentX.com</p>
+                <p>&copy; {{ yr }} SWPH. All rights reserved.</p>
+                <p class="">
+                    Powered by <NuxtLink href="https://scribbleworks.carrd.co/"> <strong>Scribble Works
+                            Publishing House</strong></NuxtLink>
+                </p>
             </div>
         </footer>
     </div>
