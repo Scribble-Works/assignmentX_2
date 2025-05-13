@@ -43,7 +43,7 @@ const contents = contentsSubStrand[0].sub_strand_list;
             <h1 class="text-center text-uppercase text-bold" style="font-size: 3em;">{{ contentsSubStrand.title }}</h1>
             <v-row v-for="content in contents" :key="content.id">
                 <v-col>
-                    <NuxtLink :to="'/strand3/substrand-' + id + '/' + content.id">
+                    <NuxtLink :to="'/workbook/workbook1/strand3/substrand-' + id + '/' + content.id">
                         <strong>{{ content.fields.Indicator }}</strong>
                     </NuxtLink>
                     <v-spacer></v-spacer>

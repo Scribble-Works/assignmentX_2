@@ -41,7 +41,7 @@ const strand4Contents = strand4.sub_strands;
             <h2 class="text-center text-uppercase text-bold" style="font-size: 2em;">handling data</h2>
             <v-row v-for="strand in strand4Contents" :key="strand.id">
                 <v-col>
-                    <NuxtLink :to="'/strand3/substrand-' + strand.id+'/'">
+                    <NuxtLink :to="'/workbook/workbook1/strand3/substrand-' + strand.id+'/'">
                         <strong>{{ strand.title }}</strong>
                     </NuxtLink>
                     <v-spacer></v-spacer>
