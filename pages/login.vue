@@ -17,7 +17,7 @@ const login = async () => {
             router.push('/login');
             return;
         } else {
-            router.push('/user/');
+            router.push('/workbook/');
             console.log(user.value)
         }
     } catch (error) {

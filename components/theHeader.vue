@@ -1,5 +1,8 @@
 <script setup>
-
+const router = useRouter();
+const routeLogin = function(){
+    router.push('/login');
+};
 </script>
 <template>
     <div>
@@ -13,7 +16,7 @@
                     <NuxtLink class="hover:text-blue-500 py-2" to="/">Home</NuxtLink>
                     <NuxtLink class="hover:text-blue-500 py-2" href="https://scribbleworks.carrd.co/">About Us
                     </NuxtLink>
-                    <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" to="/login">Get
+                    <button class="bg-blue-500 text-white py-2 px-4 rounded" :onclick="routeLogin">Get
                         Started</button>
                 </div>
                 <button class="md:hidden text-gray-500 focus:outline-none" id="navbar-toggler">
@@ -28,7 +31,7 @@
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/">Home</NuxtLink>
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" href="https://scribbleworks.carrd.co/">About Us
                 </NuxtLink>
-                <button class="block px-4 py-2 bg-blue-500 text-white rounded" to="/login">Get Started</button>
+                <button class="block px-4 py-2 bg-blue-500 text-white rounded" :onclick="routeLogin">Get Started</button>
             </div>
         </header>
     </div>
