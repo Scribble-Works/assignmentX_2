@@ -16,7 +16,7 @@ const login = async () => {
             alert('Invalid email or password');
             router.push('/login');
             return;
-        }else{
+        } else {
             router.push('/user/');
             console.log(user.value)
         }
