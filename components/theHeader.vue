@@ -1,3 +1,6 @@
+<script setup>
+
+</script>
 <template>
     <div>
         <header class="bg-white shadow">
@@ -7,9 +10,11 @@
                     AssignmentX
                 </NuxtLink>
                 <div class="hidden md:flex space-x-4">
-                    <NuxtLink class="hover:text-blue-500" to="/">Home</NuxtLink>
-                    <NuxtLink class="hover:text-blue-500" href="https://scribbleworks.carrd.co/">About Us</NuxtLink>
-                    <v-btn color="primary" class="ml-3 px-4 bg-blue-500 text-white" to="/strand1/">Get Started</v-btn>
+                    <NuxtLink class="hover:text-blue-500 py-2" to="/">Home</NuxtLink>
+                    <NuxtLink class="hover:text-blue-500 py-2" href="https://scribbleworks.carrd.co/">About Us
+                    </NuxtLink>
+                    <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" to="/login">Get
+                        Started</button>
                 </div>
                 <button class="md:hidden text-gray-500 focus:outline-none" id="navbar-toggler">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -21,8 +26,9 @@
             </nav>
             <div class="md:hidden" id="navbar-menu">
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/">Home</NuxtLink>
-                <NuxtLink class="block px-4 py-2 hover:bg-gray-200" href="https://scribbleworks.carrd.co/">About Us</NuxtLink>
-                <NuxtLink class="block px-4 py-2 bg-blue-500 text-white rounded" to="/strand1/">Get Started</NuxtLink>
+                <NuxtLink class="block px-4 py-2 hover:bg-gray-200" href="https://scribbleworks.carrd.co/">About Us
+                </NuxtLink>
+                <button class="block px-4 py-2 bg-blue-500 text-white rounded" to="/login">Get Started</button>
             </div>
         </header>
     </div>
