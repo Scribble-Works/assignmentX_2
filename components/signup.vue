@@ -1,6 +1,7 @@
 <script setup>
 const { auth } = useSupabaseClient();
 const user = useSupabaseUser();
+const router = useRouter();
 
 const email = ref('');
 const password = ref('');
