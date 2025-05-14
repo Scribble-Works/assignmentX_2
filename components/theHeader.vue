@@ -1,8 +1,7 @@
 <script setup>
 const router = useRouter();
-const routeLogin = function(){
-    router.push('/login');
-};
+const toggle = ref(null);
+
 </script>
 <template>
     <div>
@@ -16,10 +15,10 @@ const routeLogin = function(){
                     <NuxtLink class="hover:text-blue-500 py-2" to="/">Home</NuxtLink>
                     <NuxtLink class="hover:text-blue-500 py-2" href="https://scribbleworks.carrd.co/">About Us
                     </NuxtLink>
-                    <button class="bg-blue-500 text-white py-2 px-4 rounded" :onclick="routeLogin">Get
-                        Started</button>
+                    <v-btn color="blue" class=" text-white py-2 px-4 rounded" to="/auth">Get
+                        Started</v-btn>
                 </div>
-                <button class="md:hidden text-gray-500 focus:outline-none" id="navbar-toggler">
+                <button @click.stop="toggle = !toggle" class="md:hidden text-gray-500 focus:outline-none" id="navbar-toggler">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -27,11 +26,11 @@ const routeLogin = function(){
                     </svg>
                 </button>
             </nav>
-            <div class="md:hidden" id="navbar-menu">
+            <div v-if="toggle" class="md:hidden overflow-hidden transition-all duration-500 ease-in-out" :class="toggle ? 'max-h-40' : 'max-h-0'" id="navbar-menu">
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/">Home</NuxtLink>
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" href="https://scribbleworks.carrd.co/">About Us
                 </NuxtLink>
-                <button class="block px-4 py-2 bg-blue-500 text-white rounded" :onclick="routeLogin">Get Started</button>
+                <v-btn color="blue" class="px-4 py-2 text-white" to="/auth">Get Started</v-btn><br>
             </div>
         </header>
     </div>
