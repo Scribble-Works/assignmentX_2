@@ -44,7 +44,7 @@ const login = async () => {
                 class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Login</button>
 
             <p class="mt-4 text-center">
-                Forget Password? <NuxtLink to="/forget" id="toggleFormLink" class="text-blue-500 hover:underline">
+                Forgot Password? <NuxtLink to="/forget" id="toggleFormLink" class="text-blue-500 hover:underline">
                     Click Here</NuxtLink>
             </p>
         </div>

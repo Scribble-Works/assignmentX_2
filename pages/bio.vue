@@ -8,7 +8,7 @@ const email = ref('');
 <template>
     <div>
         <form @submit.prevent="forget">
-
+            
         </form>
     </div>
 </template>
