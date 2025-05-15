@@ -33,10 +33,10 @@ const resetPassword = async () => {
         <v-form @submit.prevent="resetPassword">
             <v-container>
                 <v-label>New Password</v-label>
-                <v-text-field v-model="newPassword"></v-text-field>
+                <v-text-field type="password" v-model="newPassword"></v-text-field>
                 <br>
                 <v-label>Confirm New Password</v-label>
-                <v-text-field v-model="confirmNewPassword"></v-text-field>
+                <v-text-field type="password" v-model="confirmNewPassword"></v-text-field>
                 <br>
                 <v-btn type="submit">Create New Password</v-btn>
             </v-container>

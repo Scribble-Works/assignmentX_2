@@ -1,4 +1,5 @@
 <script setup>
+const user = useSupabaseUser();
 const router = useRouter();
 const toggle = ref(null);
 
@@ -15,8 +16,14 @@ const toggle = ref(null);
                     <NuxtLink class="hover:text-blue-500 py-2" to="/">Home</NuxtLink>
                     <NuxtLink class="hover:text-blue-500 py-2" href="https://scribbleworks.carrd.co/">About Us
                     </NuxtLink>
-                    <v-btn color="blue" class=" text-white py-2 px-4 rounded" to="/auth">Get
-                        Started</v-btn>
+                    <div v-if="!user">
+                        <v-btn color="blue" class=" text-white py-2 px-4 rounded" to="/auth">Get
+                            Started</v-btn>
+                    </div>
+                    <div v-else>
+                        <avartar/>
+                    </div>
+                    
                 </div>
                 <button @click.stop="toggle = !toggle" class="md:hidden text-gray-500 focus:outline-none" id="navbar-toggler">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
