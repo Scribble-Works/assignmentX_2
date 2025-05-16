@@ -4,6 +4,11 @@ const { auth } = useSupabaseClient();
 const client = useSupabaseClient();
 const router = useRouter();
 
+const profile = await client
+    .from('profiles')
+    .select('fullName, school, DOB')
+    .eq('id', user.value.id)
+    .single();
 const signout = async () => {
     try {
         const { error } = await auth.signOut();
@@ -34,7 +39,9 @@ const signout = async () => {
                         <v-avatar color="brown">
                             <v-icon>mdi-account</v-icon>
                         </v-avatar>
-                        <!-- <h3>{{ user.fullName }}</h3> -->
+                        <div v-if="profile.data == !null">
+                            <h3>{{ profile.data.fullName }}</h3>
+                        </div>
                         <p class="text-caption mt-1">
                             {{ user.email }}
                         </p>

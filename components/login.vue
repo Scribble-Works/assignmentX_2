@@ -1,21 +1,26 @@
 <script setup>
 const { auth } = useSupabaseClient();
 const user = useSupabaseUser();
+const client = useSupabaseClient();
 const router = useRouter();
 const email = ref('');
 const password = ref('');
 
+
 const login = async () => {
+
     try {
         const { data, error } = await auth.signInWithPassword({
             email: email.value,
             password: password.value
         });
-
+        const profile = await client.from('profiles').select('id').eq('id', user.value.id).single();
         if (!user.value) {
             alert('Invalid email or password');
             router.push('/auth');
             return;
+        } else if (profile.data == null) {
+            router.push('/bio');
         } else {
             router.push('/workbook/');
             console.log(user.value)

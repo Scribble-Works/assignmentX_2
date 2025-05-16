@@ -25,7 +25,7 @@ const submit = async () => {
             console.error(error);
         } else {
             alert('Profile updated successfully!');
-            router.push('/home');
+            router.push('/workbook/');
         }
     } catch (error) {
         alert('An error occurred. Please try again later.');
