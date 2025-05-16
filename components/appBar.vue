@@ -9,6 +9,9 @@ const config = useRuntimeConfig();
 const drawer = ref(null);
 const group = ref(null);
 
+const user = useSupabaseUser();
+const router = useRouter();
+
 watch(group, () => {
   drawer.value = false;
 });
@@ -34,6 +37,7 @@ const subStrand4Ls = strand4.sub_strands;
       <img style="height: 5em;" src="/img/logo.png" alt="SWPH">
       <v-app-bar-title>AssignmentX</v-app-bar-title>
 
+      <avartar />
 
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" temporary>

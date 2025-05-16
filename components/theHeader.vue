@@ -21,11 +21,12 @@ const toggle = ref(null);
                             Started</v-btn>
                     </div>
                     <div v-else>
-                        <avartar/>
+                        <avartar />
                     </div>
-                    
+
                 </div>
-                <button @click.stop="toggle = !toggle" class="md:hidden text-gray-500 focus:outline-none" id="navbar-toggler">
+                <button @click.stop="toggle = !toggle" class="md:hidden text-gray-500 focus:outline-none"
+                    id="navbar-toggler">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -33,11 +34,18 @@ const toggle = ref(null);
                     </svg>
                 </button>
             </nav>
-            <div v-if="toggle" class="md:hidden overflow-hidden transition-all duration-500 ease-in-out" :class="toggle ? 'max-h-40' : 'max-h-0'" id="navbar-menu">
+            <div v-if="toggle" class="md:hidden overflow-hidden transition-all duration-500 ease-in-out"
+                :class="toggle ? 'max-h-40' : 'max-h-0'" id="navbar-menu">
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/">Home</NuxtLink>
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" href="https://scribbleworks.carrd.co/">About Us
                 </NuxtLink>
-                <v-btn color="blue" class="px-4 py-2 text-white" to="/auth">Get Started</v-btn><br>
+                <div v-if="!user">
+                    <v-btn color="blue" class=" text-white py-2 px-4 rounded" to="/auth">Get
+                        Started</v-btn>
+                </div>
+                <div v-else>
+                    <avartar />
+                </div><br>
             </div>
         </header>
     </div>
