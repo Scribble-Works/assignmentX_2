@@ -39,7 +39,10 @@ const signout = async () => {
                         <v-avatar color="brown">
                             <v-icon>mdi-account</v-icon>
                         </v-avatar>
-                        <div v-if="profile.data == !null">
+                        <div v-if="profile.data == null">
+                            <h3>Fill Bio Data</h3>
+                        </div>
+                        <div v-else>
                             <h3>{{ profile.data.fullName }}</h3>
                         </div>
                         <p class="text-caption mt-1">
