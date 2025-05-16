@@ -1,5 +1,5 @@
 <script setup>
-const {auth} = useSupabaseClient();
+const { auth } = useSupabaseClient();
 const user = useSupabaseUser();
 const router = useRouter();
 
@@ -29,18 +29,20 @@ const resetPassword = async () => {
 };
 </script>
 <template>
-    <div>
-        <v-form @submit.prevent="resetPassword">
-            <v-container>
-                <v-label>New Password</v-label>
-                <v-text-field type="password" v-model="newPassword"></v-text-field>
-                <br>
-                <v-label>Confirm New Password</v-label>
-                <v-text-field type="password" v-model="confirmNewPassword"></v-text-field>
-                <br>
-                <v-btn type="submit">Create New Password</v-btn>
-            </v-container>
+    <div class="d-flex flex-column fill-height justify-center align-center min-h-screen">
+        <v-card elevation="1">
+            <v-form @submit.prevent="resetPassword">
+                <v-container style="width: 80dvw;">
+                    <v-label>New Password</v-label>
+                    <v-text-field variant="outlined" type="password" v-model="newPassword"></v-text-field>
+                    <br>
+                    <v-label>Confirm New Password</v-label>
+                    <v-text-field variant="outlined" type="password" v-model="confirmNewPassword"></v-text-field>
+                    <br>
+                    <v-btn type="submit">Create New Password</v-btn>
+                </v-container>
+            </v-form>
+        </v-card>
 
-        </v-form>
     </div>
 </template>

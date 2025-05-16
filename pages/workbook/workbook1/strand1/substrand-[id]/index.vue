@@ -47,15 +47,6 @@ const contents = contentsSubStrand[0].sub_strand_list;
                         <strong>{{ content.fields.Indicator }}</strong>
                     </NuxtLink>
                     <v-spacer></v-spacer>
-                    <!-- <v-row>
-                        <v-col>
-                            <v-btn @click="openNotes" color="primary">concept note</v-btn>
-                        </v-col>
-                        <v-col>
-                            <v-btn @click="openBece" color="success">BECE Questions</v-btn>
-                        </v-col>
-                    </v-row> -->
-                    <v-divider inset style="color: black; font-weight: bolder;"></v-divider>
                     <br>
                 </v-col>
             </v-row>

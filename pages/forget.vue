@@ -16,23 +16,23 @@ const resetPassword = async () => {
             alert('An error occurred. Please try again later.');
             console.error(error);
         } else {
-            alert('Password reset email sent! Please check your inbox.');
+            // alert('Password reset email sent! Please check your inbox.');
             alert.value = true;
-            router.push('/auth');
+            // router.push('/auth');
         }
     } catch (error) {
-        alert('An error occurred. Please try again later.');
+        // alert('An error occurred. Please try again later.');
         console.error(error);
     }
 };
 </script>
 <template>
     <div class="d-flex flex-column fill-height justify-center align-center min-h-screen">
-        <v-card>
+        <v-card style="width: 80dvw;">
             <form @submit.prevent="resetPassword">
                 <v-container>
                     <v-label>Email</v-label>
-                    <v-text-field v-model="email" type="email" placeholder="Enter your email" required></v-text-field>
+                    <v-text-field variant="outlined" v-model="email" type="email" placeholder="Enter your email" required></v-text-field>
                     <v-btn type="submit">Reset</v-btn>
                 </v-container>
             </form>
