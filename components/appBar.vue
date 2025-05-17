@@ -47,8 +47,8 @@ const subStrand4Ls = strand4.sub_strands;
       <img style="height: 5em;" src="/img/logo.png" alt="SWPH">
       <v-app-bar-title>AssignmentX</v-app-bar-title>
 
-      <avartar />
-
+      <avartar class="mr-5" />
+      
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" temporary>
       <v-btn variant="text" class="mt-5">
