@@ -1,7 +1,17 @@
 <script setup>
 const user = useSupabaseUser();
 const router = useRouter();
-const toggle = ref(null);
+const toggle = ref(false);
+
+router.beforeEach((to, from, next) => {
+  if (from.name && to.name !== from.name) {
+    // This is equivalent to beforeRouteLeave
+    if (toggle.value) {
+      toggle.value = false;
+    }
+  }
+  next();
+});
 
 </script>
 <template>
