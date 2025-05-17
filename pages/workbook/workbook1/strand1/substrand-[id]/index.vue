@@ -29,7 +29,7 @@ const contents = contentsSubStrand[0].sub_strand_list;
 //                 width: 500,
 //                 height: 500,
 //             }
-//         
+//         }
 //     })
 // };
 // const { data: strandVids } = await supabase.from('sub_strands').select('');
@@ -44,7 +44,15 @@ const contents = contentsSubStrand[0].sub_strand_list;
             <v-row v-for="content in contents" :key="content.id">
                 <v-col>
                     <NuxtLink :to="'/workbook/workbook1/strand1/substrand-' + id + '/' + content.id">
-                        <strong>{{ content.fields.Indicator }}</strong>
+                        <v-card>
+                            <v-card-title>
+                                <strong>{{ content.fields.Indicator }}</strong>
+                            </v-card-title>
+                            <v-card-actions>
+                                <v-btn @click="openNotes" color="primary">concept note</v-btn>
+                                <v-btn @click="openBece" color="success">BECE Questions</v-btn>
+                            </v-card-actions>
+                        </v-card>
                     </NuxtLink>
                     <v-spacer></v-spacer>
                     <br>
