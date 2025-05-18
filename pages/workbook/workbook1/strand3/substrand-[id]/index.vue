@@ -44,17 +44,17 @@ const contents = contentsSubStrand[0].sub_strand_list;
             <v-row v-for="content in contents" :key="content.id">
                 <v-col>
                     <NuxtLink :to="'/workbook/workbook1/strand3/substrand-' + id + '/' + content.id">
-                        <strong>{{ content.fields.Indicator }}</strong>
+                        <v-card>
+                            <v-card-title class="font-weight-light text-center mb-2">
+                                <strong>{{ content.fields.Indicator }}</strong>
+                            </v-card-title>
+                            <v-card-actions>
+                                <v-btn @click="openNotes" color="primary">concept note</v-btn>
+                                <v-btn @click="openBece" color="success">BECE Questions</v-btn>
+                            </v-card-actions>
+                        </v-card>
                     </NuxtLink>
                     <v-spacer></v-spacer>
-                    <!-- <v-row>
-                        <v-col>
-                            <v-btn @click="openNotes" color="primary">concept note</v-btn>
-                        </v-col>
-                        <v-col>
-                            <v-btn @click="openBece" color="success">BECE Questions</v-btn>
-                        </v-col>
-                    </v-row> -->
                     <v-divider inset style="color: black; font-weight: bolder;"></v-divider>
                     <br>
                 </v-col>
