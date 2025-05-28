@@ -1,28 +1,32 @@
 <script setup>
+definePageMeta({
+    layout: 'auth',
+});
 const tab = ref(null);
 
 </script>
 <template>
-    <div class="container mx-auto flex justify-center items-center min-h-screen">
-        <v-card elevation="0">
-            <v-tabs v-model="tab" align-tabs="center">
-                <v-tab value="1">Login</v-tab>
-                <v-tab value="2">Sign Up</v-tab>
-            </v-tabs>
-            <v-tabs-window v-model="tab" class="w-full">
-                <v-tabs-window-item value="1">
-                    <v-container>
-                        <login />
-                    </v-container>
-                </v-tabs-window-item>
-                <v-tabs-window-item value="2">
-                    <v-container>
-                        <signup />
-                    </v-container>
-                </v-tabs-window-item>
-            </v-tabs-window>
-        </v-card>
-
+    <div>
+        <v-container>
+            <h1 class="text-h2">Welcome back!</h1>
+            <p>Enter your credentials to access your account</p>
+            <form class="mt-16">
+                <v-label>Email Address</v-label><br><br>
+                <v-text-field v-model="email" type="email" placeholder="Enter your email"
+                    variant="outlined"></v-text-field>
+                <v-row>
+                    <v-col>
+                        <v-label>Password</v-label>
+                    </v-col>
+                    <v-col>
+                        <NuxtLink to="/forget" style="color: #2096F3;">Forgot Password?</NuxtLink>
+                    </v-col>
+                </v-row><br>
+                <v-text-field v-model="password" type="password" placeholder="Enter your password"
+                    variant="outlined"></v-text-field>
+                <v-btn type="submit" color="primary">Login</v-btn>
+            </form>
+        </v-container>
     </div>
 </template>
 <style>

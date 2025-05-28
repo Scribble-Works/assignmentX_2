@@ -1,9 +1,8 @@
 <template>
     <div>
         <v-app>
-            <appBar />
+            <logo />
             <slot />
-            <theFooter/>
         </v-app>
     </div>
 </template>
