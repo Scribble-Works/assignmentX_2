@@ -8,25 +8,30 @@ export default defineNuxtConfig({
     }
   },
 
-  runtimeConfig:{
-    public:{
+  runtimeConfig: {
+    public: {
       APPLICATION_CREDENTIALS: process.env.APPLICATION_CREDENTIALS,
       GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
       SHEET_ID: process.env.SHEET_ID
     }
   },
   modules: [// '@nuxtjs/tailwindcss',
-  ['@nuxtjs/supabase', {
-    url: process.env.SUPABASE_URL,
-    key: process.env.SUPABASE_KEY,
-    redirect: false
-  }]],
+    ['@nuxtjs/supabase', {
+      url: process.env.SUPABASE_URL,
+      key: process.env.SUPABASE_KEY,
+      redirect: false
+    }], '@nuxt/fonts'],
   css: [
     'vuetify/lib/styles/main.sass',
     '@mdi/font/css/materialdesignicons.min.css',
     'assets/style/bece1.css',
     'assets/style/main.css',
   ],
+  fonts:{
+    families:[
+      {name:'Inter', provider:'google'}
+    ]
+  },
   postcss: {
     plugins: {
       tailwindcss: {},
