@@ -24,7 +24,7 @@ export default defineNuxtConfig({
   css: [
     'vuetify/lib/styles/main.sass',
     '@mdi/font/css/materialdesignicons.min.css',
-    'assets/style/bece1.css',
+    // 'assets/style/bece1.css',
     'assets/style/main.css',
   ],
   fonts:{
