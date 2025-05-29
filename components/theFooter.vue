@@ -9,9 +9,9 @@ const links = [{ name: 'Privacy Policy', href: '/privacy-policy' }, { name: 'Ter
         <footer class="bg-gray-800 text-white py-6">
             <v-row>
                 <v-col cols="" lg="4" md="4" sm="6" class="text-center">
-                    <div class="">
-                        <v-img src="/img/logo.png" height="90" alt="SWPH"></v-img>
-                        <div class="text-h4">AssignmentX</div>
+                    <div class="flex mr-10">
+                        <v-img class="ml-100" src="/img/logo.png" height="90" alt="SWPH"></v-img>
+                        <div class="text-h4 mt-5">AssignmentX</div>
 
                     </div>
                 </v-col>

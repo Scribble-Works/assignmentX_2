@@ -2,7 +2,9 @@
     <div>
         <v-app>
             <logo />
-            <slot />
+            <div class="mt-10">
+                <slot />
+            </div>
         </v-app>
     </div>
 </template>

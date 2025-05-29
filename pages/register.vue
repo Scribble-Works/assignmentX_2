@@ -25,7 +25,7 @@ const tab = ref(null);
                 </v-row><br>
                 <v-text-field v-model="password" type="password" placeholder="Enter your password"
                     variant="outlined"></v-text-field>
-                <v-btn style="width: 100%;" type="submit" color="grey-darken-3">Login</v-btn>
+                <v-btn type="submit" color="primary">Login</v-btn>
             </form><br>
             <v-spacer></v-spacer>
             <v-row align="center">
@@ -40,12 +40,12 @@ const tab = ref(null);
                 </v-col>
             </v-row>
 
-            <v-row >
+            <v-row>
                 <v-col cols="" lg="6" md="6" sm="12">
-                    <v-btn style="width: 100%;"><v-icon style="color: red;">mdi-google</v-icon> Signin with Google</v-btn>
+                    <v-btn><v-icon style="color: red;">mdi-google</v-icon> Signin with Google</v-btn>
                 </v-col>
-                <v-col cols="" lg="6" md="6" sm="12">
-                    <v-btn style="width: 100%;"><v-icon>mdi-apple</v-icon> Signin with Apple</v-btn>
+                <v-col align="right" cols="" lg="6" md="6" sm="12">
+                    <v-btn><v-icon>mdi-apple</v-icon> Signin with Apple</v-btn>
                 </v-col>
             </v-row><br>
             <p class="text-center">Don't have an account? <NuxtLink style="color: #2096F3; text-decoration: underline;" to="/register">Sign Up</NuxtLink></p>
