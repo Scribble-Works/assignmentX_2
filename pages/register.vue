@@ -2,30 +2,57 @@
 definePageMeta({
     layout: 'auth',
 });
-const tab = ref(null);
+const { auth } = useSupabaseClient();
+const user = useSupabaseUser();
+const router = useRouter();
+
+const email = ref('');
+const password = ref('');
+const confPassword = ref('');
+
+const signUp = async () => {
+    try {
+        if (password.value !== confPassword.value) {
+            alert('Passwords do not match');
+            return;
+        }
+        const { data, error } = await auth.signUp({
+            email: email.value,
+            password: password.value
+        });
+
+        if (error) {
+            alert('An error occurred. Please try again later.');
+            console.error(error);
+        } else {
+            alert('Sign up successful! Please check your email for confirmation.');
+            router.push('/auth');
+        }
+    } catch (error) {
+        alert('An error occurred. Please try again later.');
+        console.error(error);
+    }
+};
 
 </script>
 <template>
     <div class="d-flex flex-column fill-height justify-center align-center min-h-screen">
-        <v-container role="presentation">
-            <h1 class="text-h2" style="font-family: 'Inter', sans-serif; font-weight: bold;">Welcome back!</h1>
-            <p style="font-family: 'Inter', sans-serif;">Enter your credentials to access your account</p>
-            <form class="mt-16" style="">
+        <v-container class="w-auto" role="presentation">
+            <h1 class="text-h2" style="font-family: 'Inter', sans-serif; font-weight: bold;">Get Started Now</h1>
+            <!-- <p style="font-family: 'Inter', sans-serif;">Enter your credentials to access your account</p> -->
+            <form class="mt-16" @submit.prevent="signUp">
                 <v-label>Email Address</v-label><br><br>
                 <v-text-field v-model="email" type="email" placeholder="Enter your email"
                     variant="outlined"></v-text-field>
-                <v-row>
-                    <v-col>
-                        <v-label>Password</v-label>
-                    </v-col>
-                    <v-col></v-col>
-                    <v-col align="right">
-                        <NuxtLink to="/forget" style="color: #2096F3; font-family: 'Inter', sans-serif;">Forgot Password?</NuxtLink>
-                    </v-col>
-                </v-row><br>
+
+                <v-label>Password</v-label><br><br>
+
                 <v-text-field v-model="password" type="password" placeholder="Enter your password"
                     variant="outlined"></v-text-field>
-                <v-btn type="submit" color="primary">Login</v-btn>
+                <v-label>Confirm Password</v-label><br><br>
+                <v-text-field v-model="confPassword" type="password" placeholder="Confirm your password"
+                    variant="outlined"></v-text-field>
+                <v-btn style="width: 100%;" type="submit" color="grey-darken-3">Signup</v-btn>
             </form><br>
             <v-spacer></v-spacer>
             <v-row align="center">
@@ -42,13 +69,15 @@ const tab = ref(null);
 
             <v-row>
                 <v-col cols="" lg="6" md="6" sm="12">
-                    <v-btn><v-icon style="color: red;">mdi-google</v-icon> Signin with Google</v-btn>
+                    <v-btn><v-icon style="color: red;">mdi-google</v-icon> Signup with Google</v-btn>
                 </v-col>
                 <v-col align="right" cols="" lg="6" md="6" sm="12">
-                    <v-btn><v-icon>mdi-apple</v-icon> Signin with Apple</v-btn>
+                    <v-btn><v-icon>mdi-apple</v-icon> Signup with Apple</v-btn>
                 </v-col>
             </v-row><br>
-            <p class="text-center">Don't have an account? <NuxtLink style="color: #2096F3; text-decoration: underline;" to="/register">Sign Up</NuxtLink></p>
+            <p class="text-center">Have an account? <NuxtLink style="color: #2096F3; text-decoration: underline;"
+                    to="/auth">Sign In</NuxtLink>
+            </p>
         </v-container>
     </div>
 </template>
