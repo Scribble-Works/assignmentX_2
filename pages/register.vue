@@ -34,6 +34,41 @@ const signUp = async () => {
     }
 };
 
+const googleSignUP = async () => {
+    try {
+        const { data, error } = await auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: window.location.origin + '/auth'
+            }
+        });
+        if (error) {
+            alert('An error occurred while signing up with Google.');
+            console.error(error);
+        }
+    } catch (error) {
+        alert('An error occurred. Please try again later.');
+        console.error(error);
+    }
+};
+const appleSignUP = async () => {
+    try {
+        const { data, error } = await auth.signInWithOAuth({
+            provider: 'apple',
+            options: {
+                redirectTo: window.location.origin + '/auth'
+            }
+        });
+        if (error) {
+            alert('An error occurred while signing up with Apple.');
+            console.error(error);
+        }
+    } catch (error) {
+        alert('An error occurred. Please try again later.');
+        console.error(error);
+    }
+};
+
 </script>
 <template>
     <div class="d-flex flex-column fill-height justify-center align-center min-h-screen">
@@ -69,10 +104,10 @@ const signUp = async () => {
 
             <v-row>
                 <v-col cols="" lg="6" md="6" sm="12">
-                    <v-btn><v-icon style="color: red;">mdi-google</v-icon> Signup with Google</v-btn>
+                    <v-btn @click="googleSignUP" variant="outlined"><v-icon style="color: red;">mdi-google</v-icon> Signup with Google</v-btn>
                 </v-col>
                 <v-col align="right" cols="" lg="6" md="6" sm="12">
-                    <v-btn><v-icon>mdi-apple</v-icon> Signup with Apple</v-btn>
+                    <v-btn @click="appleSignUP" variant="outlined"><v-icon>mdi-apple</v-icon> Signup with Apple</v-btn>
                 </v-col>
             </v-row><br>
             <p class="text-center">Have an account? <NuxtLink style="color: #2096F3; text-decoration: underline;"

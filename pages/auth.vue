@@ -34,6 +34,61 @@ const login = async () => {
     }
 };
 
+const googleSignIN = async () => {
+    try {
+        const { data, error } = await auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: window.location.origin + '/auth'
+            }
+        });
+        if (!user.value) {
+            alert('Invalid email or password');
+            router.push('/auth');
+            return;
+        } else if (profile.data == null) {
+            router.push('/bio');
+        } else {
+            router.push('/workbook/');
+            console.log(user.value)
+        }
+        if (error) {
+            alert('An error occurred while signing in with Google.');
+            console.error(error);
+        }
+    } catch (error) {
+        alert('An error occurred. Please try again later.');
+        console.error(error);
+    }
+};
+const appleSignIN = async () => {
+    try {
+        const { data, error } = await auth.signInWithOAuth({
+            provider: 'apple',
+            options: {
+                redirectTo: window.location.origin + '/auth'
+            }
+        });
+        if (!user.value) {
+            alert('Invalid email or password');
+            router.push('/auth');
+            return;
+        } else if (profile.data == null) {
+            router.push('/bio');
+        } else {
+            router.push('/workbook/');
+            console.log(user.value)
+        }
+        if (error) {
+            alert('An error occurred while signing in with Apple.');
+            console.error(error);
+        }
+    } catch (error) {
+        alert('An error occurred. Please try again later.');
+        console.error(error);
+    }
+};
+
 </script>
 <template>
     <div class="d-flex flex-column fill-height justify-center align-center min-h-screen" >
@@ -72,10 +127,10 @@ const login = async () => {
 
             <v-row >
                 <v-col cols="" lg="6" md="6" sm="12">
-                    <v-btn variant="outlined" style="width: 100%;"><v-icon style="color: red;">mdi-google</v-icon> Signin with Google</v-btn>
+                    <v-btn @click="googleSignIN" variant="outlined" style="width: 100%;"><v-icon style="color: red;">mdi-google</v-icon> Signin with Google</v-btn>
                 </v-col>
                 <v-col cols="" lg="6" md="6" sm="12">
-                    <v-btn variant="outlined" style="width: 100%;"><v-icon>mdi-apple</v-icon> Signin with Apple</v-btn>
+                    <v-btn @click="appleSignIN" variant="outlined" style="width: 100%;"><v-icon>mdi-apple</v-icon> Signin with Apple</v-btn>
                 </v-col>
             </v-row><br>
             <p class="text-center">Don't have an account? <NuxtLink style="color: #2096F3; text-decoration: underline;" to="/register">Sign Up</NuxtLink></p>
