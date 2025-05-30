@@ -1,5 +1,6 @@
 <script setup>
 const price = ref('GHS 10.00');
+
 </script>
 <template>
     <div class="mt-5">
@@ -9,10 +10,10 @@ const price = ref('GHS 10.00');
                     <NuxtLink to="/workbook/workbook1/">
                         <v-hover v-slot="{ isHovering, props }">
                             <v-card class="mx-auto" color="grey-lighten-4" max-width="600" v-bind="props">
-                                <v-img :aspect-ratio="16 / 9" src="https://cdn.vuetifyjs.com/images/cards/kitchen.png"
+                                <v-img :aspect-ratio="16 / 9" src="/img/grade7.jpg"
                                     cover>
                                     <v-expand-transition>
-                                        <div v-if="isHovering" class="d-flex bg-orange-darken-2 v-card--reveal text-h2"
+                                        <div v-if="isHovering" class="d-flex bg-blue-grey-darken-1 v-card--reveal text-h2"
                                             style="height: 100%;">
                                             {{price}}
                                         </div>
@@ -20,12 +21,42 @@ const price = ref('GHS 10.00');
                                 </v-img>
 
                                 <v-card-text class="pt-6">
-                                    <div class="font-weight-light text-grey text-h6 mb-2">
-                                        Book 1
+                                    <h3 class="text-h4 font-weight-light text-black mb-2">
+                                        The First Assignment
+                                    </h3>
+                                    <div class="font-weight-light text-black text-h6 mb-2">
+                                        Grade 7
                                     </div>
 
-                                    <h3 class="text-h4 font-weight-light text-orange mb-2">
-                                        Assignment Workbook 1
+                                    
+
+
+                                </v-card-text>
+                            </v-card>
+                        </v-hover>
+                    </NuxtLink>
+                </v-col>
+                <v-col cols="auto" lg="4" md="4" sm="6">
+                    <NuxtLink>
+                        <v-hover v-slot="{ isHovering, props }">
+                            <v-card class="mx-auto" color="grey-lighten-4" max-width="600" v-bind="props">
+                                <v-img :aspect-ratio="16 / 9" src="/img/grade8.jpg"
+                                    cover>
+                                    <v-expand-transition>
+                                        <div v-if="isHovering" class="d-flex bg-blue-grey-darken-1 v-card--reveal text-h2"
+                                            style="height: 100%;">
+                                            {{price}}
+                                        </div>
+                                    </v-expand-transition>
+                                </v-img>
+
+                                <v-card-text class="pt-6">
+                                    <div class="font-weight-light text-black text-h6 mb-2">
+                                        Grade 8
+                                    </div>
+
+                                    <h3 class="text-h4 font-weight-light text-black mb-2">
+                                        The Second Assignment
                                     </h3>
 
 
@@ -38,10 +69,10 @@ const price = ref('GHS 10.00');
                     <NuxtLink>
                         <v-hover v-slot="{ isHovering, props }">
                             <v-card class="mx-auto" color="grey-lighten-4" max-width="600" v-bind="props">
-                                <v-img :aspect-ratio="16 / 9" src="https://cdn.vuetifyjs.com/images/cards/kitchen.png"
+                                <v-img :aspect-ratio="16 / 9" src="/img/grade9.jpg"
                                     cover>
                                     <v-expand-transition>
-                                        <div v-if="isHovering" class="d-flex bg-orange-darken-2 v-card--reveal text-h2"
+                                        <div v-if="isHovering" class="d-flex bg-blue-grey-darken-1 v-card--reveal text-h2"
                                             style="height: 100%;">
                                             {{price}}
                                         </div>
@@ -49,41 +80,12 @@ const price = ref('GHS 10.00');
                                 </v-img>
 
                                 <v-card-text class="pt-6">
-                                    <div class="font-weight-light text-grey text-h6 mb-2">
-                                        Book 2
+                                    <div class="font-weight-light text-black text-h6 mb-2">
+                                        Grade 9
                                     </div>
 
-                                    <h3 class="text-h4 font-weight-light text-orange mb-2">
-                                        Assignment Workbook 2
-                                    </h3>
-
-
-                                </v-card-text>
-                            </v-card>
-                        </v-hover>
-                    </NuxtLink>
-                </v-col>
-                <v-col cols="auto" lg="4" md="4" sm="6">
-                    <NuxtLink>
-                        <v-hover v-slot="{ isHovering, props }">
-                            <v-card class="mx-auto" color="grey-lighten-4" max-width="600" v-bind="props">
-                                <v-img :aspect-ratio="16 / 9" src="https://cdn.vuetifyjs.com/images/cards/kitchen.png"
-                                    cover>
-                                    <v-expand-transition>
-                                        <div v-if="isHovering" class="d-flex bg-orange-darken-2 v-card--reveal text-h2"
-                                            style="height: 100%;">
-                                            {{price}}
-                                        </div>
-                                    </v-expand-transition>
-                                </v-img>
-
-                                <v-card-text class="pt-6">
-                                    <div class="font-weight-light text-grey text-h6 mb-2">
-                                        Book 3
-                                    </div>
-
-                                    <h3 class="text-h4 font-weight-light text-orange mb-2">
-                                        Assignment Workbook 3
+                                    <h3 class="text-h4 font-weight-light text-black mb-2">
+                                        The Last Assignment
                                     </h3>
 
 
@@ -104,5 +106,9 @@ const price = ref('GHS 10.00');
     opacity: .9;
     position: absolute;
     width: 100%;
+}
+
+v-container{
+    font-family: 'Inter', sans-serif;
 }
 </style>

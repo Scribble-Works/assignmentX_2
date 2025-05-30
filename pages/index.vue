@@ -13,10 +13,10 @@ const user = useSupabaseUser();
                 <p class="mt-4 text-lg md:text-xl">Scan your workbook QR code to access an abundance of learning
                     resources.</p><br>
                 <div v-if="!user">
-                    <v-btn to="/auth" size="large" color="blue">Get Started</v-btn>
+                    <v-btn to="/auth" size="large" color="blue" rounded="sm">Get Started</v-btn>
                 </div>
                 <div v-else>
-                    <v-btn to="/workbook/" size="large" color="blue" rounded>Get Started</v-btn>
+                    <v-btn to="/workbook/" size="large" color="blue" rounded="sm">Get Started</v-btn>
                 </div>
             </div>
         </section>
