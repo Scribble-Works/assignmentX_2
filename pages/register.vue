@@ -71,7 +71,7 @@ const appleSignUP = async () => {
 
 </script>
 <template>
-    <div class="d-flex flex-column fill-height justify-center align-center min-h-screen">
+    <div class="d-flex flex-column fill-height justify-center align-center min-h-screen mt-5">
         <v-container class="w-auto" role="presentation">
             <h1 class="text-h2" style="font-family: 'Inter', sans-serif; font-weight: bold;">Get Started Now</h1>
             <!-- <p style="font-family: 'Inter', sans-serif;">Enter your credentials to access your account</p> -->
@@ -104,10 +104,10 @@ const appleSignUP = async () => {
 
             <v-row>
                 <v-col cols="" lg="6" md="6" sm="12">
-                    <v-btn @click="googleSignUP" variant="outlined"><v-icon style="color: red;">mdi-google</v-icon> Signup with Google</v-btn>
+                    <v-btn style="width: 100%;" @click="googleSignUP" variant="outlined"><v-icon style="color: red;">mdi-google</v-icon> Signup with Google</v-btn>
                 </v-col>
-                <v-col align="right" cols="" lg="6" md="6" sm="12">
-                    <v-btn @click="appleSignUP" variant="outlined"><v-icon>mdi-apple</v-icon> Signup with Apple</v-btn>
+                <v-col cols="" lg="6" md="6" sm="12">
+                    <v-btn style="width: 100%;" @click="appleSignUP" variant="outlined"><v-icon>mdi-apple</v-icon> Signup with Apple</v-btn>
                 </v-col>
             </v-row><br>
             <p class="text-center">Have an account? <NuxtLink style="color: #2096F3; text-decoration: underline;"

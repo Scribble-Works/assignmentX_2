@@ -91,7 +91,7 @@ const appleSignIN = async () => {
 
 </script>
 <template>
-    <div class="d-flex flex-column fill-height justify-center align-center min-h-screen" >
+    <div class="d-flex flex-column fill-height justify-center align-center min-h-screen mt-5">
         <v-container class="w-auto" role="presentation">
             <h1 class="text-h2" style="font-family: 'Inter', sans-serif; font-weight: bold;">Welcome back!</h1>
             <p style="font-family: 'Inter', sans-serif;">Enter your credentials to access your account</p>
