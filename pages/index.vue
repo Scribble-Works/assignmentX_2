@@ -174,7 +174,7 @@ const user = useSupabaseUser();
             <div class="mt-15 mb-16">
                 <v-row>
                     <v-col cols="" lg="5" md="6" sm="12" class="d-flex flex-column justify-center">
-                        <h3 class="text-h3 text-capitalize" style="font-family: 'Inter', sans-serif; color: #3E4F5C;">ready to take your learning to the next level? <span><v-img class="mt-n15" height="90" src="/img/mdi_arrow.png"></v-img></span></h3><br>
+                        <h3 class="text-h3 text-capitalize" style="font-family: 'Inter', sans-serif; color: #3E4F5C;">ready to take your learning to the next level? <span><v-img class="mt-n15" style="margin-left: 3em;" height="90" src="/img/mdi_arrow.png"></v-img></span></h3><br>
                         <div v-if="!user">
                             <v-btn to="/auth" size="large" class="mt-n10" width="150" color="blue">Get Started</v-btn>
                         </div>

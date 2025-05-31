@@ -104,7 +104,7 @@ const appleSignIN = async () => {
                         <v-label>Password</v-label>
                     </v-col>
                     <v-col></v-col>
-                    <v-col align="right">
+                    <v-col>
                         <NuxtLink to="/forget" style="color: #2096F3; font-family: 'Inter', sans-serif;">Forgot Password?</NuxtLink>
                     </v-col>
                 </v-row><br>
