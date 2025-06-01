@@ -25,7 +25,7 @@ const signout = async () => {
 </script>
 <template>
     <div>
-        <v-menu min-width="200px">
+        <v-menu min-width="250px">
             <template v-slot:activator="{ props }">
                 <v-btn v-bind="props">
                     <v-icon style="font-size: 2em;">mdi-account-circle</v-icon>
