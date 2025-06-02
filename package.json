@@ -21,8 +21,8 @@
     "googleapis": "^146.0.0",
     "nuxt": "^3.14.1592",
     "vue": "latest",
-    "vue-paystack": "^2.0.4",
-    "vue-router": "latest"
+    "vue-router": "latest",
+    "vue3-paystack": "^0.0.5"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
