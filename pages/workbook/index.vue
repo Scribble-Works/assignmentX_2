@@ -2,6 +2,13 @@
 const price = ref('GHS 10.00');
 const client = useSupabaseClient();
 const user = useSupabaseUser();
+
+const config = useRuntimeConfig();
+const profile = await client.from('profiles').select('*').eq('id', user.value.id);
+
+const book1 = profile.data[0].onePurchase;
+const book2 = profile.data[0].twoPurchase;
+const book3 = profile.data[0].threePurchase;
 const workbooks = [
     {
         grade: 'Grade 7',
@@ -25,7 +32,12 @@ const workbooks = [
         <v-container class="my-16">
             <v-row>
                 <v-col v-for="book in workbooks" :key="book.grade">
-                    <workbookcard :grade="book.grade" :assignment="book.assignment" :image="book.image" />
+                    <div v-if="book1 == true || book2 == true || book3 == true">
+                        <Workbookcard :grade="book.grade" :assignment="book.assignment" :image="book.image" />
+                    </div>
+                    <div v-else>
+                        <BookPurchaseCard :grade="book.grade" :assignment="book.assignment" :image="book.image" />
+                    </div>
                 </v-col>
             </v-row>
         </v-container><br><br><br>
