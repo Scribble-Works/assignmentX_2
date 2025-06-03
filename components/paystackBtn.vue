@@ -16,18 +16,22 @@ const book1 = profile.data[0].onePurchase;
 const book2 = profile.data[0].twoPurchase;
 const book3 = profile.data[0].threePurchase;
 
+const bookProps = defineProps({
+    bookNum: String,
+    onSuccessfulPayment: {
+        type: Function,
+        required: true
+    },
+    onCancelPayment: function () { }
+});
+
 const onSuccessfulPayment = async () => {
-    if (book1 === null) {
-        const { data, error } = await client.from('profiles').update({ onePurchase: true }).eq('id', user.value.id).single();
-    } else if (book2 === null) {
-        const { data, error } = await client.from('profiles').update({ twoPurchase: true }).eq('id', user.value.id).single();
-    } else if (book3 === null) {
-        const { data, error } = await client.from('profiles').update({ threePurchase: true }).eq('id', user.value.id).single();
-    }
-    if (error) {
-        console.error('Error updating purchase status:', error);
-    } else {
-        console.log('Purchase status updated successfully:', data);
+    if (bookProps.bookNum === '1') {
+        await client.from('profiles').update({ onePurchase: true }).eq('id', user.value.id);
+    } else if (bookProps.bookNum === '2') {
+        await client.from('profiles').update({ twoPurchase: true }).eq('id', user.value.id);
+    } else if (bookProps.bookNum === '3') {
+        await client.from('profiles').update({ threePurchase: true }).eq('id', user.value.id);
     }
 };
 
