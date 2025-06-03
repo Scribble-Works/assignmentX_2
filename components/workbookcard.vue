@@ -16,7 +16,7 @@ const { grade, assignment, image } = defineProps([
     <div>
         <NuxtLink to="/workbook/workbook1/">
             <v-hover v-slot="{ isHovering, props }">
-                <v-card class="mx-auto" color="grey-lighten-4" max-width="600" v-bind="props">
+                <v-card class="mx-auto" color="grey-lighten-4" max-width="600" height="365" v-bind="props">
                     <v-img :aspect-ratio="16 / 9" :src="image" cover>
                         <v-expand-transition>
                             <div v-if="isHovering" class="d-flex bg-blue-grey-darken-1 v-card--reveal text-h2"
