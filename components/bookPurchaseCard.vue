@@ -1,10 +1,24 @@
 <script setup>
 const price = ref('GHS 10.00');
-const { grade, assignment, image } = defineProps([
+const client = useSupabaseClient();
+const user = useSupabaseUser();
+const { grade, assignment, image, bookNum } = defineProps([
     'grade',
     'assignment',
-    'image'
+    'image',
+    'bookNum'
 ]);
+
+const onSuccessfulPayment = async () => {
+    if (bookNum === '1') {
+        await client.from('profiles').update({ onePurchase: true }).eq('id', user.value.id);
+    } else if (bookNum === '2') {
+        await client.from('profiles').update({ twoPurchase: true }).eq('id', user.value.id);
+    } else if (bookNum === '3') {
+        await client.from('profiles').update({ threePurchase: true }).eq('id', user.value.id);
+    }
+    window.location.reload();
+};
 </script>
 <template>
     <div>
@@ -27,7 +41,7 @@ const { grade, assignment, image } = defineProps([
                         {{ grade }}
                     </div>
                     <div>
-                        <PaystackBtn />
+                        <PaystackBtn :amount="10" :onSuccessfulPayment="onSuccessfulPayment" />
                     </div>
                 </v-card-text>
             </v-card>
