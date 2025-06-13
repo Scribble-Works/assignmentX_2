@@ -12,10 +12,6 @@ const fullName = profile.data[0].fullName;
 const email = user.value.email;
 const reference = ref("");
 
-const book1 = profile.data[0].onePurchase;
-const book2 = profile.data[0].twoPurchase;
-const book3 = profile.data[0].threePurchase;
-
 const bookProps = defineProps({
     amount: Number,
     onSuccessfulPayment: function () { },
