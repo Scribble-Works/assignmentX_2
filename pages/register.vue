@@ -72,48 +72,59 @@ const appleSignUP = async () => {
 </script>
 <template>
     <div class="d-flex flex-column fill-height justify-center align-center min-h-screen mt-5">
-        <v-container class="w-auto" role="presentation">
-            <h1 class="text-h2" style="font-family: 'Inter', sans-serif; font-weight: bold;">Get Started Now</h1>
-            <!-- <p style="font-family: 'Inter', sans-serif;">Enter your credentials to access your account</p> -->
-            <form class="mt-16" @submit.prevent="signUp">
-                <v-label>Email Address</v-label><br><br>
-                <v-text-field v-model="email" type="email" placeholder="Enter your email"
-                    variant="outlined"></v-text-field>
+        <v-row class="mt-16">
+            <v-col cols="" lg="6" sm="12" md="12">
+                <v-container class="w-auto" role="presentation">
+                    <h1 class="text-h2" style="font-family: 'Inter', sans-serif; font-weight: bold;">Get Started Now
+                    </h1>
+                    <!-- <p style="font-family: 'Inter', sans-serif;">Enter your credentials to access your account</p> -->
+                    <form class="mt-16" @submit.prevent="signUp">
+                        <v-label>Email Address</v-label><br><br>
+                        <v-text-field v-model="email" type="email" placeholder="Enter your email"
+                            variant="outlined"></v-text-field>
 
-                <v-label>Password</v-label><br><br>
+                        <v-label>Password</v-label><br><br>
 
-                <v-text-field v-model="password" type="password" placeholder="Enter your password"
-                    variant="outlined"></v-text-field>
-                <v-label>Confirm Password</v-label><br><br>
-                <v-text-field v-model="confPassword" type="password" placeholder="Confirm your password"
-                    variant="outlined"></v-text-field>
-                <v-btn style="width: 100%;" type="submit" color="grey-darken-3">Signup</v-btn>
-            </form><br>
-            <v-spacer></v-spacer>
-            <v-row align="center">
-                <v-col>
-                    <v-divider :thickness="6" color="#3E4F5C"></v-divider>
-                </v-col>
-                <v-col class="text-center">
-                    <span>Or</span>
-                </v-col>
-                <v-col>
-                    <v-divider :thickness="6" color="#3E4F5C"></v-divider>
-                </v-col>
-            </v-row>
+                        <v-text-field v-model="password" type="password" placeholder="Enter your password"
+                            variant="outlined"></v-text-field>
+                        <v-label>Confirm Password</v-label><br><br>
+                        <v-text-field v-model="confPassword" type="password" placeholder="Confirm your password"
+                            variant="outlined"></v-text-field>
+                        <v-btn style="width: 100%;" type="submit" color="grey-darken-3">Signup</v-btn>
+                    </form><br>
+                    <v-spacer></v-spacer>
+                    <v-row align="center">
+                        <v-col>
+                            <v-divider :thickness="6" color="#3E4F5C"></v-divider>
+                        </v-col>
+                        <v-col class="text-center">
+                            <span>Or</span>
+                        </v-col>
+                        <v-col>
+                            <v-divider :thickness="6" color="#3E4F5C"></v-divider>
+                        </v-col>
+                    </v-row>
 
-            <v-row>
-                <v-col cols="" lg="6" md="6" sm="12">
-                    <v-btn style="width: 100%;" @click="googleSignUP" variant="outlined"><v-icon style="color: red;">mdi-google</v-icon> Signup with Google</v-btn>
-                </v-col>
-                <v-col cols="" lg="6" md="6" sm="12">
-                    <v-btn style="width: 100%;" @click="appleSignUP" variant="outlined"><v-icon>mdi-apple</v-icon> Signup with Apple</v-btn>
-                </v-col>
-            </v-row><br>
-            <p class="text-center">Have an account? <NuxtLink style="color: #2096F3; text-decoration: underline;"
-                    to="/auth">Sign In</NuxtLink>
-            </p>
-        </v-container>
+                    <v-row>
+                        <v-col cols="" lg="6" md="6" sm="12">
+                            <v-btn style="width: 100%;" @click="googleSignUP" variant="outlined"><v-icon
+                                    style="color: red;">mdi-google</v-icon> Signup with Google</v-btn>
+                        </v-col>
+                        <v-col cols="" lg="6" md="6" sm="12">
+                            <v-btn style="width: 100%;" @click="appleSignUP"
+                                variant="outlined"><v-icon>mdi-apple</v-icon> Signup with Apple</v-btn>
+                        </v-col>
+                    </v-row><br>
+                    <p class="text-center">Have an account? <NuxtLink
+                            style="color: #2096F3; text-decoration: underline;" to="/auth">Sign In</NuxtLink>
+                    </p>
+                </v-container>
+            </v-col>
+            <v-col class="mt-15" cols="" lg="6" sm="12" md="12">
+                <img src="/img/signup.png" height="100" alt="Signup">
+            </v-col>
+        </v-row>
+
     </div>
 </template>
 <style>

@@ -92,7 +92,12 @@ const appleSignIN = async () => {
 </script>
 <template>
     <div class="d-flex flex-column fill-height justify-center align-center min-h-screen mt-5">
-        <v-container class="w-auto" role="presentation">
+        <v-row class="mt-16">
+            <v-col cols="" lg="6" sm="12" md="12">
+                <img height="auto" src="/img/login.png" alt="Login">
+            </v-col>
+            <v-col cols="" lg="6" sm="12" md="12">
+                <v-container class="w-auto" role="presentation">
             <h1 class="text-h2" style="font-family: 'Inter', sans-serif; font-weight: bold;">Welcome back!</h1>
             <p style="font-family: 'Inter', sans-serif;">Enter your credentials to access your account</p>
             <form class="mt-16" @submit.prevent="login">
@@ -135,6 +140,9 @@ const appleSignIN = async () => {
             </v-row><br>
             <p class="text-center">Don't have an account? <NuxtLink style="color: #2096F3; text-decoration: underline;" to="/register">Sign Up</NuxtLink></p>
         </v-container>
+            </v-col>
+        </v-row>
+       
     </div>
 </template>
 <style>
