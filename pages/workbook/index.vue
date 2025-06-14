@@ -14,7 +14,9 @@ const book3 = profile.data[0].threePurchase;
 <template>
     <div class="mt-5">
         <v-container class="my-16">
-            <v-row>
+            <h2 class="text-h3">Find Your Math Match</h2><br>
+            <p>Whether you're just getting started or aiming higher, choose the AssignmentX book that fits your level nad start learning smarter.</p><br>
+            <v-row class="mt-10">
                 <v-col cols="" lg="4" md="12" sm="12">
                     <div v-if="book1 == true">
                         <Workbookcard :grade="'Grade 7'" :assignment="'First Assignment'" :image="'/img/grade7.jpg'" />

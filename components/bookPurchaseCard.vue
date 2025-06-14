@@ -8,6 +8,14 @@ const { grade, assignment, image, bookNum } = defineProps([
     'image',
     'bookNum'
 ]);
+// if(bookNum == '1'){
+//     document.paybtn.style.backgroundColor = '#FFCDD2'; // Light Red
+// } else if (bookNum == '2') {
+//     document.paybtn.style.backgroundColor = '#BBDEFB';
+// } else if (bookNum == '3') {
+//     document.paybtn.style.backgroundColor = '#C8E6C9';
+// }
+
 
 const onSuccessfulPayment = async () => {
     if (bookNum === '1') {
@@ -41,7 +49,7 @@ const onSuccessfulPayment = async () => {
                         {{ grade }}
                     </div>
                     <div>
-                        <PaystackBtn :amount="10" :onSuccessfulPayment="onSuccessfulPayment" />
+                        <PaystackBtn class="paybtn" :amount="10" :onSuccessfulPayment="onSuccessfulPayment" />
                     </div>
                 </v-card-text>
             </v-card>

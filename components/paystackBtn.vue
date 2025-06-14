@@ -24,10 +24,20 @@ const bookProps = defineProps({
 </script>
 <template>
     <div>
-        <paystack buttonText="Buy Now"
-            style="background-color: #2096F3; height: 3.5em; width: 8em; border: #2096F3; border-radius: 10%; border-style: solid; color: white; font-weight: bold;"
+        <paystack buttonText="Buy Now" class="paybtn"
             :amount="bookProps.amount * 100" :email="email" :fullName="fullName" :currency="'GHS'"
             :onSuccess="onSuccessfulPayment" :publicKey="publicKey" :onCancel="onCancelPayment" :reference="reference">
         </paystack>
     </div>
 </template>
+<style>
+.paybtn{
+    width: 340px;
+    height: 3rem;
+    text-align: center;
+    background-color: #4C9F38;
+    border-radius: 5px; /* Added border radius for better aesthetics */
+    color: white; /* Added text color for better visibility */
+    font-size: 1.2em; /* Increased font size for better readability */;
+}
+</style>
