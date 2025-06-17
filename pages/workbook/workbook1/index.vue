@@ -1,5 +1,5 @@
 <script setup>
-const client = useSupabaseClient();
+const client = useSupabaseClient()
 const strands = ref([
     {
         id: 1,
@@ -77,8 +77,9 @@ h2 {
 p {
     font-style: 'Inter', sans-serif;
 }
-.strand-title{
-    color: #FCC30C;
+
+.strand-title {
+    color: #3E4F5C;
     font-style: 'Inter', sans-serif;
 }
 </style>

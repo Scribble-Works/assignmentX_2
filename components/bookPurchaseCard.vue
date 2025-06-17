@@ -49,10 +49,17 @@ const onSuccessfulPayment = async () => {
                         {{ grade }}
                     </div>
                     <div>
-                        <PaystackBtn class="paybtn" :amount="10" :onSuccessfulPayment="onSuccessfulPayment" />
+                        <PaystackBtn class="paybtn" :btn-text="'Enroll Now'" :amount="10" :onSuccessfulPayment="onSuccessfulPayment" />
                     </div>
                 </v-card-text>
             </v-card>
         </v-hover>
     </div>
 </template>
+<style>
+.paybtn{
+    text-align: center;
+    background-color: #2096F3;
+    border-radius: 5px; 
+}
+</style>

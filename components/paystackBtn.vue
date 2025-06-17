@@ -14,6 +14,7 @@ const reference = ref("");
 
 const bookProps = defineProps({
     amount: Number,
+    btnText:String,
     onSuccessfulPayment: function () { },
     onCancelPayment: function () { }
 });
@@ -24,20 +25,17 @@ const bookProps = defineProps({
 </script>
 <template>
     <div>
-        <paystack buttonText="Buy Now" class="paybtn"
-            :amount="bookProps.amount * 100" :email="email" :fullName="fullName" :currency="'GHS'"
-            :onSuccess="onSuccessfulPayment" :publicKey="publicKey" :onCancel="onCancelPayment" :reference="reference">
+        <paystack :buttonText="bookProps.btnText" :amount="bookProps.amount * 100" :email="email" :fullName="fullName" class="btnPay"
+            :currency="'GHS'" :onSuccess="onSuccessfulPayment" :publicKey="publicKey" :onCancel="onCancelPayment"
+            :reference="reference">
         </paystack>
     </div>
 </template>
 <style>
-.paybtn{
-    width: 340px;
+.btnPay{
+    font-size: 1.2em;
     height: 3rem;
-    text-align: center;
-    background-color: #4C9F38;
-    border-radius: 5px; /* Added border radius for better aesthetics */
-    color: white; /* Added text color for better visibility */
-    font-size: 1.2em; /* Increased font size for better readability */;
+    color: white;
+    font-style: 'Inter', sans-serif;
 }
 </style>
