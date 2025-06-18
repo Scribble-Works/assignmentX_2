@@ -1,8 +1,9 @@
 <script setup>
 import strand1 from '~/strand1.json';
-definePageMeta({
-    layout: 'dash',
-});
+// definePageMeta({
+//     layout: 'dash',
+// });
+const client = useSupabaseClient();
 const route = useRoute();
 const id = route.params.id;
 const contentsSubStrand = strand1.sub_strands.filter((strand) => strand.id === id);

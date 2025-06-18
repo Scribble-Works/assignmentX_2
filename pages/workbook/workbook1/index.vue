@@ -22,7 +22,7 @@ const strands = await client.from('Workbook1').select();
             <div class="mt-10">
                 <v-row v-for="strand in strands.data" :key="strand.id">
                     <v-col cols=12>
-                        <!-- <NuxtLink :to="'/workbook/workbook1/' + strand.route"> -->
+                        <NuxtLink :to="'/workbook/workbook1/strand-' + strand.id +'/'">
                         <v-card class="mx-auto" color="grey-lighten-4" max-width="1200">
 
                             <v-card-text class="pt-6">
@@ -35,7 +35,7 @@ const strands = await client.from('Workbook1').select();
                                 <p>{{ strand.descriptions }}</p>
                             </v-card-text>
                         </v-card>
-                        <!-- </NuxtLink> -->
+                        </NuxtLink>
                     </v-col>
                 </v-row>
             </div>
