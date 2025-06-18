@@ -7,26 +7,26 @@ const config = useRuntimeConfig();
 const client = useSupabaseClient();
 const id = route.params.id;
 
-const { data: strand1 } = await client.from('book1Strands').select('Strands_book1, BECE_Questions, concept_notes, sub_strands').eq('id');
-// const conceptNote = strand1.concept_notes;
-// const strand1Contents = strand1.sub_strands;
-console.log(strand1);
+const { data: strand1 } = await client.from('book1_strands').select().eq('id', id);
+const {data: substrands} = await client.from('book1_strand_substrands_lists').select().eq('strand_ref', id)
+const conceptNote = strand1[0].concept_notes;
+
+console.log(substrands);
 
 
 </script>
 <template>
-    <div class="mt-5" style="height: 100dvh;">
+    <div class="mt-5" style="height: auto;">
         <v-container>
             <h1 class="text-center text-uppercase text-bold" style="font-size: 3em; color: #3E4F5C;">STRAND 1 - NUMBERS
             </h1>
             <ConceptNotes :concept-note="conceptNote" />
             <!-- <h2 class="text-center text-orange text-uppercase text-bold" style="font-size: 2em;">number</h2> -->
-            <v-row v-for="strand in strand1" :key="strand.id">
+            <v-row v-for="substrand in substrands" :key="substrand.id">
                 <v-col>
-                    <NuxtLink :to="'/workbook/workbook1/strand1/substrand-' + strand.id + '/'">
+                    <NuxtLink :to="'/workbook/workbook1/strand1/substrand-' + substrand.id + '/'">
                         <v-card>
-                            <v-card-title class="font-weight-light text-center text-orange mb-2">{{ strand.title
-                                }}</v-card-title>
+                            <v-card-title class="font-weight-light text-left mb-2">{{ substrand.title }}</v-card-title>
                         </v-card>
                     </NuxtLink>
                     <v-spacer></v-spacer>
