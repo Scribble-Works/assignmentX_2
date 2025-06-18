@@ -11,31 +11,7 @@ const contents = contentsSubStrand[0].sub_strand_list;
 
 
 
-// function openNotes(){
-//     navigateTo(conceptNote, {
-//         open:{
-//             windowFeatures:{
-//                 width: 500,
-//                 height: 500,
-//             }
-//         }
-//     })
-// };
 
-// function openBece(){
-//     navigateTo(bece, {
-//         open:{
-//             windowFeatures:{
-//                 width: 500,
-//                 height: 500,
-//             }
-//         }
-//     })
-// };
-// const { data: strandVids } = await supabase.from('sub_strands').select('');
-// console.log(strandVids);
-
-// const {data: relatedVis} = await supabase.from('')
 </script>
 <template>
     <div class="mt-15" style="height: 100dvh;">
