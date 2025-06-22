@@ -1,5 +1,5 @@
 <script setup>
-import strand1 from '~/strand1.json';
+// import strand1 from '~/strand1.json';
 // definePageMeta({
 //     layout: 'dash',
 // });
@@ -8,9 +8,11 @@ const route = useRoute();
 const id = route.params.id;
 // const { data: strand_ref } = await client.from('book1_strand_substrands_lists').select('strand_ref');
 // console.log(strand_ref)
-const contentsSubStrand = strand1.sub_strands.filter((strand) => strand.id === id);
+// const contentsSubStrand = strand1.sub_strands.filter((strand) => strand.id === id);
 
 // const contents = contentsSubStrand[0].sub_strand_list;
+const { data: substrand_ls } = client.from('book1_substrand_indicators').select();
+
 
 
 
@@ -24,15 +26,15 @@ const contentsSubStrand = strand1.sub_strands.filter((strand) => strand.id === i
             <v-row v-for="content in contents" :key="content.id">
                 <v-col>
                     <!-- <NuxtLink :to="'/workbook/workbook1/strand-' + strand_ref + '/substrand-' + id + '/' + content.id"> -->
-                        <v-card>
-                            <v-card-title>
-                                <strong>{{ content.fields.Indicator }}</strong>
-                            </v-card-title>
-                            <v-card-actions>
-                                <v-btn @click="openNotes" color="primary">concept note</v-btn>
-                                <v-btn @click="openBece" color="success">BECE Questions</v-btn>
-                            </v-card-actions>
-                        </v-card>
+                    <v-card>
+                        <v-card-title>
+                            <strong>{{ content.fields.Indicator }}</strong>
+                        </v-card-title>
+                        <v-card-actions>
+                            <v-btn @click="openNotes" color="primary">concept note</v-btn>
+                            <v-btn @click="openBece" color="success">BECE Questions</v-btn>
+                        </v-card-actions>
+                    </v-card>
                     <!-- </NuxtLink> -->
                     <v-spacer></v-spacer>
                     <br>

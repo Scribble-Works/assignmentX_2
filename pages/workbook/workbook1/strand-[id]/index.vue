@@ -22,7 +22,8 @@ console.log(substrands);
             <ConceptNotes :concept-note="conceptNote" />
             <v-row class="mt-10" v-for="substrand in substrands" :key="substrand.id">
                 <v-col>
-                    <NuxtLink :to="'/workbook/workbook1/strand-'+substrand.strand_ref+'/substrand-' + substrand.route + '/'">
+                    <NuxtLink
+                        :to="'/workbook/workbook1/strand-' + substrand.strand_ref + '/substrand-' + substrand.route + '/'">
                         <v-card>
                             <v-card-title class="font-weight-light text-left mb-2">{{ substrand.title }}</v-card-title>
                         </v-card>
