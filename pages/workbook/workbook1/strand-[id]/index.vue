@@ -6,6 +6,7 @@ const config = useRuntimeConfig();
 const client = useSupabaseClient();
 const id = route.params.id;
 
+
 const { data: strand1 } = await client.from('book1_strands').select().eq('id', id);
 const { data: substrands } = await client.from('book1_strand_substrands_lists').select().eq('strand_ref', id)
 const conceptNote = strand1[0].concept_notes;
