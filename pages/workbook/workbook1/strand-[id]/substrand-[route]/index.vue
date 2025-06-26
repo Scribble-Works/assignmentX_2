@@ -5,19 +5,21 @@ const route = useRoute();
 const id = route.params.id;
 const strand_ref = route.params.route;
 
-const { data: strand } = await client.from('book1_strands').select().eq('strand_ref', strand_ref);
-// const strand_ref_id = route.params.strand.substrand_ref;
-const { data: substrand_ls } = await client.from('book1_substrand_indicators').select().eq('substrand_ref', id);
+const { data: substrand } = await client.from('book1_strand_substrands_lists').select().eq('route', strand_ref);
+const strand_ref_id = substrand[0].strand_ref;
 
-const { data: substrands } = await client.from('book1_strand_substrands_lists').select().eq('strand_ref', id);
-const title = substrands[1].title;
+const { data: substrand_ls } = await client.from('book1_substrand_indicators').select().eq('substrand_ref', strand_ref_id);
+
+// const { data: substrands } = await client.from('book1_strand_substrands_lists').select().eq('strand_ref', id);
+const title = substrand[0].title;
 // const conceptNote = strand.concept_note;
 
 
 
 
+console.log(substrand);
+console.log(strand_ref_id);
 console.log(substrand_ls);
-console.log(substrands);
 
 
 
@@ -37,16 +39,17 @@ console.log(substrands);
 
             <v-row v-for="content in substrand_ls" :key="content.id">
                 <v-col>
-                    <NuxtLink :to="'/workbook/workbook1/strand-' + content.strand_ref + '/substrand-' + strand_ref + '/' + content.id">
-                    <v-card>
-                        <v-card-title>
-                            <strong>{{ content.indicators }}</strong>
-                        </v-card-title>
-                        <v-card-actions>
-                            <v-btn @click="openNotes" color="primary">concept note</v-btn>
-                            <v-btn @click="openBece" color="success">BECE Questions</v-btn>
-                        </v-card-actions>
-                    </v-card>
+                    <NuxtLink
+                        :to="'/workbook/workbook1/strand-' + content.strand_ref + '/substrand-' + strand_ref + '/' + content.id">
+                        <v-card>
+                            <v-card-title>
+                                <strong>{{ content.indicators }}</strong>
+                            </v-card-title>
+                            <v-card-actions>
+                                <v-btn @click="openNotes" color="primary">concept note</v-btn>
+                                <v-btn @click="openBece" color="success">BECE Questions</v-btn>
+                            </v-card-actions>
+                        </v-card>
                     </NuxtLink>
                     <v-spacer></v-spacer>
                     <br>

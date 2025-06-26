@@ -1,14 +1,25 @@
 <script setup>
 import strand1 from '~/strand1.json';
-definePageMeta({
-    layout: 'dash',
-});
-
+// definePageMeta({
+//     layout: 'dash',
+// });
+const client = useSupabaseClient();
 const route = useRoute();
 const id = route.params.id;
+const strand_ref = route.params.route;
+const substrand = route.params.substrand;
 
-var substrands = [strand1.sub_strands[0].sub_strand_list, strand1.sub_strands[1].sub_strand_list, strand1.sub_strands[2].sub_strand_list, strand1.sub_strands[3].sub_strand_list];
-const strand = substrands.filter((strand) => strand.id === id);
+const { data:strands } = await client.from('book1_strands').select().eq('strand_ref', id);
+const {data:substrands} = await client.from('book1_strand_substrands_lists').select().eq('strand_ref', id);
+
+const {data: constents} = await client.from('book1_substrand_indicators').select().eq('substrand_ref', substrand)
+
+
+console.log(contents)
+
+
+// var substrands = [strand1.sub_strands[0].sub_strand_list, strand1.sub_strands[1].sub_strand_list, strand1.sub_strands[2].sub_strand_list, strand1.sub_strands[3].sub_strand_list];
+// const strand = substrands.filter((strand) => strand.id === id);
 
 const contents = substrands.flatMap((substrand) => 
     substrand.filter((strand) => strand.id === id).map((strand) => {
