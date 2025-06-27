@@ -3,12 +3,14 @@
 const client = useSupabaseClient();
 const route = useRoute();
 const id = route.params.id;
-const strand_ref = route.params.route;
+const substrand_ref = route.params.route;
+// const strand_ref = route.params
 
-const { data: substrand } = await client.from('book1_strand_substrands_lists').select().eq('route', strand_ref);
+const { data: substrand } = await client.from('book1_strand_substrands_lists').select().eq('route', substrand_ref);
 const strand_ref_id = substrand[0].strand_ref;
+const substrand_ref_id = substrand[0].id;
 
-const { data: substrand_ls } = await client.from('book1_substrand_indicators').select().eq('substrand_ref', strand_ref_id);
+const { data: substrand_ls } = await client.from('book1_substrand_indicators').select().eq('substrand_ref', substrand_ref_id);
 
 // const { data: substrands } = await client.from('book1_strand_substrands_lists').select().eq('strand_ref', id);
 const title = substrand[0].title;
@@ -18,7 +20,7 @@ const title = substrand[0].title;
 
 
 console.log(substrand);
-console.log(strand_ref_id);
+console.log(substrand_ref_id);
 console.log(substrand_ls);
 
 
@@ -40,7 +42,7 @@ console.log(substrand_ls);
             <v-row v-for="content in substrand_ls" :key="content.id">
                 <v-col>
                     <NuxtLink
-                        :to="'/workbook/workbook1/strand-' + content.strand_ref + '/substrand-' + strand_ref + '/' + content.id">
+                        :to="'/workbook/workbook1/strand-' + strand_ref_id + '/substrand-' + substrand_ref + '/' + content.id">
                         <v-card>
                             <v-card-title>
                                 <strong>{{ content.indicators }}</strong>
