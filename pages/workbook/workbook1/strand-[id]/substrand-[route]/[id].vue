@@ -9,35 +9,23 @@ const id = route.params.id;
 const strand_ref = route.params.route;
 const substrand = route.params.substrand;
 
-const { data:strands } = await client.from('book1_strands').select().eq('strand_ref', id);
-const {data:substrands} = await client.from('book1_strand_substrands_lists').select().eq('strand_ref', id);
-
-const {data: constents} = await client.from('book1_substrand_indicators').select().eq('substrand_ref', substrand)
-
-
-console.log(contents)
+const { data: substrands } = await client.from('book1_strand_substrands_lists').select().eq('route', strand_ref);
+const strand_ref_id = substrands[0].strand_ref;
+const substrand_ref_id = substrands[0].id;
 
 
-// var substrands = [strand1.sub_strands[0].sub_strand_list, strand1.sub_strands[1].sub_strand_list, strand1.sub_strands[2].sub_strand_list, strand1.sub_strands[3].sub_strand_list];
-// const strand = substrands.filter((strand) => strand.id === id);
+const { data: indicators_content } = await client.from('book1_substrand_indicators').select().eq('id', id);
 
-const contents = substrands.flatMap((substrand) => 
-    substrand.filter((strand) => strand.id === id).map((strand) => {
-        const conceptNote = strand.fields.concept_notes;
-        const bece = strand.fields.bece_questions;
-        const indicator = strand.fields.Indicator;
-        const relatedVids = [strand.fields.Link1, strand.fields.Link2, strand.fields.Link3];
+const heading = indicators_content[0].indicators;
+const vid1 = indicators_content[0].vid1;
+const vid2 = indicators_content[0].vid2;
+const vid3 = indicators_content[0].vid3
 
-        return {
-            conceptNote,
-            bece,
-            indicator,
-            relatedVids
-        };
-    })
-);
+console.log(substrands);
+console.log(indicators_content);
 
-const { conceptNote, bece, indicator, relatedVids } = contents[0] || {};
+
+
 
 
 function openNotes() {
@@ -68,38 +56,19 @@ function openBece() {
     <div class="mt-15">
         <v-container>
             <h2 class="text-center text-uppercase text-bold mb-10" style="font-size: 1.5em; font-weight: bold;">{{
-                indicator
-            }}</h2>
+                heading
+                }}</h2>
             <v-row>
-                <v-col cols="auto" lg="8" sm="8" md="6">
-
-                    <conceptNotes :conceptNote="conceptNote" />
-
-                    <v-row>
-                        <v-col cols="auto" lg="8" sm="6" md="6">
-                            <v-btn @click="openNotes" color="primary">Download Concept Note</v-btn>
-                        </v-col>
-                        <v-col cols="auto" lg="4" sm="6" md="6">
-                            <v-btn @click="openBece" color="success">Download BECE Questions</v-btn>
-                        </v-col>
-                        <div class="mt-5" style="overflow: hidden;">
-                            <questionaire />
-                        </div>
-
-                    </v-row>
-                </v-col><br>
-                <v-col cols="auto" lg="4" sm="4" md="6">
-                    <!-- <div class="mt-11"> -->
-                    <v-row>
-                        <v-col col="12" v-for="relatedVid in relatedVids" :key="relatedVid">
-                            <related :relatedVid="relatedVid" />
-                        </v-col>
-                    </v-row>
-                    <!-- </div> -->
+                
+                <v-col cols="" lg="8" md="6" sm="12">
+                    <introvid :intro="vid1" />
                 </v-col>
-
+                <v-col cols="" lg="4" md="6" sm="12">
+                    <introvid :intro="vid2" />
+                    <introvid :intro="vid3" />
+                </v-col>
             </v-row>
-            <br>
+            
 
         </v-container>
     </div>
