@@ -1,96 +1,48 @@
 <script setup>
 const price = ref('GHS 10.00');
+const client = useSupabaseClient();
+const user = useSupabaseUser();
+
+const config = useRuntimeConfig();
+const profile = await client.from('profiles').select('*').eq('id', user.value.id);
+
+const book1 = profile.data[0].onePurchase;
+const book2 = profile.data[0].twoPurchase;
+const book3 = profile.data[0].threePurchase;
+
 </script>
 <template>
     <div class="mt-5">
         <v-container class="my-16">
-            <v-row>
-                <v-col cols="auto" lg="4" md="4" sm="6">
-                    <NuxtLink to="/workbook/workbook1/">
-                        <v-hover v-slot="{ isHovering, props }">
-                            <v-card class="mx-auto" color="grey-lighten-4" max-width="600" v-bind="props">
-                                <v-img :aspect-ratio="16 / 9" src="https://cdn.vuetifyjs.com/images/cards/kitchen.png"
-                                    cover>
-                                    <v-expand-transition>
-                                        <div v-if="isHovering" class="d-flex bg-orange-darken-2 v-card--reveal text-h2"
-                                            style="height: 100%;">
-                                            {{price}}
-                                        </div>
-                                    </v-expand-transition>
-                                </v-img>
-
-                                <v-card-text class="pt-6">
-                                    <div class="font-weight-light text-grey text-h6 mb-2">
-                                        Book 1
-                                    </div>
-
-                                    <h3 class="text-h4 font-weight-light text-orange mb-2">
-                                        Assignment Workbook 1
-                                    </h3>
-
-
-                                </v-card-text>
-                            </v-card>
-                        </v-hover>
-                    </NuxtLink>
+            <h2 class="text-h3">Find Your Math Match</h2><br>
+            <p>Whether you're just getting started or aiming higher, choose the AssignmentX book that fits your level nad start learning smarter.</p><br>
+            <v-row class="mt-10">
+                <v-col cols="" lg="4" md="12" sm="12">
+                    <div v-if="book1 == true">
+                        <Workbookcard :grade="'Grade 7'" :assignment="'First Assignment'" :image="'/img/grade7.jpg'" />
+                    </div>
+                    <div v-else>
+                        <BookPurchaseCard :book-num="'1'" :grade="'Grade 7'" :assignment="'First Assignment'"
+                            :image="'/img/grade7.jpg'" />
+                    </div>
                 </v-col>
-                <v-col cols="auto" lg="4" md="4" sm="6">
-                    <NuxtLink>
-                        <v-hover v-slot="{ isHovering, props }">
-                            <v-card class="mx-auto" color="grey-lighten-4" max-width="600" v-bind="props">
-                                <v-img :aspect-ratio="16 / 9" src="https://cdn.vuetifyjs.com/images/cards/kitchen.png"
-                                    cover>
-                                    <v-expand-transition>
-                                        <div v-if="isHovering" class="d-flex bg-orange-darken-2 v-card--reveal text-h2"
-                                            style="height: 100%;">
-                                            {{price}}
-                                        </div>
-                                    </v-expand-transition>
-                                </v-img>
-
-                                <v-card-text class="pt-6">
-                                    <div class="font-weight-light text-grey text-h6 mb-2">
-                                        Book 2
-                                    </div>
-
-                                    <h3 class="text-h4 font-weight-light text-orange mb-2">
-                                        Assignment Workbook 2
-                                    </h3>
-
-
-                                </v-card-text>
-                            </v-card>
-                        </v-hover>
-                    </NuxtLink>
+                <v-col cols="" lg="4" md="12" sm="12">
+                    <div v-if="book2 == true">
+                        <Workbookcard :grade="'Grade 8'" :assignment="'Second Assignment'" :image="'/img/grade8.jpg'" />
+                    </div>
+                    <div v-else>
+                        <BookPurchaseCard :book-num="'2'" :grade="'Grade 8'" :assignment="'Second Assignment'"
+                            :image="'/img/grade8.jpg'" />
+                    </div>
                 </v-col>
-                <v-col cols="auto" lg="4" md="4" sm="6">
-                    <NuxtLink>
-                        <v-hover v-slot="{ isHovering, props }">
-                            <v-card class="mx-auto" color="grey-lighten-4" max-width="600" v-bind="props">
-                                <v-img :aspect-ratio="16 / 9" src="https://cdn.vuetifyjs.com/images/cards/kitchen.png"
-                                    cover>
-                                    <v-expand-transition>
-                                        <div v-if="isHovering" class="d-flex bg-orange-darken-2 v-card--reveal text-h2"
-                                            style="height: 100%;">
-                                            {{price}}
-                                        </div>
-                                    </v-expand-transition>
-                                </v-img>
-
-                                <v-card-text class="pt-6">
-                                    <div class="font-weight-light text-grey text-h6 mb-2">
-                                        Book 3
-                                    </div>
-
-                                    <h3 class="text-h4 font-weight-light text-orange mb-2">
-                                        Assignment Workbook 3
-                                    </h3>
-
-
-                                </v-card-text>
-                            </v-card>
-                        </v-hover>
-                    </NuxtLink>
+                <v-col cols="" lg="4" md="12" sm="12">
+                    <div v-if="book3 == true">
+                        <Workbookcard :grade="'Grade 9'" :assignment="'Last Assignment'" :image="'/img/grade9.jpg'" />
+                    </div>
+                    <div v-else>
+                        <BookPurchaseCard :book-num="'3'" :grade="'Grade 9'" :assignment="'Last Assignment'"
+                            :image="'/img/grade9.jpg'" />
+                    </div>
                 </v-col>
             </v-row>
         </v-container><br><br><br>
@@ -104,5 +56,9 @@ const price = ref('GHS 10.00');
     opacity: .9;
     position: absolute;
     width: 100%;
+}
+
+v-container {
+    font-family: 'Inter', sans-serif;
 }
 </style>

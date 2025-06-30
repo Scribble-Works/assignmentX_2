@@ -12,6 +12,7 @@
   "dependencies": {
     "@heroicons/vue": "^2.2.0",
     "@mdi/font": "^7.4.47",
+    "@nuxt/fonts": "^0.11.4",
     "@nuxtjs/supabase": "^1.4.5",
     "@supabase/supabase-js": "^2.47.10",
     "@vuepic/vue-datepicker": "^11.0.2",
@@ -20,7 +21,8 @@
     "googleapis": "^146.0.0",
     "nuxt": "^3.14.1592",
     "vue": "latest",
-    "vue-router": "latest"
+    "vue-router": "latest",
+    "vue3-paystack": "^0.0.5"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
