@@ -9,7 +9,7 @@ const resources = [{
     <div>
         <v-container>
             <v-text-field prepend-inner-icon="mdi-magnify" label="Search chapters and topics..." variant="outlined"></v-text-field><br>
-
+            
             <card-resources />
         </v-container>
     </div>
