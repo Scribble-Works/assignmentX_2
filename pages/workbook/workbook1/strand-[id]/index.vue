@@ -8,15 +8,16 @@ const id = route.params.id;
 
 
 const { data: strand1 } = await client.from('book1_strands').select().eq('id', id);
+const strand_ref = strand1[0].strand_ref;
 const { data: substrands } = await client.from('book1_strand_substrands_lists').select().eq('strand_ref', id)
 const conceptNote = strand1[0].concept_notes;
 const strandNumber = substrands[0].strand_ref;
 const { data: strandtitle } = await client.from('Workbook1').select().eq('id', strandNumber);
 const title = strandtitle[0].strand_name;
-// console.log(strand1);
-// console.log(substrands);
+console.log(strand1);
+console.log(substrands);
 
-// console.log(strandtitle);
+console.log(strandtitle);
 
 </script>
 <template>

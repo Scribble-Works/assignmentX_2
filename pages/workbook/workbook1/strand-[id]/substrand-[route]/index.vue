@@ -43,18 +43,20 @@ console.log(substrand_ls);
 
             <v-row v-for="content in substrand_ls" :key="content.id">
                 <v-col>
-                    <NuxtLink
-                        :to="'/workbook/workbook1/strand-' + strand_ref_id + '/substrand-' + substrand_ref + '/' + content.id">
-                        <v-card>
-                            <v-card-title>
+
+                    <v-card>
+                        <v-card-title>
+                            <NuxtLink
+                                :to="'/workbook/workbook1/strand-' + strand_ref_id + '/substrand-' + substrand_ref + '/' + content.id">
                                 <strong>{{ content.indicators }}</strong>
-                            </v-card-title>
-                            <v-card-actions>
-                                <v-btn @click="openNotes" color="primary">concept note</v-btn>
-                                <v-btn @click="openBece" color="success">BECE Questions</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </NuxtLink>
+                            </NuxtLink>
+                        </v-card-title>
+                        <v-card-actions>
+                            <v-btn @click="openNotes" color="primary">concept note</v-btn>
+                            <v-btn @click="openBece" color="success">BECE Questions</v-btn>
+                        </v-card-actions>
+                    </v-card>
+
                     <v-spacer></v-spacer>
                     <br>
                 </v-col>
