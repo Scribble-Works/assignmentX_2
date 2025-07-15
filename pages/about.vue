@@ -3,10 +3,21 @@
 </script>
 <template>
     <div class="">
-        <div class="about">
-            <h1 class="text-h1">About Us</h1><br>
-            <p>We’re reimagining education for the African classroom—one bold idea at a time. We make tough subjects like math simple and engaging, giving teachers the tools to boost learning and spark curiosity.</p>
-        </div>
+        <v-parallax
+            src="/img/abouthero.jpg"
+            height="100dvh"
+        >
+            <div class="d-flex align-center justify-center" style="height: 100%; width: 100%; background-color: rgba(0, 0, 0, 0.5);">
+            </div>
+        ></v-parallax>
+        <v-container>
+            <v-row>
+                <v-col>
+                    <h2 class="text-h3">Discover <br>AssignmentX</h2>
+                    <img src="/img/Vector.png" alt="">
+                </v-col>
+            </v-row>
+        </v-container>
     </div>
 </template>
 <style>

@@ -25,7 +25,7 @@ const login = async () => {
         } else if (profile.data == null) {
             router.push('/bio');
         } else {
-            router.push('/workbook/');
+            router.push('/');
             console.log(user.value)
         }
     } catch (error) {
@@ -49,7 +49,7 @@ const googleSignIN = async () => {
         } else if (profile.data == null) {
             router.push('/bio');
         } else {
-            router.push('/workbook/');
+            router.push('/');
             console.log(user.value)
         }
         if (error) {
