@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="body">
         <theHeader />
         <v-container>
             <v-text-field prepend-inner-icon="mdi-magnify" label="Search chapters and topics..."

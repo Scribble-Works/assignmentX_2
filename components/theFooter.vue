@@ -5,7 +5,7 @@ const icons = [{ icon: 'mdi-facebook', src: '' }, { icon: 'mdi-github', src: '' 
 const links = [{ name: 'Privacy Policy', href: '/privacy-policy' }, { name: 'Terms of Service', href: '/terms-of-service' }, { name: 'Sales and Refunds', href: '/terms-of-service' }, { name: 'Legal', href: '/terms-of-service' }, { name: 'Site Map', href: '/contact-us' }];
 </script>
 <template>
-    <div class="mt-16">
+    <div class="mt-0">
         <footer class="bg-gray-800 text-white py-6">
             <v-row>
                 <v-col cols="" lg="4" md="4" sm="6" class="text-center">
