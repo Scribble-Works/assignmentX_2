@@ -20,6 +20,7 @@
     "airtable": "^0.12.2",
     "googleapis": "^146.0.0",
     "nuxt": "^3.14.1592",
+    "oxc-parser": "^0.75.0",
     "vue": "latest",
     "vue-router": "latest",
     "vue3-paystack": "^0.0.5"

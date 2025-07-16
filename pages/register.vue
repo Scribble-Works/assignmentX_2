@@ -10,6 +10,13 @@ const email = ref('');
 const password = ref('');
 const confPassword = ref('');
 
+const show = ref(false)
+const rules = {
+    required: value => !!value || 'Required.',
+    min: v => v.length >= 8 || 'Min 8 characters',
+    emailMatch: () => (`The email and password you entered don't match`),
+}
+
 const signUp = async () => {
     try {
         if (password.value !== confPassword.value) {
@@ -85,11 +92,15 @@ const appleSignUP = async () => {
 
                         <v-label>Password</v-label><br><br>
 
-                        <v-text-field v-model="password" type="password" placeholder="Enter your password"
+                        <v-text-field v-model="password" :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                            @click:append-inner="show = !show" :rules="[rules.required, rules.min]"
+                            :type="show ? 'text' : 'password'" placeholder="Enter your password"
                             variant="outlined"></v-text-field>
                         <v-label>Confirm Password</v-label><br><br>
-                        <v-text-field v-model="confPassword" type="password" placeholder="Confirm your password"
-                            variant="outlined"></v-text-field>
+                        <v-text-field v-model="confPassword" :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                            @click:append-inner="show = !show" :rules="[rules.required, rules.min]"
+                            :type="show ? 'text' : 'password'" placeholder="Confirm your password"
+                            variant="outlined"></v-text-field><br>
                         <v-btn style="width: 100%;" type="submit" color="grey-darken-3">Signup</v-btn>
                     </form><br>
                     <v-spacer></v-spacer>

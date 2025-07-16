@@ -1,5 +1,5 @@
 <script setup>
-import strand1 from '~/strand1.json';
+// import strand1 from '~/strand1.json';
 // definePageMeta({
 //     layout: 'dash',
 // });

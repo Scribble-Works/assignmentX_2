@@ -15,7 +15,7 @@ const signout = async () => {
         if (error) {
             console.error(error);
         } else {
-            router.push('/auth');
+            router.push('/');
         }
     } catch (error) {
         alert('An error occurred. Please try again later.');

@@ -25,7 +25,7 @@ router.beforeEach((to, from, next) => {
                 <div class="hidden md:flex space-x-4">
                     <NuxtLink class="hover:text-blue-500 py-2" to="/">Home</NuxtLink>
                     <NuxtLink class="hover:text-blue-500 py-2" to="/about">About Us</NuxtLink>
-                    <NuxtLink class="hover:text-blue-500 py-2" to="/resources">Open Resources</NuxtLink>
+                    <NuxtLink class="hover:text-blue-500 py-2" to="/resources">Facilitator Resources</NuxtLink>
                     <div v-if="!user">
                         <v-btn color="blue" class=" text-white py-2 px-4 rounded" to="/auth">Get
                             Started</v-btn>

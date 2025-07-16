@@ -1,8 +1,17 @@
 <script setup>
 const client = useSupabaseClient()
 
-const strands = await client.from('Workbook1').select();
-// console.log(strands)
+const { data: unsortedStrands } = await client.from('Workbook1').select();
+
+// Sort the strands array based on the id property
+const strands = computed(() => {
+  if (unsortedStrands) {
+    return [...unsortedStrands].sort((a, b) => a.id - b.id);
+  }
+  return [];
+});
+
+console.log(strands)
 
 </script>
 <template>
@@ -20,21 +29,21 @@ const strands = await client.from('Workbook1').select();
             <h2 class="text-h3">📚 Topics We Cover</h2><br>
             <p>Learn and practice:</p>
             <div class="mt-10">
-                <v-row v-for="strand in strands.data" :key="strand.id">
+                <v-row v-for="strand in strands" :key="strand.id">
                     <v-col cols=12>
-                        <NuxtLink :to="'/workbook/workbook1/strand-' + strand.id +'/'">
-                        <v-card class="mx-auto" color="grey-lighten-4" max-width="1200">
+                        <NuxtLink :to="'/workbook/workbook1/strand-' + strand.id + '/'">
+                            <v-card class="mx-auto" color="grey-lighten-4" max-width="1200">
 
-                            <v-card-text class="pt-6">
-                                <div class="font-weight-light text-grey text-h6 mb-2">
-                                    {{ strand.strand_name }}
-                                </div>
-                                <h3 class="text-h4 strand-title font-weight-light mb-2">
-                                    {{ strand.title }}
-                                </h3>
-                                <p>{{ strand.descriptions }}</p>
-                            </v-card-text>
-                        </v-card>
+                                <v-card-text class="pt-6">
+                                    <div class="font-weight-light text-grey text-h6 mb-2">
+                                        {{ strand.strand_name }}
+                                    </div>
+                                    <h3 class="text-h4 strand-title font-weight-light mb-2">
+                                        {{ strand.title }}
+                                    </h3>
+                                    <p>{{ strand.descriptions }}</p>
+                                </v-card-text>
+                            </v-card>
                         </NuxtLink>
                     </v-col>
                 </v-row>

@@ -5,10 +5,17 @@ definePageMeta({
 const { auth } = useSupabaseClient();
 const user = useSupabaseUser();
 const client = useSupabaseClient();
+const show = ref(false)
 const router = useRouter();
 const email = ref('');
 const password = ref('');
 
+
+const rules = {
+    required: value => !!value || 'Required.',
+    min: v => v.length >= 8 || 'Min 8 characters',
+    emailMatch: () => (`The email and password you entered don't match`),
+}
 
 const login = async () => {
 
@@ -25,7 +32,7 @@ const login = async () => {
         } else if (profile.data == null) {
             router.push('/bio');
         } else {
-            router.push('/workbook/');
+            router.push('/');
             console.log(user.value)
         }
     } catch (error) {
@@ -49,7 +56,7 @@ const googleSignIN = async () => {
         } else if (profile.data == null) {
             router.push('/bio');
         } else {
-            router.push('/workbook/');
+            router.push('/');
             console.log(user.value)
         }
         if (error) {
@@ -98,51 +105,58 @@ const appleSignIN = async () => {
             </v-col>
             <v-col cols="" lg="6" sm="12" md="12">
                 <v-container class="w-auto" role="presentation">
-            <h1 class="text-h2" style="font-family: 'Inter', sans-serif; font-weight: bold;">Welcome back!</h1>
-            <p style="font-family: 'Inter', sans-serif;">Enter your credentials to access your account</p>
-            <form class="mt-16" @submit.prevent="login">
-                <v-label>Email Address</v-label><br><br>
-                <v-text-field v-model="email" type="email" placeholder="Enter your email"
-                    variant="outlined"></v-text-field>
-                <v-row>
-                    <v-col>
-                        <v-label>Password</v-label>
-                    </v-col>
-                    <v-col></v-col>
-                    <v-col>
-                        <NuxtLink to="/forget" style="color: #2096F3; font-family: 'Inter', sans-serif;">Forgot Password?</NuxtLink>
-                    </v-col>
-                </v-row><br>
-                <v-text-field v-model="password" type="password" placeholder="Enter your password"
-                    variant="outlined"></v-text-field>
-                <v-btn style="width: 100%;" type="submit" color="grey-darken-3">Login</v-btn>
-            </form><br>
-            <v-spacer></v-spacer>
-            <v-row align="center">
-                <v-col>
-                    <v-divider :thickness="8" style="color: black;"></v-divider>
-                </v-col>
-                <v-col class="text-center">
-                    <span>Or</span>
-                </v-col>
-                <v-col>
-                    <v-divider :thickness="8" style="color: black;"></v-divider>
-                </v-col>
-            </v-row>
+                    <h1 class="text-h2" style="font-family: 'Inter', sans-serif; font-weight: bold;">Welcome back!</h1>
+                    <p style="font-family: 'Inter', sans-serif;">Enter your credentials to access your account</p>
+                    <form class="mt-16" @submit.prevent="login">
+                        <v-label>Email Address</v-label><br><br>
+                        <v-text-field v-model="email" type="email" placeholder="Enter your email"
+                            variant="outlined"></v-text-field>
+                        <v-row>
+                            <v-col>
+                                <v-label>Password</v-label>
+                            </v-col>
+                            <v-col></v-col>
+                            <v-col>
+                                <NuxtLink to="/forget" style="color: #2096F3; font-family: 'Inter', sans-serif;">Forgot
+                                    Password?</NuxtLink>
+                            </v-col>
+                        </v-row><br>
+                        <v-text-field v-model="password" placeholder="Enter your password"
+                            :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'" @click:append-inner="show = !show"
+                            :rules="[rules.required, rules.min]" :type="show ? 'text' : 'password'"
+                            hint="At least 8 characters" variant="outlined"></v-text-field><br>
+                        <v-btn style="width: 100%;" type="submit" color="grey-darken-3">Login</v-btn>
+                    </form><br>
+                    <v-spacer></v-spacer>
+                    <v-row align="center">
+                        <v-col>
+                            <v-divider :thickness="8" style="color: black;"></v-divider>
+                        </v-col>
+                        <v-col class="text-center">
+                            <span>Or</span>
+                        </v-col>
+                        <v-col>
+                            <v-divider :thickness="8" style="color: black;"></v-divider>
+                        </v-col>
+                    </v-row>
 
-            <v-row >
-                <v-col cols="" lg="6" md="6" sm="12">
-                    <v-btn @click="googleSignIN" variant="outlined" style="width: 100%;"><v-icon style="color: red;">mdi-google</v-icon> Signin with Google</v-btn>
-                </v-col>
-                <v-col cols="" lg="6" md="6" sm="12">
-                    <v-btn @click="appleSignIN" variant="outlined" style="width: 100%;"><v-icon>mdi-apple</v-icon> Signin with Apple</v-btn>
-                </v-col>
-            </v-row><br>
-            <p class="text-center">Don't have an account? <NuxtLink style="color: #2096F3; text-decoration: underline;" to="/register">Sign Up</NuxtLink></p>
-        </v-container>
+                    <v-row>
+                        <v-col cols="" lg="6" md="6" sm="12">
+                            <v-btn @click="googleSignIN" variant="outlined" style="width: 100%;"><v-icon
+                                    style="color: red;">mdi-google</v-icon> Signin with Google</v-btn>
+                        </v-col>
+                        <v-col cols="" lg="6" md="6" sm="12">
+                            <v-btn @click="appleSignIN" variant="outlined"
+                                style="width: 100%;"><v-icon>mdi-apple</v-icon> Signin with Apple</v-btn>
+                        </v-col>
+                    </v-row><br>
+                    <p class="text-center">Don't have an account? <NuxtLink
+                            style="color: #2096F3; text-decoration: underline;" to="/register">Sign Up</NuxtLink>
+                    </p>
+                </v-container>
             </v-col>
         </v-row>
-       
+
     </div>
 </template>
 <style>
@@ -165,6 +179,6 @@ const appleSignIN = async () => {
     .form-contain {
         width: 100%;
     }
-    
+
 }
 </style>
