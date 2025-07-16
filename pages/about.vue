@@ -120,7 +120,7 @@
             </v-row>
 
             <br>
-            <v-row>
+            <v-row class="mt-15">
                 <v-col>
                     <img src="/img/diff.png" alt="">
                 </v-col>
@@ -166,7 +166,7 @@
                     </v-row>
                 </v-col>
             </v-row>
-            
+
         </v-container>
     </div>
 </template>
