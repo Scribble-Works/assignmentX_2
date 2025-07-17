@@ -205,7 +205,7 @@ const testimonials = [
                 </v-col>
             </v-row>
             <v-row class="mt-16 mb-10">
-                <v-col class="mt-10">
+                <v-col cols="" lg="6" md="12" sm="12" class="mt-10">
                     <h5 class="text-h5">Want to Get Involved?</h5>
                     <br>
                     <p>Whether you're a school, parent, teacher, or education partner <br>— we’d love to connect and
@@ -215,7 +215,7 @@ const testimonials = [
                         <v-icon>mdi-email</v-icon> scribbleworksonline@gmail.com
                     </p>
                 </v-col>
-                <v-col>
+                <v-col cols="" lg="6" md="12" sm="12">
                     <v-form>
                         <label>Name</label>
                         <v-text-field v-model="name" placeholder="Enter your name" variant="underlined"></v-text-field>
