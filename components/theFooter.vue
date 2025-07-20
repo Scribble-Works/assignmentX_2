@@ -19,50 +19,54 @@ const links = [
 <template>
   <div class="mt-0">
     <footer class="bg-gray-800 text-white py-6">
-      <v-row>
-        <v-col cols="" lg="4" md="4" sm="6" class="text-center">
-          <div class="flex mr-10">
-            <v-img
-              class="ml-100"
-              src="/img/logo.png"
-              height="90"
-              alt="SWPH"
-            ></v-img>
-            <div class="text-h4 mt-5">AssignmentX</div>
-          </div>
-        </v-col>
-        <v-spacer></v-spacer>
+      <div class="flex w-full justify-between items-center w-[80%] m-auto">
+        <!-- <div class="flex"> -->
+        <div class="flex">
+          <img class="logo" src="/img/logo.png" height="" alt="SWPH" />
+          <div class="text-xl mt-5">AssignmentX</div>
+        </div>
+        <!-- </div> -->
 
-        <v-col v-for="icon in icons" :key="icon.icon" col="1">
-          <NuxtLink :href="icon.src"
-            ><v-icon>{{ icon.icon }}</v-icon></NuxtLink
-          >
-        </v-col> </v-row
-      ><br />
+        <div class="flex gap-4 rounded">
+          <div v-for="icon in icons" :key="icon.icon">
+            <NuxtLink :to="icon.src" target="_blank">
+              <v-icon>{{ icon.icon }}</v-icon>
+            </NuxtLink>
+          </div>
+        </div>
+      </div>
       <v-divider
         class="mx-auto"
-        :thickness="3"
+        :thickness="2"
         color="white"
-        style="width: 70%"
-      ></v-divider
-      ><br />
-      <div class="d-flex flex-column align-center">
-        <v-row>
-          <v-col
+        style="width: 80%"
+      >
+      </v-divider>
+
+      <div class="flex flex-col items-center">
+        <!-- Links -->
+        <div class="flex flex-wrap justify-center gap-6 mb-4">
+          <NuxtLink
             v-for="link in links"
             :key="link.name"
-            cols="2"
-            class="text-center"
+            :href="link.href"
+            class="whitespace-nowrap text-sm my-8"
           >
-            <NuxtLink :href="link.href" class="text-white">{{
-              link.name
-            }}</NuxtLink>
-          </v-col> </v-row
-        ><br />
-        <p class="text-muted">
+            {{ link.name }}
+          </NuxtLink>
+        </div>
+
+        <!-- Copyright -->
+        <p class="text-muted text-center text-sm">
           &copy; {{ yr }} AssignmentX. All rights reserved.
         </p>
       </div>
     </footer>
   </div>
 </template>
+
+<style scoped>
+.logo {
+  width: 4em;
+}
+</style>
