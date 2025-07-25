@@ -210,7 +210,7 @@ const user = useSupabaseUser();
                         </h3><br>
                         <p style="font-family: 'Inter', sans-serif;">Get your Assignment Workbook now and unlock a <br>
                             world of learning with QR code scanning!</p><br>
-                        <v-btn href="https://wa.me/c/233201001041" size="large" width="150" color="blue">Buy the
+                        <v-btn href="/pricing" size="large" width="150" color="blue">Buy the
                             Book</v-btn>
                     </v-col>
                 </v-row>
