@@ -18,12 +18,33 @@ const { data: substrand_ls } = await client.from('book1_substrand_indicators').s
 const title = substrand[0].title;
 const conceptNote = strands[0].concept_notes;
 
+const bece = strands[0].BECE_Qquestions
+;
+function openNotes() {
+    navigateTo(conceptNote, {
+        open: {
+            windowFeatures: {
+                width: 500,
+                height: 500,
+            }
+        }
+    });
+};
+
+function openBece() {
+    const link = document.createElement('a');
+    link.href = bece;
+    link.download = 'BECE_Questions.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
 
 
 
-console.log(strands);
-console.log(substrand_ref_id);
-console.log(substrand_ls);
+// console.log(strands);
+// console.log(bece);
+// console.log(substrand_ls);
 
 
 
