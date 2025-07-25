@@ -7,7 +7,7 @@ const user = useSupabaseUser();
 const router = useRouter();
 
 const alert = ref(false);
-
+const passwordText = ref('');
 
 const newPassword = ref('');
 
@@ -16,34 +16,36 @@ const confirmNewPassword = ref('');
 const backLogin = () => {
     router.push('/auth');
 };
-const resetPassword = watchEffect(() => {
-    auth.onAuthStateChange(async (event, session) => {
-        if (event == "PASSWORD_RECOVERY") {
-            try {
-                if (newPassword.value !== confirmNewPassword.value) {
-                    // alert('Passwords do not match');
-                    const passwordText = ref('Passwords do not match');
-                    alert.value = true;
-                    return;
-                } else if (error) {
-                    alert('An error occurred. Please try again later.');
-                    console.error(error);
-                } else {
-                    const { data, error } = await auth.updateUser({
-                        password: newPassword.value
-                    });
-                    alert.value = true;
-                    const passwordText = ref('Password Reset Successfully!');
-                    // alert('Password updated successfully!');
-                    router.push('/auth');
-                }
-            } catch (error) {
-                alert('An error occurred. Please try again later.');
-                console.error(error);
-            }
+const resetPassword = async () => {
+    if (newPassword.value !== confirmNewPassword.value) {
+        passwordText.value = 'Passwords do not match';
+        alert.value = true;
+        return;
+    }
+    if (newPassword.value.length < 8) {
+        passwordText.value = 'Password must be at least 8 characters';
+        alert.value = true;
+        return;
+    }
+    try {
+        const { error } = await auth.updateUser({
+            password: newPassword.value
+        });
+        if (error) {
+            passwordText.value = 'An error occurred. Please try again later.';
+            alert.value = true;
+            console.error(error);
+            return;
         }
-    })
-});
+        passwordText.value = 'Password Reset Successfully!';
+        alert.value = true;
+        router.push('/auth');
+    } catch (error) {
+        passwordText.value = 'An error occurred. Please try again later.';
+        alert.value = true;
+        console.error(error);
+    }
+};
 
 const show = ref(false)
 const rules = {
