@@ -26,9 +26,31 @@ const { data: substrand_ls } = await client
 const title = substrand[0].title;
 const conceptNote = strands[0].concept_notes;
 
-console.log(strands);
-console.log(substrand_ref_id);
-console.log(substrand_ls);
+
+const bece = strands[0].BECE_Qquestions
+;
+function openNotes() {
+    navigateTo(conceptNote, {
+        open: {
+            windowFeatures: {
+                width: 500,
+                height: 500,
+            }
+        }
+    });
+};
+
+function openBece() {
+    const link = document.createElement('a');
+    link.href = bece;
+    link.download = 'BECE_Questions.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
+
+
+
 </script>
 <template>
   <div class="mt-15" style="height: auto; background-color: #f6f6f6">
