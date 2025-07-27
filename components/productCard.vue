@@ -1,5 +1,4 @@
 <script>
-import AppButton from "~/components/button.vue";
 export default {
   name: "ProductCard",
   props: {
@@ -38,12 +37,14 @@ export default {
         </button> -->
 
         <v-btn
-          to="/workbook/"
+          :href="`https://wa.me/233556102727?text=Hi! I'm interested in purchasing ${title} (${level}) for GHC ${price}. Can you help me with the booking process?`"
+          target="_blank"
+          rel="noopener noreferrer"
           size="large"
           class="text-white rounded-lg text-subtitle-1"
           style="background-color: #2563eb"
         >
-          Buy Now
+          Book Now
         </v-btn>
 
         <v-btn
