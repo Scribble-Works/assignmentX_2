@@ -17,8 +17,8 @@ const links = [
 ];
 </script>
 <template>
-  <div class="mt-0">
-    <footer class="bg-gray-800 text-white py-6">
+  <div class=" mt-0">
+    <footer class="bg-gray-800 text-white py-6 px-[10%] bottom-0">
       <div class="flex w-full justify-between items-center w-[80%] m-auto">
         <!-- <div class="flex"> -->
         <div class="flex">
@@ -39,7 +39,7 @@ const links = [
         class="mx-auto"
         :thickness="2"
         color="white"
-        style="width: 80%"
+        style="width: 100%"
       >
       </v-divider>
 

@@ -47,7 +47,7 @@ const products = [
       >
         Buy now
       </button> -->
-      <AppButton text="Buy now" color="blue" class="mt-6" />
+      <AppButton to="/checkout" text="Buy now" color="blue" class="mt-6" />
     </section>
 
     <!-- Banner Image -->
