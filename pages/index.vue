@@ -33,7 +33,7 @@ const user = useSupabaseUser();
       </div>
     </section>
 
-    <v-container class="mt-15">
+    <v-container class="mt-20">
       <v-row>
         <v-col cols="" lg="7" sm="12" md="6">
           <v-img src="/img/strug.png" height="550" width="auto" cover></v-img>
@@ -197,84 +197,6 @@ const user = useSupabaseUser();
           >
         </h3>
         <br />
-        <!-- <v-row class="mt-10 d-flex justify-center align-center">
-                    <v-col cols="12" md="3" class="d-flex justify-center">
-                        <v-sheet class="align-self-center d-flex flex-column align-items-center">
-                            <v-container>
-                                <div style="background-color: #FCC30C33; width: 100%; position: relative; border-radius: 10%;"
-                                    class="d-flex justify-content-center">
-                                    <v-icon class="mx-auto"
-                                        style="font-size: 10em; color: #FCC30C;">mdi-video-outline</v-icon>
-                                </div>
-                            </v-container><br>
-                            <h3 class="text-h4 text-center" style="font-family: 'Inter', sans-serif;">Video Lessons</h3>
-                            <p class="text-center">Access interactive video tutorials on <br> various topics</p><br>
-                            <div class="text-center" v-if="!user">
-                                <v-btn to="/auth" color="yellow-darken-2" class="text-white">Explore</v-btn>
-                            </div>
-                            <div class="text-center" v-else>
-                                <v-btn to="/workbook/" color="yellow-darken-2" class="text-white">Explore</v-btn>
-                            </div>
-                        </v-sheet>
-                    </v-col>
-                    <v-col cols="12" md="3" class="d-flex justify-center">
-                        <v-sheet class="align-self-center d-flex flex-column align-items-center">
-                            <v-container>
-                                <div style="background-color: #E5253A33; width: 100%; border-radius: 10%;"
-                                    class="d-flex justify-content-center">
-                                    <v-icon class="mx-auto"
-                                        style="font-size: 10em; color: #E5253A;">mdi-note-outline</v-icon>
-                                </div>
-                            </v-container><br>
-                            <h3 class="text-h4 text-center" style="font-family: 'Inter', sans-serif;">Concept Notes</h3>
-                            <p class="text-center">Detailed study notes to deepen your <br> knowledge.</p><br>
-                            <div class="text-center" v-if="!user">
-                                <v-btn to="/auth" color="yellow-darken-2" class="text-white">Explore</v-btn>
-                            </div>
-                            <div class="text-center" v-else>
-                                <v-btn to="/workbook/" color="yellow-darken-2" class="text-white">Explore</v-btn>
-                            </div>
-                        </v-sheet>
-                    </v-col>
-                    <v-col cols="12" md="3" class="d-flex justify-center">
-                        <v-sheet class="align-self-center d-flex flex-column align-items-center">
-                            <v-container>
-                                <div style="background-color: #4C9F3833; width: 100%; border-radius: 10%;"
-                                    class="d-flex justify-content-center">
-                                    <v-icon class="mx-auto"
-                                        style="font-size: 10em; color: #4C9F38;">mdi-note-plus-outline</v-icon>
-                                </div>
-                            </v-container><br>
-                            <h3 class="text-h4 text-center" style="font-family: 'Inter', sans-serif;">Quizzes</h3>
-                            <p class="text-center">Test yourself with interactive quizzes <br> and challenges</p><br>
-                            <div class="text-center" v-if="!user">
-                                <v-btn to="/auth" color="yellow-darken-2" class="text-white">Explore</v-btn>
-                            </div>
-                            <div class="text-center" v-else>
-                                <v-btn to="/workbook/" color="yellow-darken-2" class="text-white">Explore</v-btn>
-                            </div>
-                        </v-sheet>
-                    </v-col>
-                    <v-col cols="12" md="3" class="d-flex justify-center">
-                        <v-sheet class="align-self-center d-flex flex-column align-items-center">
-                            <v-container>
-                                <div style="background-color: #4C9F3833; width: 100%; border-radius: 10%;"
-                                    class="d-flex justify-content-center">
-                                    <v-icon class="mx-auto"
-                                        style="font-size: 10em; color: #3E4F5C;">mdi-google-spreadsheet</v-icon>
-                                </div>
-                            </v-container><br>
-                            <h3 class="text-h4 text-center" style="font-family: 'Inter', sans-serif;">Worksheets</h3>
-                            <p class="text-center">Test yourself with interactive quizzes <br> and challenges</p><br>
-                            <div class="text-center" v-if="!user">
-                                <v-btn to="/auth" color="yellow-darken-2" class="text-white">Explore</v-btn>
-                            </div>
-                            <div class="text-center" v-else>
-                                <v-btn to="/workbook/" color="yellow-darken-2" class="text-white">Explore</v-btn>
-                            </div>
-                        </v-sheet>
-                    </v-col>
-                </v-row> -->
 
         <div class="flex flex-wrap justify-center gap-12 max-auto mt-10">
           <!-- Video Lessons -->
@@ -295,7 +217,7 @@ const user = useSupabaseUser();
               Video Lessons
             </h3>
             <p class="text-gray-600 mb-4 w-[100%]">
-              Access interactive video tutorials on various topics
+              Cool concept videos that explain things in simple ways
             </p>
             <div v-if="!user">
               <v-btn to="/auth" color="yellow-darken-2" class="text-white"
@@ -391,7 +313,7 @@ const user = useSupabaseUser();
               Worksheets
             </h3>
             <p class="text-gray-600 mb-4">
-              Test yourself with interactive quizzes and challenges
+               Downloadable worksheets to help you practice for class and exams
             </p>
             <div v-if="!user">
               <v-btn to="/auth" color="yellow-darken-2" class="text-white"
