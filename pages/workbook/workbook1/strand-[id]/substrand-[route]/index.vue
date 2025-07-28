@@ -1,22 +1,31 @@
 <script setup>
-
 const client = useSupabaseClient();
 const route = useRoute();
 const id = route.params.id;
 const substrand_ref = route.params.route;
 // const strand_ref = route.params
 
-const { data: substrand } = await client.from('book1_strand_substrands_lists').select().eq('route', substrand_ref);
+const { data: substrand } = await client
+  .from("book1_strand_substrands_lists")
+  .select()
+  .eq("route", substrand_ref);
 const strand_ref_id = substrand[0].strand_ref;
 const substrand_ref_id = substrand[0].id;
 
-const { data: strands } = await client.from('book1_strands').select().eq('substrand_ref', substrand_ref_id);
+const { data: strands } = await client
+  .from("book1_strands")
+  .select()
+  .eq("substrand_ref", substrand_ref_id);
 
-const { data: substrand_ls } = await client.from('book1_substrand_indicators').select().eq('substrand_ref', substrand_ref_id);
+const { data: substrand_ls } = await client
+  .from("book1_substrand_indicators")
+  .select()
+  .eq("substrand_ref", substrand_ref_id);
 
 // const { data: substrands } = await client.from('book1_strand_substrands_lists').select().eq('strand_ref', id);
 const title = substrand[0].title;
 const conceptNote = strands[0].concept_notes;
+
 
 const bece = strands[0].BECE_Qquestions
     ;
@@ -43,6 +52,7 @@ function openBece() {
 const solveProblem = () => {
 
 };
+
 
 
 
