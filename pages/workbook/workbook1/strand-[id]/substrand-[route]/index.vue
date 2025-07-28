@@ -19,7 +19,7 @@ const title = substrand[0].title;
 const conceptNote = strands[0].concept_notes;
 
 const bece = strands[0].BECE_Qquestions
-;
+    ;
 function openNotes() {
     navigateTo(conceptNote, {
         open: {
@@ -40,11 +40,11 @@ function openBece() {
     document.body.removeChild(link);
 };
 
+const solveProblem = () => {
+
+};
 
 
-// console.log(strands);
-// console.log(bece);
-// console.log(substrand_ls);
 
 
 
@@ -97,10 +97,12 @@ function openBece() {
                             connect ideas, and solve real-world situations using math. There might be more than one way
                             — so be bold, be creative, and show the wow!
                         </p>
-                        <v-btn class="mt-5" color="blue-grey-darken-4">Solve Problem Set</v-btn>
+                        <v-btn @click="solveProblem" class="mt-5" color="blue-grey-darken-4">Solve Problem Set</v-btn>
                     </v-col>
                 </v-row>
             </div>
+
+            <QuizDialog :img="img" :title="title" :description="description" :quiz="solveProblem" :alert="false" />
         </v-container>
     </div>
 </template>
