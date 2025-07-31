@@ -55,34 +55,7 @@ function openBece() {
     });
 };
 
-function randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
 
-function generateQuestion() {
-    const ops = [
-        { op: '+', fn: (a, b) => a + b },
-        { op: '-', fn: (a, b) => a - b },
-        { op: '×', fn: (a, b) => a * b },
-        { op: '÷', fn: (a, b) => (b !== 0 ? (a / b).toFixed(2) : 'undefined') }
-    ];
-    const a = randomInt(1, 20);
-    const b = randomInt(1, 20);
-    const opObj = ops[randomInt(0, ops.length - 1)];
-    const question = `${a} ${opObj.op} ${b}`;
-    const answer = opObj.fn(a, b);
-    return { question, answer, flipped: false };
-}
-
-const cards = ref(Array.from({ length: 4 }, generateQuestion));
-
-function flipCard(idx) {
-    cards.value[idx].flipped = !cards.value[idx].flipped;
-}
-
-function generateCards() {
-    cards.value = Array.from({ length: 4 }, generateQuestion);
-}
 
 
 </script>
@@ -91,7 +64,7 @@ function generateCards() {
         <v-container>
             <h2 class="text-center text-h4 text-uppercase text-bold mb-10 mt-15" style="font-weight: bold;">{{
                 heading
-                }}</h2>
+            }}</h2>
             <v-row>
 
                 <v-col cols="" lg="8" md="6" sm="12">
@@ -124,7 +97,7 @@ function generateCards() {
             </div>
 
             <div class="mt-10">
-                <h3 class="text-h3" style="font-family: 'Inter', sans-serif;"> Now Let's have some math <span
+                <h3 class="text-h3 mb-10" style="font-family: 'Inter', sans-serif;"> Now Let's have some math <span
                         style="text-decoration: underline; text-decoration-color: #FCC30C;">fun</span></h3>
                 <v-container style="background-color: #F3F4F6;">
                     <div class="mt-10">
@@ -135,26 +108,8 @@ function generateCards() {
                     </div>
 
 
-                    <div>
-                        <v-row>
-                            <v-col cols="12" md="6">
-                                <div class="mx-auto d-flex justify-center">
-                                    <div class="flip-card" @click="() => { cards[0] = generateQuestion(); }">
-                                        <div :class="['flip-card-inner', { flipped: cards[0].flipped }]">
-                                            <div class="flip-card-front">
-                                                <h4 @click="flipCard(0)">{{ cards[0].question }}</h4>
-                                            </div>
-                                            <div class="flip-card-back">
-                                                <h4>{{ cards[0].answer }}</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </v-col>
-
-
-                        </v-row>
-
+                    <div class="mt-5 mb-10">
+                        <flipcard />
                     </div>
 
                 </v-container>
@@ -165,46 +120,5 @@ function generateCards() {
 <style>
 .body {
     background: white;
-}
-
-.flip-card {
-    background-color: transparent;
-    width: 220px;
-    height: 120px;
-    perspective: 1000px;
-    margin: 20px auto;
-    cursor: pointer;
-}
-
-.flip-card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.6s;
-    transform-style: preserve-3d;
-}
-
-.flip-card-inner.flipped {
-    transform: rotateY(180deg);
-}
-
-.flip-card-front,
-.flip-card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-}
-
-.flip-card-back {
-    transform: rotateY(180deg);
-    background: #f5f5f5;
 }
 </style>
