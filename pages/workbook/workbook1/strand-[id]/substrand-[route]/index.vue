@@ -63,10 +63,10 @@ const solveProblem = () => {
     <div class="mt-15" style="height: auto; background-color: #F6F6F6;">
         <v-container>
             <v-row>
-                <v-col cols="8">
+                <v-col cols="" lg="8" sm="12">
                     <h1 class="text-left text-uppercase text-bold" style="font-size: 2em;">{{ title }}</h1>
                 </v-col>
-                <v-col cols="4" align="right">
+                <v-col cols="" lg="4" sm="12" align="right">
                     <v-btn color="primary">View Progress Report</v-btn>
                 </v-col>
             </v-row>
