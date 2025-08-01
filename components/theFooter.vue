@@ -19,18 +19,16 @@ const links = [
 <template>
   <div>
     <footer class="bg-gray-800 text-white py-6 px-[10%]">
-      <div class="flex w-full justify-between items-center w-[80%] m-auto">
-        <!-- <div class="flex"> -->
-        <div class="flex">
+      <div class="flex flex-col sm:flex-row w-full justify-between items-center w-[80%] m-auto gap-4 pb-4">
+        <div class="flex items-center">
           <img class="logo" src="/img/logo.png" height="" alt="SWPH" />
           <div class="text-xl mt-5">AssignmentX</div>
         </div>
-        <!-- </div> -->
 
-        <div class="flex gap-4 rounded">
+        <div class="flex gap-2 sm:gap-4 rounded">
           <div v-for="icon in icons" :key="icon.icon">
             <NuxtLink :to="icon.src" target="_blank">
-              <v-icon>{{ icon.icon }}</v-icon>
+              <v-icon class="text-lg sm:text-xl">{{ icon.icon }}</v-icon>
             </NuxtLink>
           </div>
         </div>
