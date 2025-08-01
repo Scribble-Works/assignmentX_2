@@ -71,7 +71,7 @@ const products = [
     </section>
 
     <!-- Product Cards -->
-    <section class="product space-y-12 px-4 md:px-20 md:w-25">
+    <section class="container mx-auto space-y-32 p-4">
       <ProductCard
         v-for="(product, index) in products"
         :key="index"
@@ -86,9 +86,6 @@ const products = [
   </div>
 </template>
 
-<style>
-.product {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-</style>
+
+
+

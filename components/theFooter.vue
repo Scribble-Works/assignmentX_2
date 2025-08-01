@@ -13,12 +13,12 @@ const links = [
   { name: "Terms of Service", href: "/termsofservice" },
   { name: "Sales and Refunds", href: "/salesandrefunds" },
   { name: "Legal", href: "/legal" },
-  { name: "Site Map", href: "/contact-us" },
+  { name: "Site Map", href: "/sitemap" },
 ];
 </script>
 <template>
-  <div class=" mt-0">
-    <footer class="bg-gray-800 text-white py-6 px-[10%] bottom-0">
+  <div>
+    <footer class="bg-gray-800 text-white py-6 px-[10%]">
       <div class="flex w-full justify-between items-center w-[80%] m-auto">
         <!-- <div class="flex"> -->
         <div class="flex">
