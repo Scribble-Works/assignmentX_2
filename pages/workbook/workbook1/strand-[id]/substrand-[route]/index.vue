@@ -50,6 +50,7 @@ function openBece() {
 const solveProblem = () => {};
 </script>
 <template>
+
   <div class="mt-15" style="height: auto; background-color: #f6f6f6">
     <v-container>
       <v-row>
