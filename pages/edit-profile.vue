@@ -312,15 +312,6 @@
 <script setup>
 import { ref, computed } from "vue";
 
-// Get current user
-const user = useSupabaseUser();
-const client = useSupabaseClient();
-
-// Log current user information
-console.log("Current user:", user.value);
-console.log("User ID:", user.value?.id);
-console.log("User email:", user.value?.email);
-
 // Form data
 const form = ref({
   firstName: "Jane Doe",

@@ -32,7 +32,7 @@
         </svg>
         Bookmarks
         <span class="bg-yellow-400 text-white rounded-full px-2 py-0.5 text-xs">
-          {{ bookmarks.length }}
+          {{ bookmarkCount }}
         </span>
       </NuxtLink>
     </div>
@@ -71,7 +71,7 @@
         <!-- Bookmark Icon -->
         <button @click="toggleBookmark(file)">
           <svg
-            v-if="bookmarks.includes(file)"
+            v-if="isBookmarked(file)"
             xmlns="http://www.w3.org/2000/svg"
             class="h-6 w-6 text-yellow-500"
             viewBox="0 0 20 20"
@@ -102,6 +102,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { useBookmarks } from "~/composables/useBookmarks";
 
 definePageMeta({
   layout: "default",
@@ -109,7 +110,7 @@ definePageMeta({
 
 const files = ref([
   "1_Identifying even, odd, prime and composite numbers_1.png",
-  "2_Finding prime factors of natural numbers2.png",
+  "2_Finding prime factors of natural numbers_2.png",
   "3_Finding the HCF of natural numbers_3.png",
   "4_Finding the LCM of natural numbers_4.png",
   "5_Addition and subtraction of whole numbers_5.png",
@@ -123,16 +124,7 @@ const files = ref([
   "1. Identifying even, odd, prime and composite numbers_1.png",
 ]);
 
-const bookmarks = ref([]);
-
-const toggleBookmark = (file) => {
-  const index = bookmarks.value.indexOf(file);
-  if (index > -1) {
-    bookmarks.value.splice(index, 1);
-  } else {
-    bookmarks.value.push(file);
-  }
-};
+const { bookmarks, toggleBookmark, isBookmarked, bookmarkCount } = useBookmarks();
 
 const searchQuery = ref("");
 
