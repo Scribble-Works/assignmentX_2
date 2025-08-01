@@ -1,5 +1,5 @@
 <script setup>
-
+import compare from '~/components/flipcards/compare.vue';
 // import strand1 from '~/strand1.json';
 // definePageMeta({
 //     layout: 'dash',
@@ -109,7 +109,7 @@ function openBece() {
 
 
                     <div class="mt-5 mb-10">
-                        <flipcard />
+                        <!-- <compare /> -->
                     </div>
 
                 </v-container>

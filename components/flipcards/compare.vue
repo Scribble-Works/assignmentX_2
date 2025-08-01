@@ -8,9 +8,9 @@ function flipCard() {
 <template>
     <div>
         <v-card class="mx-auto" height="200" width="400" elevation="2" @click="flipCard">
-            <div class="d-flex align-center justify-center" :class="{ isflipped: flipped }">
-                <h2 class="text-h2">Flip</h2>
-            </div>
+            <!-- <div class="d-flex align-center justify-center front-card" :class="{ isflipped: flipped }">
+                
+            </div> -->
             
         </v-card>
     </div>
