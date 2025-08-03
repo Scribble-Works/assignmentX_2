@@ -1,9 +1,26 @@
 <script setup>
+import { ref, computed, onMounted, watch } from 'vue';
+import { useQuizProgress } from '~/composables/useQuizProgress';
+
 const client = useSupabaseClient();
 const route = useRoute();
 const id = route.params.id;
 const substrand_ref = route.params.route;
-// const strand_ref = route.params
+
+// Quiz modal state
+const showQuizModal = ref(false);
+const selectedContentId = ref(null);
+
+// Use the quiz progress composable
+const { 
+  completedQuizzes, 
+  contentStatus, 
+  markQuizInProgress, 
+  isQuizCompleted, 
+  getContentStatus, 
+  getStatusInfo,
+  loadStateFromStorage
+} = useQuizProgress();
 
 const { data: substrand } = await client
   .from("book1_strand_substrands_lists")
@@ -22,11 +39,15 @@ const { data: substrand_ls } = await client
   .select()
   .eq("substrand_ref", substrand_ref_id);
 
-// const { data: substrands } = await client.from('book1_strand_substrands_lists').select().eq('strand_ref', id);
 const title = substrand[0].title;
 const conceptNote = strands[0].concept_notes;
-
 const bece = strands[0].BECE_Qquestions;
+
+// Check if all quizzes are completed
+const allQuizzesCompleted = computed(() => {
+  return substrand_ls && completedQuizzes.value.size === substrand_ls.length;
+});
+
 function openNotes() {
   navigateTo(conceptNote, {
     open: {
@@ -47,21 +68,97 @@ function openBece() {
   document.body.removeChild(link);
 }
 
-const solveProblem = () => {};
+// Quiz modal functions
+const openQuizModal = (contentId) => {
+  selectedContentId.value = contentId;
+  showQuizModal.value = true;
+};
+
+const closeQuizModal = () => {
+  showQuizModal.value = false;
+  selectedContentId.value = null;
+};
+
+const startQuiz = (contentId) => {
+  // Quiz is now handled by the separate quiz page
+  // This function is no longer needed as the modal navigates directly
+  console.log(`Quiz started for content: ${contentId}`);
+};
+
+const handleContentClick = (contentId) => {
+  // Check if quiz is already completed
+  if (!isQuizCompleted(contentId)) {
+    // Set status to in progress when starting
+    markQuizInProgress(contentId);
+    openQuizModal(contentId);
+  } else {
+    // Navigate to content if quiz is completed
+    navigateTo(`/workbook/workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/${contentId}`);
+  }
+};
+
+// Add a completion indicator to the title
+const completedCount = computed(() => {
+  return substrand_ls ? substrand_ls.filter(content => isQuizCompleted(content.id)).length : 0;
+});
+
+const totalCount = computed(() => {
+  return substrand_ls ? substrand_ls.length : 0;
+});
+
+const solveProblem = () => {
+  // Only allow access if all quizzes are completed
+  if (allQuizzesCompleted.value) {
+    console.log('Opening problem set...');
+    // Add your problem set logic here
+  }
+};
+
+// Load state when page mounts
+onMounted(() => {
+  loadStateFromStorage();
+  console.log('Loaded quiz progress state:', {
+    completedQuizzes: Array.from(completedQuizzes.value),
+    contentStatus: Array.from(contentStatus.value.entries())
+  });
+});
+
+// Watch for changes in completion status
+watch(completedQuizzes, (newCompleted) => {
+  console.log('Completed quizzes updated:', Array.from(newCompleted));
+}, { deep: true });
+
+watch(contentStatus, (newStatus) => {
+  console.log('Content status updated:', Array.from(newStatus.entries()));
+}, { deep: true });
 </script>
 <template>
 
   <div class="mt-15" style="height: auto; background-color: #f6f6f6">
-    <v-container>
+    <div class="container mx-auto p-4">
       <v-row>
         <v-col cols="8">
           <h1 class="text-left text-uppercase text-bold" style="font-size: 2em">
             {{ title }}
           </h1>
+          <!-- Progress Indicator -->
+          <div class="mt-2 flex items-center">
+            <div class="flex items-center text-sm text-gray-600">
+              <span class="mr-2">Progress:</span>
+              <span class="font-semibold text-green-600">{{ completedCount }}/{{ totalCount }}</span>
+              <span class="ml-2">courses completed</span>
+            </div>
+            <div class="ml-4 w-32 bg-gray-200 rounded-full h-2">
+              <div 
+                class="bg-green-600 h-2 rounded-full transition-all duration-300"
+                :style="{ width: `${totalCount > 0 ? (completedCount / totalCount) * 100 : 0}%` }"
+              ></div>
+            </div>
+          </div>
         </v-col>
-        <!-- <v-col cols="4" align="right">
+        <v-col cols="4" align="right">
           <v-btn to="/progress" color="primary">View Progress Report</v-btn>
-        </v-col> -->
+        </v-col>
       </v-row>
       <ConceptNotes :concept-note="conceptNote" />
 
@@ -69,22 +166,33 @@ const solveProblem = () => {};
         <v-col>
           <v-card>
             <v-card-title>
-              <NuxtLink
-                :to="
-                  '/workbook/workbook1/strand-' +
-                  strand_ref_id +
-                  '/substrand-' +
-                  substrand_ref +
-                  '/' +
-                  content.id
-                "
+              <div 
+                @click="handleContentClick(content.id)"
+                class="cursor-pointer hover:text-gray-600 transition-colors"
               >
                 <strong>{{ content.indicators }}</strong>
-              </NuxtLink>
+              </div>
             </v-card-title>
-            <v-card-actions>
-              <v-btn @click="openNotes" color="primary">concept note</v-btn>
-              <v-btn @click="openBece" color="success">BECE Questions</v-btn>
+            <v-card-actions class="flex items-center justify-between">
+              <div class="flex gap-2">
+                <v-btn @click="openNotes" color="primary">concept note</v-btn>
+                <v-btn @click="openBece" color="success">BECE Questions</v-btn>
+              </div>
+              
+              <!-- Status Indicator -->
+              <div class="flex items-center">
+                <span 
+                  :class="[
+                    'px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-1',
+                    getStatusInfo(getContentStatus(content.id)).bgColor,
+                    getStatusInfo(getContentStatus(content.id)).color
+                  ]"
+                  style="border-radius: 10px;"
+                >
+                  <span>{{ getStatusInfo(getContentStatus(content.id)).icon }}</span>
+                  {{ getStatusInfo(getContentStatus(content.id)).text }}
+                </span>
+              </div>
             </v-card-actions>
           </v-card>
 
@@ -93,7 +201,8 @@ const solveProblem = () => {};
         </v-col>
       </v-row>
 
-      <div class="mt-10">
+      <!-- Problem Set Section - Only shown when all quizzes are completed -->
+      <div v-if="allQuizzesCompleted" class="mt-10">
         <div class="text-h3">Problem Set</div>
         <p>Time to apply and show the Wow!</p>
         <br />
@@ -115,13 +224,15 @@ const solveProblem = () => {};
         </v-row>
       </div>
 
-      <QuizDialog
-        :img="img"
-        :title="title"
-        :description="description"
-        :quiz="solveProblem"
-        :alert="false"
+      <!-- Quiz Modal -->
+      <QuizModal
+        :is-open="showQuizModal"
+        :content-id="selectedContentId"
+        :substrand-route="`substrand-${substrand_ref}`"
+        :strand-id="strand_ref_id"
+        @close="closeQuizModal"
+        @start-quiz="startQuiz"
       />
-    </v-container>
+    </div>
   </div>
 </template>

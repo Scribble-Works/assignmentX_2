@@ -1,5 +1,8 @@
 <script setup>
 import compare from '~/components/flipcards/compare.vue';
+import { useQuizProgress } from '~/composables/useQuizProgress';
+import { ref, onMounted } from 'vue';
+
 // import strand1 from '~/strand1.json';
 // definePageMeta({
 //     layout: 'dash',
@@ -9,6 +12,16 @@ const route = useRoute();
 const id = route.params.id;
 const strand_ref = route.params.route;
 const substrand = route.params.substrand;
+
+// Quiz progress management
+const { markQuizCompleted, isQuizCompleted, loadStateFromStorage } = useQuizProgress();
+const courseCompleted = ref(false);
+
+// Check if course is already completed on mount
+onMounted(() => {
+  loadStateFromStorage();
+  courseCompleted.value = isQuizCompleted(id);
+});
 
 const { data: substrands } = await client.from('book1_strand_substrands_lists').select().eq('route', strand_ref);
 
@@ -53,6 +66,14 @@ function openBece() {
             }
         }
     });
+};
+
+// Course completion function
+const markCourseAsCompleted = () => {
+    courseCompleted.value = true;
+    markQuizCompleted(id);
+    // Force update the status to completed
+    console.log(`Course ${id} marked as completed`);
 };
 
 
@@ -113,6 +134,51 @@ function openBece() {
                     </div>
 
                 </v-container>
+            </div>
+
+            <!-- Course Completion Section -->
+            <div class="mt-15">
+                <div class="bg-white rounded-lg shadow-md p-8 text-center">
+                    <div v-if="!courseCompleted && !isQuizCompleted(id)" class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">
+                            🎯 Ready to Complete This Course?
+                        </h3>
+                        <p class="text-gray-600 mb-6">
+                            You've reviewed all the materials. Click the button below to mark this course as completed.
+                        </p>
+                        <button
+                            @click="markCourseAsCompleted"
+                            class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 flex items-center justify-center mx-auto"
+                        >
+                            <span class="mr-2">✓</span>
+                            Mark Course as Completed
+                        </button>
+                    </div>
+
+                    <div v-else-if="courseCompleted || isQuizCompleted(id)" class="mb-6">
+                        <div class="text-green-600 text-6xl mb-4">🎉</div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">
+                            Course Completed!
+                        </h3>
+                        <p class="text-gray-600 mb-6">
+                            Congratulations! You've successfully completed this course. You can now return to the course list or continue with other topics.
+                        </p>
+                        <div class="flex justify-center space-x-4">
+                            <button
+                                @click="navigateTo('/workbook/workbook1/strand-1/substrand-number-and-numeration-system')"
+                                class="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200"
+                            >
+                                Back to Course List
+                            </button>
+                            <button
+                                @click="navigateTo('/progress')"
+                                class="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-colors duration-200"
+                            >
+                                View Progress
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </v-container>
     </div>
