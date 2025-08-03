@@ -93,15 +93,15 @@ const solveProblem = () => {
                 </v-col>
             </v-row>
 
-            <div class="mt-10">
+            <div class="mt-10 mb-16">
                 <div class="text-h3">Problem Set</div>
                 <p>Time to apply and show the Wow!</p>
                 <br>
                 <v-row>
-                    <v-col>
+                    <v-col cols="" lg="6" sm="12" md="6">
                         <v-img src="/img/problem.png"></v-img>
                     </v-col>
-                    <v-col class="mt-15">
+                    <v-col cols="" lg="6" sm="12" md="6" class="mt-15">
                         <p>
                             Now it’s your turn to apply what you’ve learned. These problems challenge you to think,
                             connect ideas, and solve real-world situations using math. There might be more than one way

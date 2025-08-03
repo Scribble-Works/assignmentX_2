@@ -16,7 +16,8 @@ export default defineNuxtConfig({
       PAYSTACK_PUBLIC_KEY: process.env.PAYSTACK_PUBLIC_KEY,
     }
   },
-  modules: [// '@nuxtjs/tailwindcss',
+  modules: [
+    // '@nuxtjs/tailwindcss',
     ['@nuxtjs/supabase', {
       url: process.env.SUPABASE_URL,
       key: process.env.SUPABASE_KEY,
@@ -28,9 +29,9 @@ export default defineNuxtConfig({
     // 'assets/style/bece1.css',
     'assets/style/main.css',
   ],
-  fonts:{
-    families:[
-      {name:'Inter', provider:'google'}
+  fonts: {
+    families: [
+      { name: 'Inter', provider: 'google' }
     ]
   },
   postcss: {

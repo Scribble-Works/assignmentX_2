@@ -6,7 +6,7 @@ const router = useRouter();
 
 const profile = await client
   .from("profiles")
-  .select("fullName, school, DOB")
+  .select("firstName, lastName, school, DOB")
   .eq("id", user.value.id)
   .single();
 const signout = async () => {
@@ -34,7 +34,7 @@ const signout = async () => {
           </div>
           <div v-else>
             <span class="ml-2"
-              >{{ profile.data.fullName }} <v-icon>mdi-menu-down</v-icon></span
+              >{{ profile.data.firstName }} {{ profile.data.lastName }} <v-icon>mdi-menu-down</v-icon></span
             >
           </div>
         </v-btn>
