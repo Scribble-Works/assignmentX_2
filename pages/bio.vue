@@ -23,7 +23,7 @@ const submit = async () => {
             school: school.value,
             DOB: dob.value,
             gender: gender.value,
-            id: user.value.id
+            id: user.value && user.value.id ? user.value.id : null
         }).single();
 
         if (error) {
@@ -63,9 +63,9 @@ const submit = async () => {
                                 <v-label>Date of Birth</v-label>
                                 <v-menu v-model="menu" :close-on-content-click="false" :nudge-right="40"
                                     transition="scale-transition" offset-y min-width="290px">
-                                    <template v-slot:activator="{ props }">
+                                    <template v-slot:activator="slotProps">
                                         <v-text-field v-model="dob" variant="outlined" placeholder="Date of Birth"
-                                            append-inner-icon="event" readonly v-bind="props"></v-text-field>
+                                            append-inner-icon="event" readonly v-bind="slotProps"></v-text-field>
                                     </template>
                                     <v-date-picker v-model="dob" @input="menu = false"></v-date-picker>
                                 </v-menu>

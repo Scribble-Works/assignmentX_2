@@ -5,7 +5,7 @@
       <h1 class="text-3xl font-bold text-black mb-8">Edit Profile</h1>
 
       <!-- Form -->
-      <form @submit.prevent="saveChanges" class="space-y-6">
+      <form @submit.prevent="updateProfile" class="space-y-6 mb-15">
         <!-- Two Column Layout -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <!-- Left Column -->
@@ -24,18 +24,12 @@
               <label for="email" class="block text-sm font-medium text-black mb-2">
                 Email
               </label>
-              <input id="email" v-model="form.email" type="email"
+              <input id="email" v-model="form.email" type="email" disabled
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent" />
             </div>
 
             <!-- Password -->
-            <div>
-              <label for="password" class="block text-sm font-medium text-black mb-2">
-                Password
-              </label>
-              <input id="password" v-model="form.password" type="password" placeholder="Enter your password"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent" />
-            </div>
+
 
             <!-- Date of Birth -->
             <div>
@@ -87,15 +81,8 @@
 
                     <!-- Days of week -->
                     <div class="grid grid-cols-7 gap-1 mb-2">
-                      <div v-for="day in [
-                        'Sun',
-                        'Mon',
-                        'Tue',
-                        'Wed',
-                        'Thu',
-                        'Fri',
-                        'Sat',
-                      ]" :key="day" class="text-center text-sm font-medium text-gray-500 py-1">
+                      <div v-for="day in ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']" :key="day"
+                        class="text-center text-sm font-medium text-gray-500 py-1">
                         {{ day }}
                       </div>
                     </div>
@@ -147,19 +134,11 @@
               <label for="gender" class="block text-sm font-medium text-black mb-2">
                 Gender
               </label>
-              <input id="gender" v-model="form.gender" type="text"
+              <input id="gender" v-model="form.gender" type="text" disabled
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent" />
             </div>
 
-            <!-- Confirm Password -->
-            <div>
-              <label for="confirmPassword" class="block text-sm font-medium text-black mb-2">
-                Confirm Password
-              </label>
-              <input id="confirmPassword" v-model="form.confirmPassword" type="password"
-                placeholder="Confirm your password"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent" />
-            </div>
+
 
             <!-- Phone Number -->
             <div>
@@ -180,6 +159,38 @@
           </button>
         </div>
       </form>
+
+      <div class="mt-10 mb-15">
+        <!-- password changes -->
+        <h1 class="text-3xl font-bold text-black mb-8">Change Password</h1>
+        <form @submit.prevent="changePassword">
+          <div class=" grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+          <div class="space-y-6">
+            <div>
+            <label for="password" class="block text-sm font-medium text-black mb-2">
+              Password
+            </label>
+            <input id="password" v-model="form.password" type="password" placeholder="Enter your password"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent" />
+          </div>
+          <div class="space-y-6">
+            <!-- Confirm Password -->
+          <div>
+            <label for="confirmPassword" class="block text-sm font-medium text-black mb-2">
+              Confirm Password
+            </label>
+            <input id="confirmPassword" v-model="form.confirmPassword" type="password"
+              placeholder="Confirm your password"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent" />
+          </div>
+          </div>
+          <button type="submit"
+            class="mt-4 w-full bg-gray-800 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-700 transition-colors duration-200">
+            Change Password</button>
+          </div>
+          
+        </form>
+      </div>
     </div>
   </div>
 </template>
@@ -291,10 +302,39 @@ const confirmDate = () => {
   showDatePicker.value = false;
 };
 
-// Handle form submission
-const saveChanges = () => {
-  console.log("Saving changes:", form.value);
-  // Add your save logic here
-  // e.g., API call to update user profile
+// Handle form submission to update user profile
+const changePassword = async () => {
+  try {
+    if (form.value.password !== form.value.confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+    const { data, error } = await client.auth.updateUser({
+      password: form.value.password,
+    });
+
+    if (error) {
+      console.error("Error changing password:", error);
+      alert("An error occurred while changing the password.");
+    } else {
+      alert("Password changed successfully!");
+    }
+  } catch (error) {
+    console.error("Error changing password:", error);
+    alert("An error occurred while changing the password.");
+  }
+};
+
+const updateProfile = async () => {
+  try {
+    const {data, error} = await client.from("profiles").update({
+      firstName: form.value.firstName,
+      lastName: form.value.lastName,
+      DOB: form.value.dateOfBirth,
+      phone: form.value.phoneNumber
+    }).eq("id", user.value.id);
+  } catch (error) {
+    console.error("Error updating profile:", error);
+  }
 };
 </script>
