@@ -6,7 +6,7 @@ const router = useRouter();
 
 const profile = await client
   .from("profiles")
-  .select("fullName, school, DOB")
+  .select("firstName, lastName, school, DOB")
   .eq("id", user.value.id)
   .single();
 const signout = async () => {
