@@ -133,8 +133,7 @@ watch(contentStatus, (newStatus) => {
 }, { deep: true });
 </script>
 <template>
-
-  <div class="mt-15" style="height: auto; background-color: #f6f6f6">
+    <div class="mt-15" style="height: auto; background-color: #f6f6f6">
     <div class="container mx-auto p-4">
       <v-row>
         <v-col cols="8">

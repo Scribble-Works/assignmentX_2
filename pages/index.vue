@@ -4,10 +4,8 @@ const user = useSupabaseUser();
 <template>
   <div class="body">
     <!-- Hero Section -->
-    <section
-      class="flex items-center justify-center min-h-screen bg-cover bg-center relative"
-      style="background-image: url('/img/img1.jpg')"
-    >
+    <section class="flex items-center justify-center min-h-screen bg-cover bg-center relative"
+      style="background-image: url('/img/img1.jpg')">
       <div class="absolute inset-0 bg-black opacity-50"></div>
       <div class="text-center text-white relative z-10 p-4 max-w-lg mx-auto">
         <h1 class="text-4xl md:text-6xl font-bold">
@@ -21,14 +19,10 @@ const user = useSupabaseUser();
         </p>
         <br />
         <div v-if="!user">
-          <v-btn to="/auth" size="large" color="blue" rounded="sm"
-            >Get Started</v-btn
-          >
+          <v-btn to="/auth" size="large" color="blue" rounded="sm">Get Started</v-btn>
         </div>
         <div v-else>
-          <v-btn to="/workbook/" size="large" color="blue" rounded="sm"
-            >Get Started</v-btn
-          >
+          <v-btn to="/workbook/" size="large" color="blue" rounded="sm">Get Started</v-btn>
         </div>
       </div>
     </section>
@@ -39,14 +33,11 @@ const user = useSupabaseUser();
           <v-img src="/img/strug.png" height="550" width="auto" cover></v-img>
         </v-col>
         <v-col class="mt-10" cols="" lg="5" sm="12" md="6">
-          <h2
-            style="
+          <h2 style="
               font-family: 'Inter', sans-serif;
               font-weight: bold;
               color: #3e4f5c;
-            "
-            class="text-h3"
-          >
+            " class="text-h3">
             Turn Every Math Lesson into a Journey of Discovery.
           </h2>
           <br />
@@ -56,22 +47,24 @@ const user = useSupabaseUser();
             designed for Junior High learners, it supports your teaching with
           </p>
           <br />
-          <v-btn class="text-white" color="yellow-darken-2" rounded="lg"
-            >Learn More</v-btn
-          >
+          <div v-if="!user">
+            <v-btn to="/auth" class="text-white" color="yellow-darken-2" rounded="lg">Learn More</v-btn>
+          </div>
+          <div v-else>
+            <v-btn to="/workbook/" class="text-white" color="yellow-darken-2" rounded="lg">Learn More</v-btn>
+          </div>
+
+          
         </v-col>
       </v-row>
 
       <v-row class="mt-15 pt-16">
         <v-col class="mt-15" cols="" lg="5" md="12" sm="12">
-          <h2
-            style="
+          <h2 style="
               font-family: 'Inter', sans-serif;
               font-weight: bold;
               color: #3e4f5c;
-            "
-            class="text-h2"
-          >
+            " class="text-h2">
             Struggling to understand your textbook?
           </h2>
           <br />
@@ -86,40 +79,26 @@ const user = useSupabaseUser();
           </p>
         </v-col>
         <v-col cols="" lg="7" md="12" sm="12">
-          <v-img
-            height="550"
-            width="auto"
-            src="/img/textbook.png"
-            cover
-          ></v-img>
+          <v-img height="550" width="auto" src="/img/textbook.png" cover></v-img>
         </v-col>
       </v-row>
 
       <div class="mt-15">
-        <p
-          class="text-center text-uppercase text-h6"
-          style="
+        <p class="text-center text-uppercase text-h6" style="
             font-family: 'Inter', sans-serif;
             color: #66bb6a;
             font-weight: bold;
-          "
-        >
+          ">
           what to do
         </p>
-        <h1
-          class="text-center text-h4"
-          style="font-family: 'Inter', sans-serif; color: #3e4f5c"
-        >
+        <h1 class="text-center text-h4" style="font-family: 'Inter', sans-serif; color: #3e4f5c">
           Help Your Child
-          <span
-            style="
+          <span style="
               text-decoration: underline;
               text-decoration-color: #fcc30c;
               text-decoration-style: initial;
               text-decoration-line: underline;
-            "
-            >Understand</span
-          >
+            ">Understand</span>
           Not Just Memorize.
         </h1>
         <br />
@@ -132,22 +111,17 @@ const user = useSupabaseUser();
           <v-col class="mt-5" cols="" lg="7" sm="12" md="6">
             <v-row>
               <v-col cols="4">
-                <v-icon style="color: #2096f3; font-size: 5em"
-                  >mdi-magnify</v-icon
-                >
+                <v-icon style="color: #2096f3; font-size: 5em">mdi-magnify</v-icon>
               </v-col>
               <v-col cols="8">
                 <h2 class="text-h4">Explore the Chapters</h2>
                 <p>Browse our comprehensive list of textbook chapters</p>
-              </v-col> </v-row
-            ><br />
+              </v-col> </v-row><br />
             <div class="vert"></div>
             <br />
             <v-row>
               <v-col cols="4">
-                <v-icon style="font-size: 5em; color: #e5253a"
-                  >mdi-book-open-variant-outline</v-icon
-                >
+                <v-icon style="font-size: 5em; color: #e5253a">mdi-book-open-variant-outline</v-icon>
               </v-col>
               <v-col cols="8">
                 <h2 class="text-h4">Dive into the Topics</h2>
@@ -155,15 +129,12 @@ const user = useSupabaseUser();
                   Select a chpater and explore detailed explanations and
                   examples
                 </p>
-              </v-col> </v-row
-            ><br />
+              </v-col> </v-row><br />
             <div class="vert"></div>
             <br />
             <v-row>
               <v-col cols="4">
-                <v-icon style="font-size: 5em; color: #fcc30c"
-                  >mdi-check</v-icon
-                >
+                <v-icon style="font-size: 5em; color: #fcc30c">mdi-check</v-icon>
               </v-col>
               <v-col cols="8">
                 <h2 class="text-h4">Practice and Quiz</h2>
@@ -179,22 +150,13 @@ const user = useSupabaseUser();
 
       <br /><br /><br />
       <div class="mt-16 py-16">
-        <h4
-          class="text-h6 text-uppercase text-center"
-          style="color: #66bb6a; font-family: 'Inter', sans-serif"
-        >
+        <h4 class="text-h6 text-uppercase text-center" style="color: #66bb6a; font-family: 'Inter', sans-serif">
           course category
         </h4>
         <br />
-        <h3
-          class="text-h3 text-center"
-          style="font-family: 'Inter', sans-serif"
-        >
+        <h3 class="text-h3 text-center" style="font-family: 'Inter', sans-serif">
           Explore Our
-          <span
-            style="text-decoration: underline; text-decoration-color: #fcc30c"
-            >Features</span
-          >
+          <span style="text-decoration: underline; text-decoration-color: #fcc30c">Features</span>
         </h3>
         <br />
 
@@ -202,128 +164,84 @@ const user = useSupabaseUser();
           <!-- Video Lessons -->
           <div class="flex flex-col items-center text-center w-full md:w-64">
             <div class="w-full flex justify-center mb-4">
-              <div
-                class="bg-yellow-100 w-32 h-32 rounded-2xl flex items-center justify-center"
-              >
-                <v-icon class="text-6xl text-yellow-500" size="4em"
-                  >mdi-video-outline</v-icon
-                >
+              <div class="bg-yellow-100 w-32 h-32 rounded-2xl flex items-center justify-center">
+                <v-icon class="text-6xl text-yellow-500" size="4em">mdi-video-outline</v-icon>
               </div>
             </div>
-            <h3
-              class="text-2xl font-bold mb-2"
-              style="font-family: 'Inter', sans-serif"
-            >
+            <h3 class="text-2xl font-bold mb-2" style="font-family: 'Inter', sans-serif">
               Video Lessons
             </h3>
             <p class="text-gray-600 mb-4 w-[100%]">
               Cool concept videos that explain things in simple ways
             </p>
             <div v-if="!user">
-              <v-btn to="/auth" color="yellow-darken-2" class="text-white"
-                >Explore</v-btn
-              >
+              <v-btn to="/auth" color="yellow-darken-2" class="text-white">Explore</v-btn>
             </div>
             <div v-else>
-              <v-btn to="/workbook/" color="yellow-darken-2" class="text-white"
-                >Explore</v-btn
-              >
+              <v-btn to="/workbook/" color="yellow-darken-2" class="text-white">Explore</v-btn>
             </div>
           </div>
 
           <!-- Concept Notes -->
           <div class="flex flex-col items-center text-center w-full md:w-64">
             <div class="w-full flex justify-center mb-4">
-              <div
-                class="bg-red-100 w-32 h-32 rounded-2xl flex items-center justify-center"
-              >
-                <v-icon class="text-6xl text-red-600" size="4em"
-                  >mdi-note-outline</v-icon
-                >
+              <div class="bg-red-100 w-32 h-32 rounded-2xl flex items-center justify-center">
+                <v-icon class="text-6xl text-red-600" size="4em">mdi-note-outline</v-icon>
               </div>
             </div>
-            <h3
-              class="text-2xl font-bold mb-2"
-              style="font-family: 'Inter', sans-serif"
-            >
+            <h3 class="text-2xl font-bold mb-2" style="font-family: 'Inter', sans-serif">
               Concept Notes
             </h3>
             <p class="text-gray-600 mb-4">
               Detailed study notes to deepen your knowledge.
             </p>
             <div v-if="!user">
-              <v-btn to="/auth" color="yellow-darken-2" class="text-white"
-                >Explore</v-btn
-              >
+              <v-btn to="/auth" color="yellow-darken-2" class="text-white">Explore</v-btn>
             </div>
             <div v-else>
-              <v-btn to="/workbook/" color="yellow-darken-2" class="text-white"
-                >Explore</v-btn
-              >
+              <v-btn to="/workbook/" color="yellow-darken-2" class="text-white">Explore</v-btn>
             </div>
           </div>
 
           <!-- Quizzes -->
           <div class="flex flex-col items-center text-center w-full md:w-64">
             <div class="w-full flex justify-center mb-4">
-              <div
-                class="bg-green-100 w-32 h-32 rounded-2xl flex items-center justify-center"
-              >
-                <v-icon class="text-5xl text-green-600" size="4em"
-                  >mdi-note-plus-outline</v-icon
-                >
+              <div class="bg-green-100 w-32 h-32 rounded-2xl flex items-center justify-center">
+                <v-icon class="text-5xl text-green-600" size="4em">mdi-note-plus-outline</v-icon>
               </div>
             </div>
-            <h3
-              class="text-2xl font-bold mb-2"
-              style="font-family: 'Inter', sans-serif"
-            >
+            <h3 class="text-2xl font-bold mb-2" style="font-family: 'Inter', sans-serif">
               Quizzes
             </h3>
             <p class="text-gray-600 mb-4">
               Test yourself with interactive quizzes and challenges
             </p>
             <div v-if="!user">
-              <v-btn to="/auth" color="yellow-darken-2" class="text-white"
-                >Explore</v-btn
-              >
+              <v-btn to="/auth" color="yellow-darken-2" class="text-white">Explore</v-btn>
             </div>
             <div v-else>
-              <v-btn to="/workbook/" color="yellow-darken-2" class="text-white"
-                >Explore</v-btn
-              >
+              <v-btn to="/workbook/" color="yellow-darken-2" class="text-white">Explore</v-btn>
             </div>
           </div>
 
           <!-- Worksheets -->
           <div class="flex flex-col items-center text-center w-full md:w-64">
             <div class="w-full flex justify-center mb-4">
-              <div
-                class="bg-gray-100 w-32 h-32 rounded-2xl flex items-center justify-center"
-              >
-                <v-icon class="text-6xl text-gray-600" size="4em"
-                  >mdi-google-spreadsheet</v-icon
-                >
+              <div class="bg-gray-100 w-32 h-32 rounded-2xl flex items-center justify-center">
+                <v-icon class="text-6xl text-gray-600" size="4em">mdi-google-spreadsheet</v-icon>
               </div>
             </div>
-            <h3
-              class="text-2xl font-bold mb-2"
-              style="font-family: 'Inter', sans-serif"
-            >
+            <h3 class="text-2xl font-bold mb-2" style="font-family: 'Inter', sans-serif">
               Worksheets
             </h3>
             <p class="text-gray-600 mb-4">
                Downloadable worksheets to help you practice for class and exams
             </p>
             <div v-if="!user">
-              <v-btn to="/auth" color="yellow-darken-2" class="text-white"
-                >Explore</v-btn
-              >
+              <v-btn to="/auth" color="yellow-darken-2" class="text-white">Explore</v-btn>
             </div>
             <div v-else>
-              <v-btn to="/workbook/" color="yellow-darken-2" class="text-white"
-                >Explore</v-btn
-              >
+              <v-btn to="/workbook/" color="yellow-darken-2" class="text-white">Explore</v-btn>
             </div>
           </div>
         </div>
@@ -337,25 +255,13 @@ const user = useSupabaseUser();
             <v-img src="/img/shop.png" height="700" cover></v-img>
             <!-- </v-sheet> -->
           </v-col>
-          <v-col
-            cols=""
-            lg="5"
-            sm="12"
-            md="6"
-            class="mt-15 d-flex flex-column justify-center pl-15"
-          >
-            <h3
-              class="text-h3"
-              style="font-family: 'Inter', sans-serif; color: #3e4f5c"
-            >
+          <v-col cols="" lg="5" sm="12" md="6" class="mt-15 d-flex flex-column justify-center pl-15">
+            <h3 class="text-h3" style="font-family: 'Inter', sans-serif; color: #3e4f5c">
               Don't have the
-              <span
-                style="
+              <span style="
                   text-decoration: underline;
                   text-decoration-color: #fcc30c;
-                "
-                >book</span
-              ><br />
+                ">book</span><br />
               yet?
             </h3>
             <br />
@@ -364,56 +270,24 @@ const user = useSupabaseUser();
               world of learning with QR code scanning!
             </p>
             <br />
-            <v-btn href="/pricing" size="large" width="150" color="blue"
-              >Buy the Book</v-btn
-            >
+            <v-btn href="/pricing" size="large" width="150" color="blue">Buy the Book</v-btn>
           </v-col>
         </v-row>
       </div>
       <br />
       <div class="mt-15 mb-16">
         <v-row>
-          <v-col
-            cols=""
-            lg="5"
-            md="6"
-            sm="12"
-            class="d-flex flex-column justify-center"
-          >
-            <h3
-              class="text-h3 text-capitalize"
-              style="font-family: 'Inter', sans-serif; color: #3e4f5c"
-            >
+          <v-col cols="" lg="5" md="6" sm="12" class="d-flex flex-column justify-center">
+            <h3 class="text-h3 text-capitalize" style="font-family: 'Inter', sans-serif; color: #3e4f5c">
               ready to take your learning to the next level?
-              <span
-                ><v-img
-                  class="mt-n15"
-                  style="margin-left: 3em"
-                  height="90"
-                  src="/img/mdi_arrow.png"
-                ></v-img
-              ></span>
+              <span><v-img class="mt-n15" style="margin-left: 3em" height="90" src="/img/mdi_arrow.png"></v-img></span>
             </h3>
             <br />
             <div v-if="!user">
-              <v-btn
-                to="/auth"
-                size="large"
-                class="mt-n10"
-                width="150"
-                color="blue"
-                >Get Started</v-btn
-              >
+              <v-btn to="/auth" size="large" class="mt-n10" width="150" color="blue">Get Started</v-btn>
             </div>
             <div v-else>
-              <v-btn
-                to="/workbook/"
-                size="large"
-                class="mt-n10"
-                width="150"
-                color="blue"
-                >Get Started</v-btn
-              >
+              <v-btn to="/workbook/" size="large" class="mt-n10" width="150" color="blue">Get Started</v-btn>
             </div>
           </v-col>
           <v-col cols="" lg="7" md="6" sm="12">
