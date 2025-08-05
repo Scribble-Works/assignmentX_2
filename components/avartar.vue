@@ -34,7 +34,7 @@ const signout = async () => {
           </div>
           <div v-else>
             <span class="ml-2"
-              >{{ profile.data.fullName }} <v-icon>mdi-menu-down</v-icon></span
+              >{{ profile.data.firstName }} {{ profile.data.lastName }} <v-icon>mdi-menu-down</v-icon></span
             >
           </div>
         </v-btn>
