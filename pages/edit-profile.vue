@@ -212,6 +212,7 @@ console.log("Current user:", user.value);
 console.log("User ID:", user.value && user.value.id);
 console.log("User email:", user.value && user.value.email);
 console.log("User profile:", profile);
+
 // Form data
 const form = ref({
   firstName: profile.data.firstName,

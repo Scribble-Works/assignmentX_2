@@ -20,19 +20,13 @@ export default {
     </div>
 
     <!-- Text -->
-    <div class="flex-1 mt-6 md:mt-0">
+    <div class="flex-1 mt-6 md:mt-0 md:px-8">
       <h3 class="text-xl font-bold">{{ title }}</h3>
       <p class="text-gray-600">{{ level }}</p>
       <p class="mt-4 text-sm text-gray-700">{{ description }}</p>
       <p class="mt-4 font-semibold">Price: GHC {{ price }}</p>
 
       <div class="mt-4 flex gap-4">
-        <!-- <button
-          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Buy now
-        </button> -->
-
         <v-btn
           :href="`https://wa.me/233201001041?text=Hi! I'm interested in purchasing ${title} (${level}) for GHC ${price}. Can you help me with the booking process?`"
           target="_blank" rel="noopener noreferrer" size="large" class="text-white rounded-lg text-subtitle-1"
