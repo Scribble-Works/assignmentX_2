@@ -13,10 +13,7 @@ export default {
 </script>
 
 <template>
-  <div
-    class="flex flex-col md:flex-row md:items-center"
-    :class="reverse ? 'md:flex-row-reverse' : 'md:flex-row'"
-  >
+  <div class="flex flex-col md:flex-row md:items-center" :class="reverse ? 'md:flex-row-reverse' : 'md:flex-row'">
     <!-- Image -->
     <div class="flex-none w-full md:w-5/12" :class="reverse ? 'md:w-5/12' : ''">
       <img :src="image" alt="book" class="w-full h-auto object-cover rounded" />
@@ -37,22 +34,14 @@ export default {
         </button> -->
 
         <v-btn
-          :href="`https://wa.me/233556102727?text=Hi! I'm interested in purchasing ${title} (${level}) for GHC ${price}. Can you help me with the booking process?`"
-          target="_blank"
-          rel="noopener noreferrer"
-          size="large"
-          class="text-white rounded-lg text-subtitle-1"
-          style="background-color: #2563eb"
-        >
-          Book Now
+          :href="`https://wa.me/233201001041?text=Hi! I'm interested in purchasing ${title} (${level}) for GHC ${price}. Can you help me with the booking process?`"
+          target="_blank" rel="noopener noreferrer" size="large" class="text-white rounded-lg text-subtitle-1"
+          style="background-color: #2563eb">
+          Buy Now
         </v-btn>
 
-        <v-btn
-          to="/preview/"
-          size="large"
-          class="text-white rounded-lg text-subtitle-1"
-          style="background-color: #fcc30c"
-        >
+        <v-btn to="/preview/" size="large" class="text-white rounded-lg text-subtitle-1"
+          style="background-color: #fcc30c">
           Preview
         </v-btn>
       </div>

@@ -34,7 +34,7 @@ const products = [
 </script>
 
 <template>
-  <div class="font-sans">
+  <div class="font-sans mb-15">
     <!-- Hero Section -->
     <section class="text-center py-16 bg-white">
       <h1 class="text-4xl md:text-6xl font-bold">Study Smarter!</h1>
