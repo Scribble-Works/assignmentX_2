@@ -19,7 +19,7 @@ const user = useSupabaseUser();
         </p>
         <br />
         <div v-if="!user">
-          <v-btn to="/auth" size="large" color="blue" rounded="sm">Get Started</v-btn>
+          <v-btn to="/register" size="large" color="blue" rounded="sm">Sign Up</v-btn>
         </div>
         <div v-else>
           <v-btn to="/workbook/" size="large" color="blue" rounded="sm">Get Started</v-btn>
@@ -47,14 +47,12 @@ const user = useSupabaseUser();
             designed for Junior High learners, it supports your teaching with
           </p>
           <br />
-          <div v-if="!user">
-            <v-btn to="/auth" class="text-white" color="yellow-darken-2" rounded="lg">Learn More</v-btn>
-          </div>
-          <div v-else>
-            <v-btn to="/workbook/" class="text-white" color="yellow-darken-2" rounded="lg">Learn More</v-btn>
+
+          <div>
+            <v-btn to="/resources/" class="text-white" color="yellow-darken-2" rounded="lg">Learn More</v-btn>
           </div>
 
-          
+
         </v-col>
       </v-row>
 
@@ -261,7 +259,7 @@ const user = useSupabaseUser();
               <span style="
                   text-decoration: underline;
                   text-decoration-color: #fcc30c;
-                ">book</span><br />
+                ">book</span>
               yet?
             </h3>
             <br />

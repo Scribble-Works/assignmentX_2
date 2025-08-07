@@ -33,9 +33,8 @@ const signout = async () => {
             <h3>Fill Bio Data</h3>
           </div>
           <div v-else>
-            <span class="ml-2"
-              >{{ profile.data.firstName }} {{ profile.data.lastName }} <v-icon>mdi-menu-down</v-icon></span
-            >
+            <span class="ml-2">{{ profile.data.firstName }} {{ profile.data.lastName }}
+              <v-icon>mdi-menu-down</v-icon></span>
           </div>
         </v-btn>
       </template>
@@ -50,10 +49,7 @@ const signout = async () => {
             </p>
             <v-divider class="my-3"></v-divider>
             <v-btn variant="text" rounded>
-              <NuxtLink
-                to="/edit-profile"
-                class="text-sm text-blue-600 hover:text-blue-800 transition"
-              >
+              <NuxtLink to="/edit-profile" class="text-sm text-blue-600 hover:text-blue-800 transition">
                 Edit Account
               </NuxtLink>
             </v-btn>
