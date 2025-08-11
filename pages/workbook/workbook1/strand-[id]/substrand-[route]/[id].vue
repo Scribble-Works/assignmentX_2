@@ -89,32 +89,31 @@ const markCourseAsCompleted = () => {
             <v-row>
 
                 <v-col cols="" lg="8" md="6" sm="12">
-                    <introvid :intro="vid1" />
+                    <vids :url="vid1" />
                 </v-col>
                 <v-col cols="" lg="4" md="6" sm="12">
-                    <introvid :intro="vid2" />
-                    <introvid :intro="vid3" />
+                    <vids :url="vid2" />
+                    <vids :url="vid3" />
                 </v-col>
             </v-row>
-            <v-row class="mt-n8">
-                <v-col cols="" lg="2" sm="12" md="3">
+            <v-row>
+                <v-col cols="" lg="6" sm="12" md="3">
                     <v-btn @click="openNotes" rounded color="grey-darken-3">Concept Note</v-btn>
                 </v-col>
-                <v-col cols="" lg="3" sm="12" md="5">
+                <v-col cols="" lg="6" sm="12" md="5">
                     <v-btn @click="openBece" rounded color="grey-darken-3">Sample Questions</v-btn>
                 </v-col>
-                <v-col cols="" lg="3" sm="12" md="4">
+                <!-- <v-col cols="" lg="3" sm="12" md="4">
                     <v-btn rounded color="grey-darken-3">Video transcription</v-btn>
-                </v-col>
+                </v-col> -->
             </v-row>
 
-            <div class="mt-15">
+            <!-- <div class="mt-15">
                 <h3 class="text-h3 mb-5" style="font-family: 'Inter', sans-serif; font-weight: bold;">Worked Exam<span
                         style="text-decoration: underline; text-decoration-color: #FCC30C;">ples</span></h3>
                 <v-container style="background-color: #F3F4F6;">
                     <v-img class="mt-10 mb-10" src="/img/example.png"></v-img>
                     <v-img class="mb-10" src="/img/solution.png"></v-img>
-                </v-container>
             </div>
 
             <div class="mt-10">
@@ -129,15 +128,15 @@ const markCourseAsCompleted = () => {
                     </div>
 
 
-                    <div class="mt-5 mb-10">
+                    <div class="mt-5 mb-10"> -->
                         <!-- <compare /> -->
-                    </div>
+                    <!-- </div> -->
 
                 </v-container>
             </div>
 
             <!-- Course Completion Section -->
-            <div class="mt-15">
+            <!-- <div class="mt-15">
                 <div class="bg-white rounded-lg shadow-md p-8 text-center">
                     <div v-if="!courseCompleted && !isQuizCompleted(id)" class="mb-6">
                         <h3 class="text-2xl font-bold text-gray-800 mb-4">
@@ -179,9 +178,7 @@ const markCourseAsCompleted = () => {
                         </div>
                     </div>
                 </div>
-            </div>
-        </v-container>
-    </div>
+            </div> -->
 </template>
 <style>
 .body {

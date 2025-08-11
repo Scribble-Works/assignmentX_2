@@ -9,6 +9,7 @@ const show = ref(false)
 const router = useRouter();
 const email = ref('');
 const password = ref('');
+// const alert = ref(false);
 
 
 const rules = {
@@ -26,7 +27,10 @@ const login = async () => {
         });
         const profile = await client.from('profiles').select('id').eq('id', user.value.id).single();
         if (!user.value) {
-            alert('Invalid email or password');
+            // alert('Invalid email or password');
+            const text = 'Invalid Email or Password!';
+            const title = 'Login Message';
+            alert.value = true;
             router.push('/auth');
             return;
         } else if (profile.data == null) {
@@ -50,7 +54,10 @@ const googleSignIN = async () => {
             }
         });
         if (!user.value) {
-            alert('Invalid email or password');
+            // alert('Invalid email or password');
+            const text = 'Invalid Email or Password!';
+            const title = 'Login Message';
+            alert.value = true;
             router.push('/auth');
             return;
         } else if (profile.data == null) {
@@ -60,12 +67,18 @@ const googleSignIN = async () => {
             console.log(user.value)
         }
         if (error) {
-            alert('An error occurred while signing in with Google.');
-            console.error(error);
+            // alert('An error occurred while signing in with Google.');
+            // console.error(error);
+            const text = 'An error occurred while signing in with Google.';
+            const title = 'Login Message';
+            alert.value = true;
         }
     } catch (error) {
-        alert('An error occurred. Please try again later.');
-        console.error(error);
+        // alert('An error occurred. Please try again later.');
+        // console.error(error);
+        const text = 'An error occurred. Please try again later.';
+        const title = 'Login Message';
+        alert.value = true;
     }
 };
 const appleSignIN = async () => {
@@ -77,7 +90,10 @@ const appleSignIN = async () => {
             }
         });
         if (!user.value) {
-            alert('Invalid email or password');
+            // alert('Invalid email or password');
+            alert.value = true;
+            const message = 'Invalid Email or Password';
+            const title = 'Login Error';
             router.push('/auth');
             return;
         } else if (profile.data == null) {
@@ -98,7 +114,7 @@ const appleSignIN = async () => {
 
 </script>
 <template>
-    <div class="d-flex flex-column fill-height justify-center align-center min-h-screen mt-5">
+    <div class="d-flex flex-column fill-height justify-center align-center min-h-screen mt-0">
         <v-row class="mt-16">
             <v-col cols="" lg="6" sm="12" md="12">
                 <img height="auto" src="/img/login.png" alt="Login">
@@ -156,7 +172,7 @@ const appleSignIN = async () => {
                 </v-container>
             </v-col>
         </v-row>
-
+        <dialog :text="message" :title="title"  />
     </div>
 </template>
 <style>

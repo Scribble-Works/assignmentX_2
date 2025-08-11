@@ -7,20 +7,23 @@ const user = useSupabaseUser();
 const router = useRouter();
 const email = ref('');
 const alert = ref(false);
+const text = ref('');
 const resetPassword = async () => {
     try {
         const { data, error } = await auth.resetPasswordForEmail(email.value);
         console.log(data);
         if (error) {
-            alert('An error occurred. Please try again later.');
+            text.value = error.message || 'An error occurred. Please try again later.';
+            alert.value = true;
             console.error(error);
         } else {
-            // alert('Password reset email sent! Please check your inbox.');
+            text.value = 'Password reset email sent! Please check your inbox.';
             alert.value = true;
             // router.push('/auth');
         }
     } catch (error) {
-        // alert('An error occurred. Please try again later.');
+        text.value = error.message || 'An error occurred. Please try again later.';
+        alert.value = true;
         console.error(error);
     }
 };
@@ -57,8 +60,8 @@ const backLogin = () => {
                 </v-col>
             </v-row>
 
-
-            <dialog :alert="alert" :text="'Password reset email sent! Please check your inbox.!'" :title="'Reset Password'" />
+            
+            <dialog :v-model="alert" :text="text" :title="'Reset Password'" />
         </v-container>
     </div>
 </template>

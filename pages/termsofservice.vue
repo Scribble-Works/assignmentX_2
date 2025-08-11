@@ -13,7 +13,7 @@
           <!-- Introduction -->
           <div>
             <p class="text-gray-700 leading-relaxed mb-4">
-              Welcome to AssignmentX — a digital companion to your math workbook
+              Welcome to AssignmentX, a digital companion to your math workbook
               experience. These Terms of Use govern your access to and use of
               the AssignmentX website and its associated services. By using the
               site, you agree to these Terms in full. If you do not agree,
@@ -86,8 +86,8 @@
               Intellectual Property
             </h2>
             <p class="text-gray-700 leading-relaxed mb-4">
-              All content on AssignmentX — including text, graphics, logos,
-              exercises, games, and software — is owned by or licensed to
+              All content on AssignmentX, including text, graphics, logos,
+              exercises, games, and software, is owned by or licensed to
               AssignmentX and is protected by copyright and other intellectual
               property laws.
             </p>

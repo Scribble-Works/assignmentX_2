@@ -21,7 +21,7 @@ const testimonials = [
                 <v-col cols="" lg="" md="" sm="12">
                     <h4 class="text-h4">
                         <span style="color: #FCC30C; font-weight: bold;">AssignmentX</span> is a learning platform built
-                        to help students truly understand mathematics — not just memorize it.
+                        to help students truly understand mathematics, not just memorize it.
                     </h4><br>
                     <p>
                         We use storytelling, real-life examples, games, and guided practice to make math engaging,
@@ -104,7 +104,7 @@ const testimonials = [
                 <v-col cols="" lg="6" md="12" sm="12">
                     <h3 class="text-h3">Why It Matters</h3>
                     <br>
-                    <p>Many learners struggle with math not because they aren’t smart — but because math was never shown
+                    <p>Many learners struggle with math not because they aren’t smart, but because math was never shown
                         to them in a way that made sense. We’re changing that.</p><br>
                     <p>AssignmentX is designed to work online or offline, in low-resource schools, and with localized
                         content to meet learners where they are, ensuring access and relevance for all.

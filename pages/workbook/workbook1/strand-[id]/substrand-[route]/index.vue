@@ -86,15 +86,16 @@ const startQuiz = (contentId) => {
 };
 
 const handleContentClick = (contentId) => {
+    navigateTo(`/workbook/workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/${contentId}`);
     // Check if quiz is already completed
-    if (!isQuizCompleted(contentId)) {
-        // Set status to in progress when starting
-        markQuizInProgress(contentId);
-        openQuizModal(contentId);
-    } else {
-        // Navigate to content if quiz is completed
-        navigateTo(`/workbook/workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/${contentId}`);
-    }
+    // if (!isQuizCompleted(contentId)) {
+    //     // Set status to in progress when starting
+    //     markQuizInProgress(contentId);
+    //     openQuizModal(contentId);
+    // } else {
+    //     // Navigate to content if quiz is completed
+    //     navigateTo(`/workbook/workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/${contentId}`);
+    // }
 };
 
 // Add a completion indicator to the title
@@ -141,7 +142,7 @@ watch(contentStatus, (newStatus) => {
                         {{ title }}
                     </h1>
                     <!-- Progress Indicator -->
-                    <div class="mt-2 flex items-center">
+                    <!-- <div class="mt-2 flex items-center">
                         <div class="flex items-center text-sm text-gray-600">
                             <span class="mr-2">Progress:</span>
                             <span class="font-semibold text-green-600">{{ completedCount }}/{{ totalCount }}</span>
@@ -152,11 +153,11 @@ watch(contentStatus, (newStatus) => {
                                 :style="{ width: `${totalCount > 0 ? (completedCount / totalCount) * 100 : 0}%` }">
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </v-col>
-                <v-col cols="" lg="4" sm="12" align="right">
+                <!-- <v-col cols="" lg="4" sm="12" align="right">
                     <v-btn to="/progress" color="primary">View Progress Report</v-btn>
-                </v-col>
+                </v-col> -->
             </v-row>
             <ConceptNotes :concept-note="conceptNote" />
             <div class="mt-15" style="height: auto; background-color: #f6f6f6">
@@ -174,10 +175,10 @@ watch(contentStatus, (newStatus) => {
                                     </div>
                                 </v-card-title>
                                 <v-card-actions class="flex items-center justify-between">
-                                    <div class="gap-2">
+                                    <!-- <div class="gap-2">
                                         <v-btn @click="openNotes" color="primary">concept note</v-btn>
                                         <v-btn @click="openBece" color="success">BECE Questions</v-btn>
-                                    </div>
+                                    </div> -->
 
                                     <!-- Status Indicator -->
                                     <div class="flex items-center">

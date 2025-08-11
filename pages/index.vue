@@ -13,7 +13,7 @@ const user = useSupabaseUser();
           <div class="asign">Makes Sense.</div>
         </h1>
         <p class="mt-4 text-lg md:text-xl">
-          Math can be hard — but it doesn’t have to be boring or confusing.
+          Math can be hard, but it doesn’t have to be boring or confusing.
           AssignmentX is here to help you understand the “why” behind the
           numbers, not just memorize formulas.
         </p>
@@ -42,7 +42,7 @@ const user = useSupabaseUser();
           </h2>
           <br />
           <p style="font-family: 'Inter', sans-serif">
-            AssignmentX helps you make math more engaging and effective — even
+            AssignmentX helps you make math more engaging and effective, even
             in resource-limited classrooms. Built on the Ghanaian curriculum and
             designed for Junior High learners, it supports your teaching with
           </p>
@@ -67,7 +67,7 @@ const user = useSupabaseUser();
           </h2>
           <br />
           <p>
-            AssignmentX is more than a digital learning tool — it's a response
+            AssignmentX is more than a digital learning tool, it's a response
             to one of the biggest challenges in African education: students
             struggling to grasp mathematics. Built as a web extension of The
             Assignment Maths Workbook Series, AssignmentX offers a

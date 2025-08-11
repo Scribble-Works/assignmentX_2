@@ -7,7 +7,7 @@ const products = [
     title: "The First Assignment",
     level: "JHS 1",
     description:
-      "Start strong with a solid foundation in all your subjects. This book introduces important concepts in Mathematics — explained in simple terms with fun examples to help you understand better. Perfect for classroom support and building good study habits.",
+      "Start strong with a solid foundation in all your subjects. This book introduces important concepts in Mathematics, explained in simple terms with fun examples to help you understand better. Perfect for classroom support and building good study habits.",
     price: "80",
     image: "/img/jhs1BookSpine.png",
     reverse: false,
@@ -39,7 +39,7 @@ const products = [
     <section class="text-center py-16 bg-white">
       <h1 class="text-4xl md:text-6xl font-bold">Study Smarter!</h1>
       <p class="mt-4 text-gray-600 mx-auto">
-        Stay ahead in class with your official companion books — specially
+        Stay ahead in class with your official companion books, specially
         designed for JHS1, JHS2, and JHS3 students.
       </p>
       <!-- <button
@@ -63,8 +63,8 @@ const products = [
     <section class="text-center py-12 px-4">
       <h2 class="text-xl md:text-2xl font-semibold">Get Your Workbooks Now!</h2>
       <p class="hidden md:block text-gray-600 mt-4 max-w-3xl mx-auto">
-        Stay ahead in class with your official companion books — specially
-        designed for JSS1, JSS2, and JSS3 students. Whether you're reviewing a
+        Stay ahead in class with your official companion books, specially
+        designed for JHS1, JHS2, and JHS3 students. Whether you're reviewing a
         topic, preparing for exams, or just want extra practice, these books are
         your go-to guides.
       </p>

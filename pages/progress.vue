@@ -22,7 +22,7 @@ const previewImages = [
         <p className="text-sm text-slate-600 max-w-4xl ">
           Look how far you’ve come!This page shows how much you’ve improved by
           comparing what you knew before the lesson and what you know now. It’s
-          proof that learning is happening — one topic at a time.
+          proof that learning is happening, one topic at a time.
         </p>
       </div>
 

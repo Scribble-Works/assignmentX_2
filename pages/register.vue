@@ -78,14 +78,14 @@ const appleSignUP = async () => {
 
 </script>
 <template>
-    <div class="d-flex flex-column fill-height justify-center align-center min-h-screen mt-5">
-        <v-row class="mt-16">
+    <div class="d-flex flex-column fill-height justify-center align-center min-h-screen">
+        <v-row class="mt-n1">
             <v-col cols="" lg="6" sm="12" md="12">
                 <v-container class="w-auto" role="presentation">
                     <h1 class="text-h2" style="font-family: 'Inter', sans-serif; font-weight: bold;">Get Started Now
                     </h1>
                     <!-- <p style="font-family: 'Inter', sans-serif;">Enter your credentials to access your account</p> -->
-                    <form class="mt-16" @submit.prevent="signUp">
+                    <form class="mt-10" @submit.prevent="signUp">
                         <v-label>Email Address</v-label><br><br>
                         <v-text-field v-model="email" type="email" placeholder="Enter your email"
                             variant="outlined"></v-text-field>
