@@ -58,13 +58,7 @@ const backLogin = () => {
             </v-row>
 
 
-            <v-dialog v-model="alert" width="auto">
-                <v-card max-width="400" title="Reset Password" text="Please check your email for the reset link.">
-                    <template v-slot:actions>
-                        <v-btn class="ms-auto" text="Ok" @click="alert = false"></v-btn>
-                    </template>
-                </v-card>
-            </v-dialog>
+            <dialog :alert="alert" :text="'Password reset email sent! Please check your inbox.!'" :title="'Reset Password'" />
         </v-container>
     </div>
 </template>
