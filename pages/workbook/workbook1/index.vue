@@ -15,7 +15,7 @@ console.log(strands)
 
 </script>
 <template>
-    <div>
+    <div class="body">
         <v-container>
             <introvid :intro="'https://www.youtube.com/embed/Ec7zLUi16JU'" />
             <br>
@@ -32,7 +32,7 @@ console.log(strands)
                 <v-row v-for="strand in strands" :key="strand.id">
                     <v-col cols=12>
                         <NuxtLink :to="'/workbook/workbook1/strand-' + strand.id + '/'">
-                            <v-card class="mx-auto" color="grey-lighten-4" max-width="1200">
+                            <v-card class="mx-auto" color="white" max-width="1200">
 
                                 <v-card-text class="pt-6">
                                     <div class="font-weight-light text-grey text-h6 mb-2">
@@ -52,6 +52,9 @@ console.log(strands)
     </div>
 </template>
 <style>
+.body {
+    background-color: #F6F6F6;
+}
 h2 {
     color: #3E4F5C;
     font-style: 'Inter', sans-serif;

@@ -20,7 +20,7 @@ export default defineNuxtConfig({
     // '@nuxtjs/tailwindcss',
     ['@nuxtjs/supabase', {
       url: process.env.SUPABASE_URL,
-      key: process.env.SUPABASE_KEY,
+      key: process.env.SUPABASE_GEN_KEY,
       redirect: false
     }], '@nuxt/fonts'],
   css: [

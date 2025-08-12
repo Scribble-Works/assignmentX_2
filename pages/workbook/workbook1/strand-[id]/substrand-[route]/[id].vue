@@ -96,7 +96,7 @@ const markCourseAsCompleted = () => {
                     <vids :url="vid3" />
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row class="mt-n1 mr-10">
                 <v-col cols="" lg="6" sm="12" md="3">
                     <v-btn @click="openNotes" rounded color="grey-darken-3">Concept Note</v-btn>
                 </v-col>

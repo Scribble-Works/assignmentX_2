@@ -12,7 +12,7 @@ const book3 = profile.data[0].threePurchase;
 
 </script>
 <template>
-    <div class="mt-5">
+    <div class="mt-5 body">
         <v-container class="my-16">
             <h2 class="text-h3">Find Your Math Match</h2><br>
             <p>Whether you're just getting started or aiming higher, choose the AssignmentX book that fits your level nad start learning smarter.</p><br>
@@ -49,6 +49,9 @@ const book3 = profile.data[0].threePurchase;
     </div>
 </template>
 <style>
+.body {
+    background-color: #F6F6F6;
+}
 .v-card--reveal {
     align-items: center;
     bottom: 0;
