@@ -40,7 +40,7 @@ const signUp = async () => {
         } else {
             alert.value = true;
             text.value = 'Sign up successful! Please check your email for confirmation.';
-            router.push('/auth');
+            // router.push('/auth');
         }
     } catch (error) {
         // alert('An error occurred. Please try again later.');
