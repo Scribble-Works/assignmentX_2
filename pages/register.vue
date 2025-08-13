@@ -91,6 +91,13 @@ const appleSignUP = async () => {
     }
 };
 
+const closeAlert = () => {
+    alert.value = false;
+    if (text.value === 'Sign up successful! Please check your email for confirmation.') {
+        router.push('/auth');
+    }
+};
+
 </script>
 <template>
     <div class="d-flex flex-column fill-height justify-center align-center min-h-screen">
@@ -153,15 +160,15 @@ const appleSignUP = async () => {
 
 
         <v-dialog v-model="alert" max-width="400">
-                <v-card>
-                    <v-card-title class="headline">Sign Up</v-card-title>
-                    <v-card-text>{{ text }}</v-card-text>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="primary" text @click="alert = false">OK</v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
+            <v-card>
+                <v-card-title class="headline">Sign Up</v-card-title>
+                <v-card-text>{{ text }}</v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" text @click="closeAlert()">OK</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 <style>

@@ -36,12 +36,18 @@ const submit = async () => {
         } else {
             alert.value = true;
             text.value = 'Profile updated successfully!';
-            router.push('/');
+            // router.push('/');
         }
     } catch (error) {
         alert.value = true;
         text.value = 'An error occurred. Please try again later.';
         console.error(error);
+    }
+};
+const closeAlert = () => {
+    alert.value = false;
+    if (text.value === 'Profile updated successfully!') {
+        router.push('/');
     }
 };
 </script>
@@ -56,13 +62,11 @@ const submit = async () => {
                         <v-row>
                             <v-col cols="" lg="6" md="12" sm="12">
                                 <v-label>First Name</v-label>
-                                <v-text-field variant="outlined" placeholder="First Name"
-                                    v-model="fName" />
+                                <v-text-field variant="outlined" placeholder="First Name" v-model="fName" />
                             </v-col>
                             <v-col cols="" lg="6" md="12" sm="12">
                                 <v-label>Last Name</v-label>
-                                <v-text-field variant="outlined" placeholder="Last Name"
-                                    v-model="lName" />
+                                <v-text-field variant="outlined" placeholder="Last Name" v-model="lName" />
                             </v-col>
                         </v-row>
                         <v-row>
@@ -86,8 +90,7 @@ const submit = async () => {
                         <v-row>
                             <v-col cols="" lg="12" md="12" sm="12">
                                 <v-label>School</v-label>
-                                <v-text-field variant="outlined" placeholder="School"
-                                    v-model="school" />
+                                <v-text-field variant="outlined" placeholder="School" v-model="school" />
                             </v-col>
                         </v-row>
                         <v-btn style="width: 100%;" color="grey-darken-3" type="submit">Submit</v-btn>
@@ -104,7 +107,7 @@ const submit = async () => {
                     <v-card-text>{{ text }}</v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" text @click="alert = false">OK</v-btn>
+                        <v-btn color="primary" variant="text" @click="closeAlert()">OK</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
