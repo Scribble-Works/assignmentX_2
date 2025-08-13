@@ -9,6 +9,8 @@ const router = useRouter();
 const email = ref('');
 const password = ref('');
 const confPassword = ref('');
+const alert = ref(false);
+const text = ref('');
 
 const show = ref(false)
 const rules = {
@@ -20,7 +22,9 @@ const rules = {
 const signUp = async () => {
     try {
         if (password.value !== confPassword.value) {
-            alert('Passwords do not match');
+            // alert('Passwords do not match');
+            alert.value = true;
+            text.value = 'Passwords do not match';
             return;
         }
         const { data, error } = await auth.signUp({
@@ -29,14 +33,19 @@ const signUp = async () => {
         });
 
         if (error) {
-            alert('An error occurred. Please try again later.');
+            // alert('An error occurred. Please try again later.');
+            alert.value = true;
+            text.value = 'An error occurred. Please try again later.';
             console.error(error);
         } else {
-            alert('Sign up successful! Please check your email for confirmation.');
+            alert.value = true;
+            text.value = 'Sign up successful! Please check your email for confirmation.';
             router.push('/auth');
         }
     } catch (error) {
-        alert('An error occurred. Please try again later.');
+        // alert('An error occurred. Please try again later.');
+        alert.value = true;
+        text.value = 'An error occurred. Please try again later.';
         console.error(error);
     }
 };
@@ -50,11 +59,15 @@ const googleSignUP = async () => {
             }
         });
         if (error) {
-            alert('An error occurred while signing up with Google.');
+            // alert('An error occurred while signing up with Google.');
+            alert.value = true;
+            text.value = 'An error occurred while signing up with Google.';
             console.error(error);
         }
     } catch (error) {
-        alert('An error occurred. Please try again later.');
+        // alert('An error occurred. Please try again later.');
+        alert.value = true;
+        text.value = 'An error occurred. Please try again later.';
         console.error(error);
     }
 };
@@ -67,11 +80,13 @@ const appleSignUP = async () => {
             }
         });
         if (error) {
-            alert('An error occurred while signing up with Apple.');
+            alert.value = true;
+            text.value = 'An error occurred while signing up with Apple.';
             console.error(error);
         }
     } catch (error) {
-        alert('An error occurred. Please try again later.');
+        alert.value = true;
+        text.value = 'An error occurred. Please try again later.';
         console.error(error);
     }
 };
@@ -136,6 +151,17 @@ const appleSignUP = async () => {
             </v-col>
         </v-row>
 
+
+        <v-dialog v-model="alert" max-width="400">
+                <v-card>
+                    <v-card-title class="headline">Sign Up</v-card-title>
+                    <v-card-text>{{ text }}</v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="primary" text @click="alert = false">OK</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
     </div>
 </template>
 <style>

@@ -88,15 +88,15 @@ const markCourseAsCompleted = () => {
             }}</h2>
             <v-row>
 
-                <v-col cols="" lg="8" md="6" sm="12">
+                <v-col cols="" lg="9" md="6" sm="12">
                     <vids :url="vid1" />
                 </v-col>
-                <v-col cols="" lg="4" md="6" sm="12">
+                <v-col cols="" lg="3" md="6" sm="12">
                     <vids :url="vid2" />
                     <vids :url="vid3" />
                 </v-col>
             </v-row>
-            <v-row class="mt-n1 mr-10">
+            <v-row class="mt-n5 mr-10">
                 <v-col cols="" lg="6" sm="12" md="3">
                     <v-btn @click="openNotes" rounded color="grey-darken-3">Concept Note</v-btn>
                 </v-col>

@@ -20,7 +20,7 @@ console.log(strands)
             <introvid :intro="'https://www.youtube.com/embed/Ec7zLUi16JU'" />
             <br>
             <h2 class="text-h3">📘 Welcome to Your Math Companion!</h2><br>
-            <p style="width: 70%;">Not every explanation in the textbook will make sense right away—and that’s okay.
+            <p style="width: 70%;">Not every explanation in the textbook will make sense right away, and that’s okay.
 
                 This site is here to give you a helping hand when math gets confusing. We break things down with simple
                 steps, helpful examples, and clear visuals so you can learn at your own pace and build real confidence.
