@@ -18,31 +18,31 @@ const book3 = profile.data[0].threePurchase;
             <p>Whether you're just getting started or aiming higher, choose the AssignmentX book that fits your level nad start learning smarter.</p><br>
             <v-row class="mt-10">
                 <v-col cols="" lg="4" md="12" sm="12">
-                    <div v-if="book1 == true">
+                    <!-- <div v-if="book1 == true"> -->
                         <Workbookcard :grade="'Grade 7'" :assignment="'First Assignment'" :image="'/img/grade7.jpg'" />
-                    </div>
-                    <div v-else>
-                        <BookPurchaseCard :book-num="'1'" :grade="'Grade 7'" :assignment="'First Assignment'"
-                            :image="'/img/grade7.jpg'" />
-                    </div>
+                    <!-- </div> -->
+                    <!-- <div v-else> -->
+                        <!-- <BookPurchaseCard :book-num="'1'" :grade="'Grade 7'" :assignment="'First Assignment'" -->
+                            <!-- :image="'/img/grade7.jpg'" /> -->
+                    <!-- </div> -->
                 </v-col>
                 <v-col cols="" lg="4" md="12" sm="12">
-                    <div v-if="book2 == true">
+                    <!-- <div v-if="book2 == true"> -->
                         <Workbookcard :grade="'Grade 8'" :assignment="'Second Assignment'" :image="'/img/grade8.jpg'" />
-                    </div>
-                    <div v-else>
-                        <BookPurchaseCard :book-num="'2'" :grade="'Grade 8'" :assignment="'Second Assignment'"
-                            :image="'/img/grade8.jpg'" />
-                    </div>
+                    <!-- </div> -->
+                    <!-- <div v-else> -->
+                        <!-- <BookPurchaseCard :book-num="'2'" :grade="'Grade 8'" :assignment="'Second Assignment'" -->
+                            <!-- :image="'/img/grade8.jpg'" /> -->
+                    <!-- </div> -->
                 </v-col>
                 <v-col cols="" lg="4" md="12" sm="12">
-                    <div v-if="book3 == true">
+                    <!-- <div v-if="book3 == true"> -->
                         <Workbookcard :grade="'Grade 9'" :assignment="'Last Assignment'" :image="'/img/grade9.jpg'" />
-                    </div>
-                    <div v-else>
-                        <BookPurchaseCard :book-num="'3'" :grade="'Grade 9'" :assignment="'Last Assignment'"
-                            :image="'/img/grade9.jpg'" />
-                    </div>
+                    <!-- </div> -->
+                    <!-- <div v-else> -->
+                        <!-- <BookPurchaseCard :book-num="'3'" :grade="'Grade 9'" :assignment="'Last Assignment'" -->
+                            <!-- :image="'/img/grade9.jpg'" /> -->
+                    <!-- </div> -->
                 </v-col>
             </v-row>
         </v-container><br><br><br>

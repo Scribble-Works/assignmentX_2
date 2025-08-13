@@ -55,7 +55,7 @@ const googleSignUP = async () => {
         const { data, error } = await auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: window.location.origin + '/auth'
+                redirectTo: window.location.origin + '/'
             }
         });
         if (error) {
@@ -71,25 +71,25 @@ const googleSignUP = async () => {
         console.error(error);
     }
 };
-const appleSignUP = async () => {
-    try {
-        const { data, error } = await auth.signInWithOAuth({
-            provider: 'apple',
-            options: {
-                redirectTo: window.location.origin + '/auth'
-            }
-        });
-        if (error) {
-            alert.value = true;
-            text.value = 'An error occurred while signing up with Apple.';
-            console.error(error);
-        }
-    } catch (error) {
-        alert.value = true;
-        text.value = 'An error occurred. Please try again later.';
-        console.error(error);
-    }
-};
+// const appleSignUP = async () => {
+//     try {
+//         const { data, error } = await auth.signInWithOAuth({
+//             provider: 'apple',
+//             options: {
+//                 redirectTo: window.location.origin + '/auth'
+//             }
+//         });
+//         if (error) {
+//             alert.value = true;
+//             text.value = 'An error occurred while signing up with Apple.';
+//             console.error(error);
+//         }
+//     } catch (error) {
+//         alert.value = true;
+//         text.value = 'An error occurred. Please try again later.';
+//         console.error(error);
+//     }
+// };
 
 const closeAlert = () => {
     alert.value = false;
@@ -139,14 +139,14 @@ const closeAlert = () => {
                     </v-row>
 
                     <v-row>
-                        <v-col cols="" lg="6" md="6" sm="12">
+                        <v-col cols="" lg="12" md="12" sm="12">
                             <v-btn style="width: 100%;" @click="googleSignUP" variant="outlined"><v-icon
                                     style="color: red;">mdi-google</v-icon> Signup with Google</v-btn>
                         </v-col>
-                        <v-col cols="" lg="6" md="6" sm="12">
+                        <!-- <v-col cols="" lg="6" md="6" sm="12">
                             <v-btn style="width: 100%;" @click="appleSignUP"
                                 variant="outlined"><v-icon>mdi-apple</v-icon> Signup with Apple</v-btn>
-                        </v-col>
+                        </v-col> -->
                     </v-row><br>
                     <p class="text-center">Have an account? <NuxtLink
                             style="color: #2096F3; text-decoration: underline;" to="/auth">Sign In</NuxtLink>

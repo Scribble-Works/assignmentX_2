@@ -81,36 +81,36 @@ const googleSignIN = async () => {
         alert.value = true;
     }
 };
-const appleSignIN = async () => {
-    try {
-        const { data, error } = await auth.signInWithOAuth({
-            provider: 'apple',
-            options: {
-                redirectTo: window.location.origin + '/auth'
-            }
-        });
-        if (!user.value) {
-            // alert('Invalid email or password');
-            alert.value = true;
-            const message = 'Invalid Email or Password';
-            const title = 'Login Error';
-            router.push('/auth');
-            return;
-        } else if (profile.data == null) {
-            router.push('/bio');
-        } else {
-            router.push('/workbook/');
-            console.log(user.value)
-        }
-        if (error) {
-            alert('An error occurred while signing in with Apple.');
-            console.error(error);
-        }
-    } catch (error) {
-        alert('An error occurred. Please try again later.');
-        console.error(error);
-    }
-};
+// const appleSignIN = async () => {
+//     try {
+//         const { data, error } = await auth.signInWithOAuth({
+//             provider: 'apple',
+//             options: {
+//                 redirectTo: window.location.origin + '/auth'
+//             }
+//         });
+//         if (!user.value) {
+//             // alert('Invalid email or password');
+//             alert.value = true;
+//             const message = 'Invalid Email or Password';
+//             const title = 'Login Error';
+//             router.push('/auth');
+//             return;
+//         } else if (profile.data == null) {
+//             router.push('/bio');
+//         } else {
+//             router.push('/workbook/');
+//             console.log(user.value)
+//         }
+//         if (error) {
+//             alert('An error occurred while signing in with Apple.');
+//             console.error(error);
+//         }
+//     } catch (error) {
+//         alert('An error occurred. Please try again later.');
+//         console.error(error);
+//     }
+// };
 
 </script>
 <template>
@@ -157,14 +157,14 @@ const appleSignIN = async () => {
                     </v-row>
 
                     <v-row>
-                        <v-col cols="" lg="6" md="6" sm="12">
+                        <v-col cols="" lg="12" md="12" sm="12">
                             <v-btn @click="googleSignIN" variant="outlined" style="width: 100%;"><v-icon
                                     style="color: red;">mdi-google</v-icon> Signin with Google</v-btn>
                         </v-col>
-                        <v-col cols="" lg="6" md="6" sm="12">
+                        <!-- <v-col cols="" lg="6" md="6" sm="12">
                             <v-btn @click="appleSignIN" variant="outlined"
                                 style="width: 100%;"><v-icon>mdi-apple</v-icon> Signin with Apple</v-btn>
-                        </v-col>
+                        </v-col> -->
                     </v-row><br>
                     <p class="text-center">Don't have an account? <NuxtLink
                             style="color: #2096F3; text-decoration: underline;" to="/register">Sign Up</NuxtLink>
@@ -172,7 +172,7 @@ const appleSignIN = async () => {
                 </v-container>
             </v-col>
         </v-row>
-        <dialog :text="message" :title="title"  />
+        <!-- <dialog :text="message" :title="title"  /> -->
     </div>
 </template>
 <style>

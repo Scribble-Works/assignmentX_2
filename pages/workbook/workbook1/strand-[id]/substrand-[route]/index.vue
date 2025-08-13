@@ -167,10 +167,11 @@ watch(contentStatus, (newStatus) => {
                         <v-col>
                             <v-card>
                                 <v-card-title>
+                                    
                                     <div @click="handleContentClick(content.id)"
                                         class="cursor-pointer hover:text-gray-600 transition-colors">
-                                        <div style="max-width: 89dvw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block;">
-                                            <strong>{{ content.indicators }}</strong>
+                                        <div>
+                                            <strong style="font-size: .9em; max-width: 100dvw;" class="d-inline-block text-truncate">{{ content.indicators }}</strong>
                                         </div>
                                     </div>
                                 </v-card-title>

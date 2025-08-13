@@ -4,6 +4,10 @@ const { auth } = useSupabaseClient();
 const client = useSupabaseClient();
 const router = useRouter();
 
+const googleUser = user.value?.user_metadata?.provider === 'google';
+
+console.log(googleUser);
+
 const profile = await client
   .from("profiles")
   .select("firstName, lastName, school, DOB")
@@ -22,6 +26,8 @@ const signout = async () => {
     console.error(error);
   }
 };
+
+
 </script>
 <template>
   <div>
@@ -31,6 +37,10 @@ const signout = async () => {
           <v-icon style="font-size: 2em">mdi-account-circle</v-icon>
           <div v-if="profile.data == null">
             <h3>Fill Bio Data</h3>
+          </div>
+          <div v-else-if="googleUser">
+            <span class="ml-2">{{ user.user_metadata.full_name }}
+              <v-icon>mdi-menu-down</v-icon></span>
           </div>
           <div v-else>
             <span class="ml-2">{{ profile.data.firstName }} {{ profile.data.lastName }}
