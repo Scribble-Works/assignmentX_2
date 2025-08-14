@@ -2,18 +2,30 @@
 const user = useSupabaseUser();
 const client = useSupabaseClient();
 
-const profile = await client.from("profiles").select('*').eq("id", user.value.id)
-    .single();;
 const alert = ref(false);
-// console.log(profile);
 
-watchEffect(() => {
-    if (user.value && profile.data === null) {
-        alert.value = true;
-    } else {
-        alert.value = false;
+const profile = ref(null);
+
+onMounted(async () => {
+    if (user.value && profile.value !== null) {
+        const { data } = await client.from("profiles").select('*').eq("id", user.value.id).single();
+        if (data) {
+            profile.value = data;
+        }
     }
 });
+
+
+watch(
+    () => [user.value, profile.value],
+    ([userVal, profileVal]) => {
+        if (userVal && profileVal === null) {
+            alert.value = true;
+        } else {
+            alert.value = false;
+        }
+    }
+);
 
 const openBioData = () => {
     navigateTo('/bio');
