@@ -2,16 +2,20 @@
 const user = useSupabaseUser();
 const client = useSupabaseClient();
 
-const alert = ref(false);
+const dialog = ref(false);
 
 const profile = ref(null);
 
 onMounted(async () => {
-    if (user.value && profile.value === null) {
-        const { data } = await client.from("profiles").select('*').eq("id", user.value.id).single();
-        if (data) {
-            profile.value = data;
+    try {
+        if (user.value && profile.value === null) {
+            const { data } = await client.from("profiles").select('*').eq("id", user.value.id).single();
+            if (data) {
+                profile.value = data;
+            }
         }
+    } catch (error) {
+        console.error('Error fetching profile data:', error);
     }
 });
 
@@ -19,10 +23,14 @@ onMounted(async () => {
 watch(
     () => [user.value, profile.value],
     ([userVal, profileVal]) => {
-        if (userVal && profileVal === null) {
-            alert.value = true;
-        } else {
-            alert.value = false;
+        try {
+            if (userVal && profileVal === null) {
+                dialog.value = true;
+            } else {
+                dialog.value = false;
+            }
+        } catch (error) {
+            console.error('Error in watch function:', error);
         }
     },
     { immediate: true }
@@ -40,16 +48,15 @@ const openBioData = () => {
         </main>
         <theFooter />
 
-        <v-dialog v-model="alert" max-width="500" persistent>
-            <v-card>
-                <v-card-title class="headline">Fill Bio Data</v-card-title>
-                <v-card-text>Please Fill Bio Data to use the app.</v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn @click="openBioData" color="secondary">Bio Data</v-btn>
-                    <!-- <v-btn color="primary" @click="closeAlert">Close</v-btn> -->
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+        <div v-if="dialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+            <h2 class="text-xl font-semibold mb-4">Fill Bio Data</h2>
+            <p class="mb-6">Please Fill Bio Data to use the app.</p>
+            <div class="flex justify-end space-x-2">
+                <button @click="openBioData"
+                class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition">Bio Data</button>
+            </div>
+            </div>
+        </div>
     </div>
 </template>
