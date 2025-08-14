@@ -7,7 +7,7 @@ const alert = ref(false);
 const profile = ref(null);
 
 onMounted(async () => {
-    if (user.value && profile.value !== null) {
+    if (user.value && profile.value === null) {
         const { data } = await client.from("profiles").select('*').eq("id", user.value.id).single();
         if (data) {
             profile.value = data;
@@ -24,7 +24,8 @@ watch(
         } else {
             alert.value = false;
         }
-    }
+    },
+    { immediate: true }
 );
 
 const openBioData = () => {
