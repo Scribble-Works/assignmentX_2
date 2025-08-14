@@ -35,13 +35,13 @@ const signout = async () => {
       <template v-slot:activator="{ props }">
         <v-btn v-bind="props">
           <v-icon style="font-size: 2em">mdi-account-circle</v-icon>
-          <div v-if="profile.data == null || !googleUser">
+          <div v-if="profile.data == null">
             <h3>Fill Bio Data</h3>
           </div>
-          <div v-else-if="googleUser">
+          <!-- <div v-else-if="googleUser">
             <span class="ml-2">{{ user.user_metadata.full_name }}
               <v-icon>mdi-menu-down</v-icon></span>
-          </div>
+          </div> -->
           <div v-else>
             <span class="ml-2">{{ profile.data.firstName }} {{ profile.data.lastName }}
               <v-icon>mdi-menu-down</v-icon></span>
