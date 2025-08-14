@@ -6,7 +6,7 @@ const router = useRouter();
 
 const googleUser = user.value?.user_metadata?.provider === 'google';
 
-console.log(googleUser);
+// console.log(googleUser);
 
 const profile = await client
   .from("profiles")
