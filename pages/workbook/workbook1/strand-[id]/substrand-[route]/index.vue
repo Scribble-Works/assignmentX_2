@@ -171,7 +171,12 @@ watch(contentStatus, (newStatus) => {
                                     <div @click="handleContentClick(content.id)"
                                         class="cursor-pointer hover:text-gray-600 transition-colors">
                                         <div>
-                                            <strong style="font-size: .9em; max-width: 100dvw;" class="d-inline-block text-truncate">{{ content.indicators }}</strong>
+                                            <strong
+                                                style="font-size: .9em; max-width: 100%; white-space: normal; word-break: break-word;"
+                                                class="d-inline-block"
+                                            >
+                                                {{ content.indicators }}
+                                            </strong>
                                         </div>
                                     </div>
                                 </v-card-title>
