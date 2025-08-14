@@ -27,6 +27,14 @@ const signout = async () => {
   }
 };
 
+const editProfile = () => {
+  if (profile.data == null) {
+    router.push('/bio');
+  } else {
+    router.push('/edit-profile');
+  }
+};
+
 
 </script>
 <template>
@@ -58,10 +66,8 @@ const signout = async () => {
               {{ user.email }}
             </p>
             <v-divider class="my-3"></v-divider>
-            <v-btn variant="text" rounded>
-              <NuxtLink to="/edit-profile" class="text-sm text-blue-600 hover:text-blue-800 transition">
-                Edit Account
-              </NuxtLink>
+            <v-btn @click="editProfile" variant="text" rounded>
+              Edit Account
             </v-btn>
             <v-divider class="my-3"></v-divider>
             <v-btn @click="signout" variant="text" rounded> Sign Out </v-btn>
