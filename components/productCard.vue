@@ -1,15 +1,12 @@
-<script>
-export default {
-  name: "ProductCard",
-  props: {
-    title: String,
-    level: String,
-    description: String,
-    price: String,
-    image: String,
-    reverse: Boolean,
-  },
-};
+<script setup>
+defineProps({
+  title: String,
+  level: String,
+  description: String,
+  price: String,
+  image: String,
+  reverse: Boolean,
+});
 </script>
 
 <template>
