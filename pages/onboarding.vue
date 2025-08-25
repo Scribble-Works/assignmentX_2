@@ -1,4 +1,23 @@
-<template setup>
+<script setup>
+definePageMeta({
+  layout: "onboarding",
+});
+
+const user = useSupabaseUser();
+const { auth } = useSupabaseClient();
+const client = useSupabaseClient();
+
+
+const profile = await client.from("profiles")
+  .select("*")
+  .eq("id", user.value.id)
+  .single();
+
+const firstName = profile.data.firstName;
+
+
+</script>
+<template>
   <!-- Main Content -->
   <main class="flex-1 flex flex-col items-center justify-center px-6 py-12">
     <!-- Welcome Illustration -->
@@ -17,7 +36,7 @@
       </h1>
 
       <p class="welcome-text text-gray-600 leading-relaxed">
-        Hi [User's First Name], now that you're here, a few quick questions will
+        Hi {{ firstName }}, now that you're here, a few quick questions will
         help us tailor AssignmentX to your unique learning needs. This helps us
         provide the most relevant content, features, and support just for you.
         It'll only take a moment!
@@ -35,23 +54,17 @@
       >
         Let's Start</v-btn
       >
-      <v-btn
+      <!-- <v-btn
         to=""
         size="large"
         color="blue"
         class="bg-green-500 hover:bg-blue-600 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200"
       >
         Skip For Now</v-btn
-      >
+      > -->
     </div>
   </main>
 </template>
-
-<script default>
-definePageMeta({
-  layout: "onboarding",
-});
-</script>
 
 <style scoped>
 .logo {

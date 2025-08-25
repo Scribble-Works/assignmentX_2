@@ -1,4 +1,6 @@
 <script setup>
+import { useMediaQuery } from '@vueuse/core';
+const mobile = useMediaQuery('(max-width: 600px)');
 definePageMeta({
     layout: 'auth',
 });
@@ -63,7 +65,7 @@ const backLogin = () => {
                     </form>
                 </v-col>
                 <v-col cols="" lg="6" md="12" sm="12">
-                    <img src="/img/forget.png" alt="Forget Password">
+                    <img v-if="!mobile" src="/img/forget.png" alt="Forget Password">
                 </v-col>
             </v-row>
 

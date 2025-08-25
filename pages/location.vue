@@ -106,7 +106,11 @@ definePageMeta({
   layout: "onboarding",
 });
 
-const selectedAccessibility = ref("yes"); // Default to 'yes' as per image
+const user = useSupabaseUser();
+const client = useSupabaseClient();
+const router = useRouter();
+
+const selectedAccessibility = ref(""); // Default to 'yes' as per image
 
 const handleSkip = () => {
   console.log("Skipping accessibility question...");
@@ -118,10 +122,15 @@ const handlePrevious = () => {
   // Add previous step navigation logic here
 };
 
-const handleNext = () => {
-  console.log("Selected accessibility option:", selectedAccessibility.value);
-  console.log("Going to next step...");
-  // Add next step navigation logic here, passing selectedAccessibility.value
+const handleNext = async() => {
+  try {
+   const {data, error} = await client.from("onboarding").insert({
+      id: user.value.id,
+      location: selectedAccessibility.value
+    });
+  } catch (error) {
+    
+  }
 };
 </script>
 

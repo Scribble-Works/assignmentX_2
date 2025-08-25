@@ -1,4 +1,6 @@
 <script setup>
+import { useMediaQuery } from '@vueuse/core';
+const mobile = useMediaQuery('(max-width: 600px)');
 definePageMeta({
     layout: 'auth',
 });
@@ -117,7 +119,7 @@ const googleSignIN = async () => {
     <div class="d-flex flex-column fill-height justify-center align-center min-h-screen mt-0">
         <v-row class="mt-16">
             <v-col cols="" lg="6" sm="12" md="12">
-                <img height="auto" src="/img/login.png" alt="Login">
+                <img v-if="!mobile" height="auto" src="/img/login.png" alt="Login">
             </v-col>
             <v-col cols="" lg="6" sm="12" md="12">
                 <v-container class="w-auto" role="presentation">
