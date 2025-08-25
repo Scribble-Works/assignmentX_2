@@ -74,7 +74,6 @@
 
       <div class="flex gap-4">
         <v-btn
-          to="/"
           @click="handlePrevious"
           size="large"
           class="previous-btn bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200"
@@ -83,7 +82,6 @@
           Previous
         </v-btn>
         <v-btn
-          to="/location"
           @click="handleNext"
           size="large"
           class="next-btn bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200"
@@ -102,23 +100,38 @@ import { ref } from "vue";
 definePageMeta({
   layout: "onboarding",
 });
+const user = useSupabaseUser();
+const client = useSupabaseClient();
+const router = useRouter();
 
-const selectedAccessibility = ref("yes"); // Default to 'yes' as per image
+const selectedAccessibility = ref(""); // Default to 'yes' as per image
 
 const handleSkip = () => {
   console.log("Skipping accessibility question...");
   // Add skip logic here
+  router.push("/");
 };
 
 const handlePrevious = () => {
   console.log("Going to previous step...");
   // Add previous step navigation logic here
+  router.push('/location');
 };
 
-const handleNext = () => {
-  console.log("Selected accessibility option:", selectedAccessibility.value);
-  console.log("Going to next step...");
-  // Add next step navigation logic here, passing selectedAccessibility.value
+const handleNext = async() => {
+  try {
+    const { data, error } = await client.from("onboarding").update({
+      disability: selectedAccessibility.value,
+    }).eq("id", user.value.id);
+    if(error){
+      console.log("Error updating accessibility:", error);
+    }else{
+      router.push("/completed");
+    }
+
+  } catch (error) {
+    console.error("Error saving accessibility info:", error);
+  }
 };
 </script>
 

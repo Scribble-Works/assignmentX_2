@@ -51,15 +51,19 @@
 definePageMeta({
   layout: "onboarding",
 });
+const user = useSupabaseUser();
+const client = useSupabaseClient();
+const router = useRouter();
 
 const handleStartLearning = () => {
   console.log("Starting learning journey...");
-  // Add navigation logic to the learning content
+  router.push("/workbook/")
 };
 
 const handleGoToDashboard = () => {
   console.log("Navigating to dashboard...");
   // Add navigation logic to the user dashboard
+  router.push('/')
 };
 </script>
 

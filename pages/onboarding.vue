@@ -54,14 +54,14 @@ const firstName = profile.data.firstName;
       >
         Let's Start</v-btn
       >
-      <!-- <v-btn
-        to=""
+      <v-btn
+        to="/"
         size="large"
         color="blue"
         class="bg-green-500 hover:bg-blue-600 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200"
       >
         Skip For Now</v-btn
-      > -->
+      >
     </div>
   </main>
 </template>

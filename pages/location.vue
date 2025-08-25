@@ -114,22 +114,26 @@ const selectedAccessibility = ref(""); // Default to 'yes' as per image
 
 const handleSkip = () => {
   console.log("Skipping accessibility question...");
-  // Add skip logic here
+  router.push("/");
 };
 
 const handlePrevious = () => {
   console.log("Going to previous step...");
   // Add previous step navigation logic here
+  router.push('/role');
 };
 
 const handleNext = async() => {
   try {
-   const {data, error} = await client.from("onboarding").insert({
-      id: user.value.id,
-      location: selectedAccessibility.value
-    });
+   const {data, error} = await client
+     .from("onboarding")
+     .update({
+       location: selectedAccessibility.value
+     })
+     .eq('id', user.value.id);
+     router.push('/accessibility');
   } catch (error) {
-    
+    console.log("Error updating location:", error);
   }
 };
 </script>

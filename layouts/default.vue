@@ -39,6 +39,16 @@ const client = useSupabaseClient();
 // const openBioData = () => {
 //     navigateTo('/bio');
 // };
+const onboarding = await client.from("onboarding")
+  .select("*")
+  .eq("id", user.value.id)
+  .single();
+
+onMounted(() => {
+  if (user.value && onboarding.data == null) {
+    navigateTo('/onboarding');
+  }
+});
 </script>
 <template>
     <div class="min-h-screen flex flex-col">

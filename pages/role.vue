@@ -115,6 +115,7 @@ const firstName = profile.data.firstName;
 const handleSkip = () => {
   console.log("Skipping role selection...");
   // Add skip logic here
+  router.push("/");
 };
 
 const handlePrevious = () => {
