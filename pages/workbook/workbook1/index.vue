@@ -36,10 +36,10 @@ console.log(strands)
 
                                 <v-card-text class="pt-6">
                                     <div class="font-weight-light text-grey text-h6 mb-2">
-                                        {{ strand.strand_name }}
+                                        {{ strand.title }}
                                     </div>
                                     <h3 class="text-h4 strand-title font-weight-light mb-2">
-                                        {{ strand.title }}
+                                        {{ strand.strand_name }}
                                     </h3>
                                     <p>{{ strand.descriptions }}</p>
                                 </v-card-text>

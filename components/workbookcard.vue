@@ -7,7 +7,8 @@ const Purchase = ref('Available');
 const { grade, assignment, image } = defineProps([
     'grade',
     'assignment',
-    'image'
+    'image',
+    'age'
 ]);
 
 
@@ -33,6 +34,7 @@ const { grade, assignment, image } = defineProps([
                         <div class="font-weight-light text-black text-h6 mb-2">
                             {{ grade }}
                         </div>
+                        <p class="text-muted">{{ age }}</p>
                     </v-card-text>
                 </v-card>
             </v-hover>

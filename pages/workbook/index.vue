@@ -19,7 +19,7 @@ const book3 = profile.data[0].threePurchase;
             <v-row class="mt-10">
                 <v-col cols="" lg="4" md="12" sm="12">
                     <!-- <div v-if="book1 == true"> -->
-                        <Workbookcard :grade="'Grade 7'" :assignment="'First Assignment'" :image="'/img/grade7.jpg'" />
+                        <Workbookcard :grade="'Grade 7'" :assignment="'First Assignment'" :image="'/img/grade7.jpg'" :age="'Ages 11 - 13'" />
                     <!-- </div> -->
                     <!-- <div v-else> -->
                         <!-- <BookPurchaseCard :book-num="'1'" :grade="'Grade 7'" :assignment="'First Assignment'" -->
@@ -28,7 +28,7 @@ const book3 = profile.data[0].threePurchase;
                 </v-col>
                 <v-col cols="" lg="4" md="12" sm="12">
                     <!-- <div v-if="book2 == true"> -->
-                        <Workbookcard :grade="'Grade 8'" :assignment="'Second Assignment'" :image="'/img/grade8.jpg'" />
+                        <Workbookcard :grade="'Grade 8'" :assignment="'Second Assignment'" :image="'/img/grade8.jpg'" :age="'Ages 12 - 14'" />
                     <!-- </div> -->
                     <!-- <div v-else> -->
                         <!-- <BookPurchaseCard :book-num="'2'" :grade="'Grade 8'" :assignment="'Second Assignment'" -->
@@ -37,7 +37,7 @@ const book3 = profile.data[0].threePurchase;
                 </v-col>
                 <v-col cols="" lg="4" md="12" sm="12">
                     <!-- <div v-if="book3 == true"> -->
-                        <Workbookcard :grade="'Grade 9'" :assignment="'Last Assignment'" :image="'/img/grade9.jpg'" />
+                        <Workbookcard :grade="'Grade 9'" :assignment="'Last Assignment'" :image="'/img/grade9.jpg'" :age="'Ages 13 - 15'" />
                     <!-- </div> -->
                     <!-- <div v-else> -->
                         <!-- <BookPurchaseCard :book-num="'3'" :grade="'Grade 9'" :assignment="'Last Assignment'" -->
