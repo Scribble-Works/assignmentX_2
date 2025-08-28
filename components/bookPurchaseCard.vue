@@ -1,12 +1,13 @@
 <script setup>
-const price = ref('GHS 10.00');
+const price = ref('Available');
 const client = useSupabaseClient();
 const user = useSupabaseUser();
 const { grade, assignment, image, bookNum } = defineProps([
     'grade',
     'assignment',
     'image',
-    'bookNum'
+    'bookNum',
+    'age'
 ]);
 // if(bookNum == '1'){
 //     document.paybtn.style.backgroundColor = '#FFCDD2'; // Light Red
@@ -31,7 +32,7 @@ const onSuccessfulPayment = async () => {
 <template>
     <div>
         <v-hover v-slot="{ isHovering, props }">
-            <v-card class="mx-auto" color="grey-lighten-4" max-width="600"  v-bind="props">
+            <v-card class="mx-auto" color="grey-lighten-4" max-width="600" v-bind="props">
                 <v-img :aspect-ratio="16 / 9" :src="image" cover>
                     <v-expand-transition>
                         <div v-if="isHovering" class="d-flex bg-blue-grey-darken-1 v-card--reveal text-h2"
@@ -43,13 +44,15 @@ const onSuccessfulPayment = async () => {
 
                 <v-card-text class="pt-6">
                     <h3 class="text-h4 font-weight-light text-black mb-2">
-                        {{ assignment }}
+                        {{ grade }}
                     </h3>
                     <div class="font-weight-light text-black text-h6 mb-2">
-                        {{ grade }}
+                        {{ assignment }}
                     </div>
+                    <p class="text-muted font-weight-bold mb-5">{{ age }}</p>
                     <div>
-                        <PaystackBtn class="paybtn" :btn-text="'Enroll Now'" :amount="10" :onSuccessfulPayment="onSuccessfulPayment" />
+                        <v-btn class="paybtn" style="color: white; width: 100%;" :amount="10"
+                            @click="onSuccessfulPayment">Enroll For Free</v-btn>
                     </div>
                 </v-card-text>
             </v-card>
@@ -57,9 +60,9 @@ const onSuccessfulPayment = async () => {
     </div>
 </template>
 <style>
-.paybtn{
+.paybtn {
     text-align: center;
     background-color: #2096F3;
-    border-radius: 5px; 
+    border-radius: 5px;
 }
 </style>

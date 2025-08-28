@@ -23,22 +23,30 @@ console.log(strandtitle);
 <template>
     <div class="mt-5" style="height: auto;">
         <v-container>
-            <h1 class="text-center text-uppercase text-bold" style="font-size: 3em; color: #3E4F5C;">STRAND
+            <h1 class="text-left font-weight-bold text-uppercase text-bold" style="font-size: 1.5em; color: #3E4F5C;">
+                STRAND
                 {{ strandNumber }} - {{ title }}
             </h1>
-            <ConceptNotes :concept-note="conceptNote" />
-            <v-row class="mt-10" v-for="substrand in substrands" :key="substrand.id">
-                <v-col>
-                    <NuxtLink
-                        :to="'/workbook/workbook1/strand-' + substrand.strand_ref + '/substrand-' + substrand.route + '/'">
-                        <v-card>
-                            <v-card-title class="font-weight-light text-left mb-2">{{ substrand.title }}</v-card-title>
-                        </v-card>
-                    </NuxtLink>
-                    <v-spacer></v-spacer>
-                    <br>
-                </v-col>
-            </v-row>
+            <introvid :intro="'https://www.youtube.com/embed/Ec7zLUi16JU'" />
+            <div class="mt-10">
+                <v-row class="mt-n5" v-for="substrand in substrands" :key="substrand.id">
+                    <v-col>
+                        <NuxtLink
+                            :to="'/workbook/workbook1/strand-' + substrand.strand_ref + '/substrand-' + substrand.route + '/'">
+                            <v-card>
+                                <v-card-title class="font-weight-light text-left">{{ substrand.title }}</v-card-title>
+                            </v-card>
+                        </NuxtLink>
+                        <v-spacer></v-spacer>
+                        <br>
+                    </v-col>
+                </v-row>
+            </div>
         </v-container>
     </div>
 </template>
+<style>
+body {
+    background-color: #F6F6F6;
+}
+</style>

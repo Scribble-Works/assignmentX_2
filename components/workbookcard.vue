@@ -17,7 +17,7 @@ const { grade, assignment, image } = defineProps([
     <div>
         <NuxtLink to="/workbook/workbook1/">
             <v-hover v-slot="{ isHovering, props }">
-                <v-card class="mx-auto" color="grey-lighten-4" max-width="600" min-height="287" v-bind="props">
+                <v-card class="mx-auto" color="grey-lighten-4" max-width="600" min-height="415" v-bind="props">
                     <v-img :aspect-ratio="16 / 9" :src="image" cover>
                         <v-expand-transition>
                             <div v-if="isHovering" class="d-flex bg-blue-grey-darken-1 v-card--reveal text-h2"
@@ -28,13 +28,13 @@ const { grade, assignment, image } = defineProps([
                     </v-img>
 
                     <v-card-text class="pt-6">
-                        <h3 class="text-h4 font-weight-light text-black mb-2">
-                            {{ assignment }}
-                        </h3>
-                        <div class="font-weight-light text-black text-h6 mb-2">
+                        <h3 class="text-h4 font-weight-light text-black mb-1">
                             {{ grade }}
+                        </h3>
+                        <div class="font-weight-light text-black text-h6 mb-1">
+                            {{ assignment }}
                         </div>
-                        <p class="text-muted">{{ age }}</p>
+                        <p class="font-weight-bold">{{ age }}</p>
                     </v-card-text>
                 </v-card>
             </v-hover>

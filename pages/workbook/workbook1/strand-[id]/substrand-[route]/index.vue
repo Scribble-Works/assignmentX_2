@@ -134,11 +134,11 @@ watch(contentStatus, (newStatus) => {
 }, { deep: true });
 </script>
 <template>
-    <div class="mt-15" style="height: auto; background-color: #f6f6f6">
+    <div class="mt-5" style="height: auto; background-color: #f6f6f6">
         <div class="container mx-auto p-4">
             <v-row>
                 <v-col cols="" lg="8" sm="12">
-                    <h1 class="text-left text-uppercase text-bold" style="font-size: 2em">
+                    <h1 class="text-left font-weight-bold text-uppercase text-bold" style="font-size: 1.4em">
                         {{ title }}
                     </h1>
                     <!-- Progress Indicator -->
@@ -160,7 +160,7 @@ watch(contentStatus, (newStatus) => {
                 </v-col> -->
             </v-row>
             <ConceptNotes :concept-note="conceptNote" />
-            <div class="mt-15" style="height: auto; background-color: #f6f6f6">
+            <div class="mt-10" style="height: auto; background-color: #f6f6f6">
                 <div class="container mx-auto p-4">
                     <v-row v-for="content in substrand_ls" :key="content.id">
 
@@ -180,14 +180,14 @@ watch(contentStatus, (newStatus) => {
                                         </div>
                                     </div>
                                 </v-card-title>
-                                <v-card-actions class="flex items-center justify-between">
+                                <!-- <v-card-actions class="flex items-center justify-between"> -->
                                     <!-- <div class="gap-2">
                                         <v-btn @click="openNotes" color="primary">concept note</v-btn>
                                         <v-btn @click="openBece" color="success">BECE Questions</v-btn>
                                     </div> -->
 
                                     <!-- Status Indicator -->
-                                    <div class="flex items-center">
+                                    <!-- <div class="flex items-center">
                                         <span :class="[
                                             'px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-1',
                                             getStatusInfo(getContentStatus(content.id)).bgColor,
@@ -196,8 +196,8 @@ watch(contentStatus, (newStatus) => {
                                             <span>{{ getStatusInfo(getContentStatus(content.id)).icon }}</span>
                                             {{ getStatusInfo(getContentStatus(content.id)).text }}
                                         </span>
-                                    </div>
-                                </v-card-actions>
+                                    </div> -->
+                                <!-- </v-card-actions> -->
                             </v-card>
 
                             <v-spacer></v-spacer>

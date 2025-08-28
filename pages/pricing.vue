@@ -7,7 +7,7 @@ const products = [
     title: "The First Assignment",
     level: "JHS 1",
     description:
-      "Start strong with a solid foundation in all your subjects. This book introduces important concepts in Mathematics, explained in simple terms with fun examples to help you understand better. Perfect for classroom support and building good study habits.",
+      "The First Assignment JHS 1 Maths Workbook is a trusted tool for mastering mathematics at the junior high level. Developed in alignment with the NaCCA Common Core Programme, this workbook offers structured exercises, dedicated correction spaces, and a built-in graph sheet. It focuses on effective learning through well-defined learning standards and formative assessments, making complex topics simple and accessible.",
     price: "80",
     image: "/img/jhs1BookSpine.png",
     reverse: false,
@@ -16,7 +16,7 @@ const products = [
     title: "The Second Assignment",
     level: "JHS 2",
     description:
-      "Take your learning to the next level! This book dives deeper into the topics you've already started, with more exercises, guided explanations, and helpful revision tips. Great for reinforcing your knowledge and staying ahead in class.",
+      "The Second Assignment JHS 2 Maths Workbook continues to build on the foundation from JHS 1, with a focus on preparing students for higher-level concepts. This book provides a wealth of practice exercises and a clear, step-by-step approach to help learners deepen their understanding of key mathematical principles.",
     price: "80",
     image: "/img/jhs2BookSpine.png",
     reverse: true,
@@ -25,7 +25,7 @@ const products = [
     title: "The Last Assignment",
     level: "JHS 3",
     description:
-      "Your exam prep starts here! This book is focused on helping you revise and practice for your final junior school exams. It includes key summaries, solved past questions, practice tests, and exam strategies. Covers all major subjects to help you feel confident and ready.",
+      "The Last Assignment JHS 3 Maths Workbook is the final step in the series, designed to prepare students for the BECE exams. It offers a comprehensive review of all topics, challenging practice tests, and detailed solutions to strengthen problem-solving skills and ensure students are fully prepared for success.",
     price: "80",
     image: "/img/jhs3BookSpine.png",
     reverse: false,
