@@ -35,7 +35,7 @@ console.log(strands)
                             <v-card class="mx-auto" color="white" max-width="1200">
 
                                 <v-card-text class="pt-6">
-                                    <div class="font-weight-light text-grey text-h6 mb-2">
+                                    <div style="color: #2096f3;" class="font-weight-light text-h6 mb-2">
                                         {{ strand.title }}
                                     </div>
                                     <h3 class="text-h4 strand-title font-weight-light mb-2">
