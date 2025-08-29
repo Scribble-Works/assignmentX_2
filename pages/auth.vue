@@ -1,6 +1,7 @@
 <script setup>
 import { useMediaQuery } from '@vueuse/core';
 const mobile = useMediaQuery('(max-width: 600px)');
+const tablet = useMediaQuery('(min-width: 601px) and (max-width: 1024px)');
 definePageMeta({
     layout: 'auth',
 });
@@ -119,9 +120,15 @@ const googleSignIN = async () => {
     <div class="d-flex flex-column fill-height justify-center align-center min-h-screen mt-0">
         <v-row class="mt-16">
             <v-col cols="" lg="6" sm="12" md="12">
-                <img v-if="!mobile" height="auto" src="/img/login.png" alt="Login">
+                <img v-if="!mobile && !tablet" height="auto" src="/img/login.png" alt="Login">
             </v-col>
-            <v-col cols="" lg="6" sm="12" md="12">
+            <v-col
+                :class="(mobile || tablet) ? 'mt-n16' : ''"
+                cols=""
+                lg="6"
+                sm="12"
+                md="12"
+            >
                 <v-container class="w-auto" role="presentation">
                     <h1 class="text-h2" style="font-family: 'Inter', sans-serif; font-weight: bold;">Welcome back!</h1>
                     <p style="font-family: 'Inter', sans-serif;">Enter your credentials to access your account</p>
@@ -164,8 +171,8 @@ const googleSignIN = async () => {
                                     style="color: red;">mdi-google</v-icon> Signin with Google</v-btn>
                         </v-col>
                         <!-- <v-col cols="" lg="6" md="6" sm="12">
-                            <v-btn @click="appleSignIN" variant="outlined"
-                                style="width: 100%;"><v-icon>mdi-apple</v-icon> Signin with Apple</v-btn>
+                                <v-btn @click="appleSignIN" variant="outlined"
+                                        style="width: 100%;"><v-icon>mdi-apple</v-icon> Signin with Apple</v-btn>
                         </v-col> -->
                     </v-row><br>
                     <p class="text-center">Don't have an account? <NuxtLink

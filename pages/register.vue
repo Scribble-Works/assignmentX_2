@@ -8,6 +8,7 @@ const { auth } = useSupabaseClient();
 const user = useSupabaseUser();
 const router = useRouter();
 const mobile = useMediaQuery('(max-width: 600px)');
+const tablet = useMediaQuery('(min-width: 601px) and (max-width: 1024px)');
 
 const email = ref('');
 const password = ref('');
@@ -105,8 +106,18 @@ const closeAlert = () => {
 <template>
     <div class="d-flex flex-column fill-height justify-center align-center min-h-screen">
         <v-row class="mt-n1">
-            <v-col cols="" lg="6" sm="12" md="12">
-                <v-container class="w-auto" role="presentation">
+            <v-col
+                :class="(mobile || tablet) ? 'd-flex justify-center align-center mt-10' : ''"
+                cols=""
+                lg="6"
+                sm="12"
+                md="12"
+            >
+                <v-container
+                    class="w-auto"
+                    role="presentation"
+                    :style="(mobile || tablet) ? 'max-width: 100%;' : ''"
+                >
                     <h1 class="text-h2" style="font-family: 'Inter', sans-serif; font-weight: bold;">Get Started Now
                     </h1>
                     <!-- <p style="font-family: 'Inter', sans-serif;">Enter your credentials to access your account</p> -->
@@ -157,7 +168,7 @@ const closeAlert = () => {
                 </v-container>
             </v-col>
             <v-col class="mt-15" cols="" lg="6" sm="12" md="12">
-                <img v-if="!mobile" src="/img/signup.png" height="100" alt="Signup">
+                <img v-if="!mobile && !tablet" src="/img/signup.png" height="100" alt="Signup">
             </v-col>
         </v-row>
 
