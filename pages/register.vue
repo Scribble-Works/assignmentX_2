@@ -44,7 +44,7 @@ const signUp = async () => {
         } else {
             alert.value = true;
             text.value = 'Sign up successful! Please check your email for confirmation.';
-            router.push('/bio');
+            router.push('/complete-signup');
         }
     } catch (error) {
         // alert('An error occurred. Please try again later.');
@@ -59,7 +59,7 @@ const googleSignUP = async () => {
         const { data, error } = await auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: window.location.origin + '/'
+                redirectTo: window.location.origin + '/bio'
             }
         });
         if (error) {
