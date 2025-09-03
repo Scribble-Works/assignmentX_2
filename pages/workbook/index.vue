@@ -11,8 +11,8 @@ const book2 = profile.data[0].twoPurchase;
 const book3 = profile.data[0].threePurchase;
 
 </script>
-<template>
-    <div class="mt-5 body">
+<template clasc="body">
+    <div class="mt-5">
         <v-container class="my-16">
             <h2 class="text-h3">Find Your Math Match</h2><br>
             <p>Explore our learning modules and learning resources to find the perfect fit for your level. Whether you're building a foundation or ready for a new challenge, start learning smarter with AssignmentX.</p><br>

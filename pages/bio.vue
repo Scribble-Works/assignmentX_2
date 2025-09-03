@@ -17,6 +17,7 @@ const text = ref('');
 const school = ref('');
 const dob = ref(new Date().toISOString().substring(0, 10));
 const gender = ref('');
+const phone = ref('');
 
 const submit = async () => {
     try {
@@ -26,6 +27,7 @@ const submit = async () => {
             school: school.value,
             DOB: dob.value,
             gender: gender.value,
+            phone: phone.value,
             id: user.value && user.value.id ? user.value.id : null
         }).single();
 
@@ -88,9 +90,13 @@ const closeAlert = () => {
                             </v-col>
                         </v-row>
                         <v-row>
-                            <v-col cols="" lg="12" md="12" sm="12">
+                            <v-col cols="" lg="6" md="6" sm="12">
                                 <v-label>School</v-label>
                                 <v-text-field variant="outlined" placeholder="School" v-model="school" />
+                            </v-col>
+                            <v-col cols="" lg="6" md="6" sm="12">
+                                <v-label>Phone Number</v-label>
+                                <v-text-field variant="outlined" placeholder="Phone Number" v-model="phone" />
                             </v-col>
                         </v-row>
                         <v-btn style="width: 100%;" color="grey-darken-3" type="submit">Submit</v-btn>

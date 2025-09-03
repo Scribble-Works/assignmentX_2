@@ -282,7 +282,7 @@ const user = useSupabaseUser();
             </h3>
             <br />
             <div v-if="!user">
-              <v-btn to="/auth" size="large" class="mt-n10" width="150" color="blue">Get Started</v-btn>
+              <v-btn to="/register" size="large" class="mt-n10" width="150" color="blue">Get Started</v-btn>
             </div>
             <div v-else>
               <v-btn to="/workbook/" size="large" class="mt-n10" width="150" color="blue">Get Started</v-btn>
@@ -299,7 +299,7 @@ const user = useSupabaseUser();
   </div>
 </template>
 <style>
-.body {
+body {
   background-color: white;
 }
 
