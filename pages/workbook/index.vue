@@ -85,32 +85,32 @@ const book3 = profile.data[0].threePurchase;
                 <h4 class="text-h4">Universal Carricullum</h4>
                 <v-row class="mt-0">
                     <v-col cols="" lg="4" md="12" sm="12">
-                        <div v-if="book3 == true">
+                        <!-- <div v-if="book3 == true">
                             <Workbookcard :grade="'All Grades'" :assignment="'Mathematical Notations'"
                                 :image="'/img/notations.jpg'" :age="'Fundamentals'" />
-                        </div>
-                        <div v-else>
+                        </div> -->
+                        <div>
                             <soonCard :book-num="'3'" :grade="'All Grades'" :assignment="'Mathematical Notations'"
                                 :image="'/img/notations.jpg'" :age="'Fundamentals'" />
                         </div>
                     </v-col>
                     <v-col cols="" lg="4" md="12" sm="12">
-                        <div v-if="book3 == true">
+                        <!-- <div v-if="book3 == true">
                             <Workbookcard :grade="'All Grades'" :assignment="'Mathematical Illustrations'"
                                 :image="'/img/equations.jpg'" :age="'Fundamentals'" />
-                        </div>
-                        <div v-else>
-                            <soonCard :book-num="'3'" :grade="'All Grades'" :assignment="'Mathematical Illustrations'"
+                        </div> -->
+                        <div>
+                            <soon-card :book-num="'3'" :grade="'All Grades'" :assignment="'Mathematical Illustrations'"
                                 :image="'/img/equations.jpg'" :age="'Fundamentals'" />
                         </div>
                     </v-col>
                     <v-col cols="" lg="4" md="12" sm="12">
-                        <div v-if="book3 == true">
+                        <!-- <div v-if="book3 == true">
                             <Workbookcard :grade="'All Grades'" :assignment="'Mathematical Tools'"
                                 :image="'/img/tools.jpg'" :age="'Fundamentals'" />
-                        </div>
-                        <div v-else>
-                            <soonCard :book-num="'3'" :grade="'All Grades'" :assignment="'Mathematical Tools'"
+                        </div> -->
+                        <div>
+                            <soon-card :book-num="'3'" :grade="'All Grades'" :assignment="'Mathematical Tools'"
                                 :image="'/img/tools.jpg'" :age="'Fundamentals'" />
                         </div>
                     </v-col>
