@@ -1,9 +1,10 @@
 <script setup>
 const user = useSupabaseUser();
 const client = useSupabaseClient();
-
+const router = useRouter();
 
 let onboarding = { data: null };
+let profile = { data: null };
 
 onMounted(async () => {
     if (user.value && user.value.id) {
@@ -13,7 +14,15 @@ onMounted(async () => {
             .single();
         
         onboarding.data = data;
-        if (onboarding.data == null) {
+        profile = await client.from("profiles")
+            .select("*")
+            .eq("id", user.value.id)
+            .single();
+        
+        // profile.data = profileData;
+        if(profile.data == null) {
+            router.push("/bio");
+        } else if (onboarding.data == null) {
             navigateTo('/onboarding');
         }
     }
