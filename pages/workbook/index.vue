@@ -22,7 +22,7 @@ const book3 = profile.data[0].threePurchase;
             <v-row class="mt-0">
                 <v-col cols="" lg="4" md="12" sm="12">
                     <div v-if="book3 == true">
-                        <Workbookcard :grade="'Grade 4'" :assignment="'First Pre-Assignment'" :image="'/img/grade5.png'"
+                        <Workbookcard :grade="'Grade 4'" :assignment="'First Pre-Assignment'" :image="'/img/grade4.png'"
                             :age="'Ages 8 - 10'" />
                     </div>
                     <div v-else>
