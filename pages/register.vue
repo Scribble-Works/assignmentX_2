@@ -42,7 +42,7 @@ const signUp = async () => {
             text.value = 'An error occurred. Please try again later.';
             console.error(error);
         } else {
-            alert.value = true;
+            // alert.value = true;
             text.value = 'Sign up successful! Please check your email for confirmation.';
             router.push('/complete-signup');
         }

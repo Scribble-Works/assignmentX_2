@@ -11,6 +11,7 @@ onMounted(async () => {
             .select("*")
             .eq("id", user.value.id)
             .single();
+        
         onboarding.data = data;
         if (onboarding.data == null) {
             navigateTo('/onboarding');

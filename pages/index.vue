@@ -1,5 +1,7 @@
 <script setup>
 const user = useSupabaseUser();
+const client = useSupabaseClient();
+
 </script>
 <template>
   <div class="body">
@@ -299,7 +301,7 @@ const user = useSupabaseUser();
   </div>
 </template>
 <style>
-body {
+.body {
   background-color: white;
 }
 
