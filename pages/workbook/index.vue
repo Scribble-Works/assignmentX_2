@@ -21,39 +21,39 @@ const book3 = profile.data[0].threePurchase;
             <h4 class="text-h4">GES Carricullum</h4>
             <v-row class="mt-0">
                 <v-col cols="" lg="4" md="12" sm="12">
-                    <div v-if="book3 == true">
+                    <!-- <div v-if="book3 == true">
                         <Workbookcard :grade="'Grade 4'" :assignment="'First Pre-Assignment'" :image="'/img/grade4.png'"
                             :age="'Ages 8 - 10'" />
-                    </div>
-                    <div v-else>
-                        <BookPurchaseCard :book-num="'3'" :grade="'Grade 4'" :assignment="'First Pre-Assignment'"
+                    </div> -->
+                    <div>
+                        <soonCard :book-num="'3'" :grade="'Grade 4'" :assignment="'First Pre-Assignment'"
                             :image="'/img/grade4.png'" :age="'Ages 8 - 10'" />
                     </div>
                 </v-col>
                 <v-col cols="" lg="4" md="12" sm="12">
-                    <div v-if="book2 == true">
+                    <!-- <div v-if="book2 == true">
                         <Workbookcard :grade="'Grade 5'" :assignment="'Second Pre-Assignment'"
                             :image="'/img/grade5.png'" :age="'Ages 9 - 11'" />
-                    </div>
-                    <div v-else>
-                        <BookPurchaseCard :book-num="'2'" :grade="'Grade 5'" :assignment="'Second Pre-Assignment'"
+                    </div> -->
+                    <div>
+                        <soonCard :book-num="'2'" :grade="'Grade 5'" :assignment="'Second Pre-Assignment'"
                             :image="'/img/grade5.png'" :age="'Ages 9 - 11'" />
                     </div>
                 </v-col>
                 <v-col cols="" lg="4" md="12" sm="12">
-                    <div v-if="book2 == true">
+                    <!-- <div v-if="book2 == true">
                         <Workbookcard :grade="'Grade 6'" :assignment="'Third Pre-Assignment'" :image="'/img/grade6.png'"
                             :age="'Ages 10 - 12'" />
-                    </div>
-                    <div v-else>
-                        <BookPurchaseCard :book-num="'2'" :grade="'Grade 6'" :assignment="'Third Pre-Assignment'"
+                    </div> -->
+                    <div>
+                        <soonCard :book-num="'2'" :grade="'Grade 6'" :assignment="'Third Pre-Assignment'"
                             :image="'/img/grade6.png'" :age="'Ages 10 - 12'" />
                     </div>
                 </v-col>
                 <v-col cols="" lg="4" md="12" sm="12">
                     <div v-if="book1 == true">
                         <Workbookcard :grade="'Grade 7'" :assignment="'The First Assignment'" :image="'/img/grade7.jpg'"
-                            :age="'Ages 11 - 13'" />
+                            :age="'Ages 11 - 13'" :route="'/workbook/workbook1/'" />
                     </div>
                     <div v-else>
                         <BookPurchaseCard :book-num="'1'" :grade="'Grade 7'" :assignment="'The First Assignment'"
@@ -63,7 +63,7 @@ const book3 = profile.data[0].threePurchase;
                 <v-col cols="" lg="4" md="12" sm="12">
                     <div v-if="book2 == true">
                         <Workbookcard :grade="'Grade 8'" :assignment="'The Second Assignment'"
-                            :image="'/img/grade8.jpg'" :age="'Ages 12 - 14'" />
+                            :image="'/img/grade8.jpg'" :age="'Ages 12 - 14'" :route="'/workbook/assignment_workbook2/'" />
                     </div>
                     <div v-else>
                         <BookPurchaseCard :book-num="'2'" :grade="'Grade 8'" :assignment="'The Second Assignment'"
@@ -73,7 +73,7 @@ const book3 = profile.data[0].threePurchase;
                 <v-col cols="" lg="4" md="12" sm="12">
                     <div v-if="book3 == true">
                         <Workbookcard :grade="'Grade 9'" :assignment="'The Last Assignment'" :image="'/img/grade9.jpg'"
-                            :age="'Ages 13 - 15'" />
+                            :age="'Ages 13 - 15'" :route="'/workbook/assignment_workbook3/'" />
                     </div>
                     <div v-else>
                         <BookPurchaseCard :book-num="'3'" :grade="'Grade 9'" :assignment="'The Last Assignment'"

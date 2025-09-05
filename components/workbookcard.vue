@@ -8,14 +8,15 @@ const { grade, assignment, image } = defineProps([
     'grade',
     'assignment',
     'image',
-    'age'
+    'age',
+    'route'
 ]);
 
 
 </script>
 <template>
     <div>
-        <NuxtLink to="/workbook/workbook1/">
+        <NuxtLink :to="route">
             <v-hover v-slot="{ isHovering, props }">
                 <v-card class="mx-auto" color="grey-lighten-4" max-width="600" min-height="415" v-bind="props">
                     <v-img :aspect-ratio="16 / 9" :src="image" cover>
