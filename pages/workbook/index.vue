@@ -14,20 +14,20 @@ const book3 = profile.data[0].threePurchase;
 <template class="body">
     <div class="mt-5">
         <v-container class="my-16">
-            <h2 class="text-h3">Find Your Math Match</h2><br>
+            <h2 class="text-h2">Find Your Math Match</h2><br>
             <p>Explore our learning modules and learning resources to find the perfect fit for your level. Whether
                 you're building a foundation or ready for a new challenge, start learning smarter with AssignmentX.</p>
             <br>
-            <h4 class="text-h4">GES Carricullum</h4>
-            <v-row class="mt-0">
+            <h2 class="text-h3">Ghanaian Curriculum</h2>
+            <v-row class="mt-5">
                 <v-col cols="" lg="4" md="12" sm="12">
                     <!-- <div v-if="book3 == true">
                         <Workbookcard :grade="'Grade 4'" :assignment="'First Pre-Assignment'" :image="'/img/grade4.png'"
                             :age="'Ages 8 - 10'" />
                     </div> -->
                     <div>
-                        <soonCard :book-num="'3'" :grade="'Grade 4'" :assignment="'First Pre-Assignment'"
-                            :image="'/img/grade4.png'" :age="'Ages 8 - 10'" />
+                        <soonCard :book-num="'3'" :grade="'Grade 4'" :assignment="'The First Pre-Assignment'"
+                            :image="'/img/woman-teaching-kids-class.jpg'" :age="'Ages 8 - 10'" />
                     </div>
                 </v-col>
                 <v-col cols="" lg="4" md="12" sm="12">
@@ -36,8 +36,8 @@ const book3 = profile.data[0].threePurchase;
                             :image="'/img/grade5.png'" :age="'Ages 9 - 11'" />
                     </div> -->
                     <div>
-                        <soonCard :book-num="'2'" :grade="'Grade 5'" :assignment="'Second Pre-Assignment'"
-                            :image="'/img/grade5.png'" :age="'Ages 9 - 11'" />
+                        <soonCard :book-num="'2'" :grade="'Grade 5'" :assignment="'The Second Pre-Assignment'"
+                            :image="'/img/children_with_tab.png'" :age="'Ages 9 - 11'" />
                     </div>
                 </v-col>
                 <v-col cols="" lg="4" md="12" sm="12">
@@ -46,8 +46,8 @@ const book3 = profile.data[0].threePurchase;
                             :age="'Ages 10 - 12'" />
                     </div> -->
                     <div>
-                        <soonCard :book-num="'2'" :grade="'Grade 6'" :assignment="'Third Pre-Assignment'"
-                            :image="'/img/grade6.png'" :age="'Ages 10 - 12'" />
+                        <soonCard :book-num="'2'" :grade="'Grade 6'" :assignment="'The Last Pre-Assignment'"
+                            :image="'/img/african-woman-teaching-children-class.jpg'" :age="'Ages 10 - 12'" />
                     </div>
                 </v-col>
                 <v-col cols="" lg="4" md="12" sm="12">
@@ -81,17 +81,17 @@ const book3 = profile.data[0].threePurchase;
                     </div>
                 </v-col>
             </v-row>
-            <div class="mt-10">
-                <h4 class="text-h4">Universal Carricullum</h4>
-                <v-row class="mt-0">
+            <div class="mt-16">
+                <h2 class="text-h3">Universal Modules</h2>
+                <v-row class="mt-5">
                     <v-col cols="" lg="4" md="12" sm="12">
                         <!-- <div v-if="book3 == true">
                             <Workbookcard :grade="'All Grades'" :assignment="'Mathematical Notations'"
                                 :image="'/img/notations.jpg'" :age="'Fundamentals'" />
                         </div> -->
                         <div>
-                            <soonCard :book-num="'3'" :grade="'All Grades'" :assignment="'Mathematical Notations'"
-                                :image="'/img/notations.jpg'" :age="'Fundamentals'" />
+                            <soonCard :book-num="'3'" :grade="'Grade 7+'" :assignment="'Mathematical Notations'"
+                                :image="'/img/smilingchild.png'" :age="'Fundamentals'" />
                         </div>
                     </v-col>
                     <v-col cols="" lg="4" md="12" sm="12">
@@ -100,8 +100,8 @@ const book3 = profile.data[0].threePurchase;
                                 :image="'/img/equations.jpg'" :age="'Fundamentals'" />
                         </div> -->
                         <div>
-                            <soon-card :book-num="'3'" :grade="'All Grades'" :assignment="'Mathematical Illustrations'"
-                                :image="'/img/equations.jpg'" :age="'Fundamentals'" />
+                            <soon-card :book-num="'3'" :grade="'Grade 7+'" :assignment="'Mathematical Illustrations'"
+                                :image="'/img/writtingman.jpg'" :age="'Fundamentals'" />
                         </div>
                     </v-col>
                     <v-col cols="" lg="4" md="12" sm="12">
@@ -110,8 +110,8 @@ const book3 = profile.data[0].threePurchase;
                                 :image="'/img/tools.jpg'" :age="'Fundamentals'" />
                         </div> -->
                         <div>
-                            <soon-card :book-num="'3'" :grade="'All Grades'" :assignment="'Mathematical Tools'"
-                                :image="'/img/tools.jpg'" :age="'Fundamentals'" />
+                            <soon-card :book-num="'3'" :grade="'Grade 4+'" :assignment="'Mathematical Tools'"
+                                :image="'/img/abbacuss.png'" :age="'Fundamentals'" />
                         </div>
                     </v-col>
                 </v-row>
