@@ -31,6 +31,15 @@ const products = [
     reverse: false,
   },
 ];
+const checkout = ref(null);
+
+const scrollToCheckout = () => {
+  if (checkout.value) {
+    checkout.value.scrollIntoView({ behavior: "smooth" });
+  }
+};
+
+
 </script>
 
 <template>
@@ -47,7 +56,7 @@ const products = [
       >
         Buy now
       </button> -->
-      <AppButton to="/checkout" text="Buy now" color="blue" class="mt-6" />
+      <AppButton @click="scrollToCheckout" text="Buy now" color="blue" class="mt-6" />
     </section>
 
     <!-- Banner Image -->
@@ -60,7 +69,7 @@ const products = [
     </section>
 
     <!-- Intro Text -->
-    <section class="text-center py-12 px-4">
+    <section ref="checkout" class="text-center py-12 px-4">
       <h2 class="text-xl md:text-2xl font-semibold">Get Your Workbooks Now!</h2>
       <p class="hidden md:block text-gray-600 mt-4 max-w-3xl mx-auto">
         Stay ahead in class with your official companion books, specially
