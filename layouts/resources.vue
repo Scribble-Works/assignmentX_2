@@ -1,11 +1,13 @@
 <template>
-    <div class="body">
-        <theHeader />
-        <v-container>
-            <v-text-field prepend-inner-icon="mdi-magnify" label="Search chapters and topics..."
-                variant="outlined"></v-text-field><br>
-            <slot />
-        </v-container>
-        <theFooter />
-    </div>
+    <v-app>
+        <div class="body">
+            <theHeader />
+            <v-container>
+                <v-text-field prepend-inner-icon="mdi-magnify" label="Search chapters and topics..."
+                    variant="outlined"></v-text-field><br>
+                <slot />
+            </v-container>
+            <theFooter />
+        </div>
+    </v-app>
 </template>
