@@ -38,14 +38,14 @@ router.beforeEach((to, from, next) => {
 <template>
     <div>
         <header class="bg-white shadow">
-            <nav class="container mx-auto flex items-center justify-between p-5">
+            <nav class="container mx-auto flex items-center justify-between p-3">
                 <NuxtLink class="flex items-center font-bold text-xl" to="/">
-                    <img src="/img/logo.png" alt="Logo" class="w-12 ml-n2 mt-0 mr-2">
-                    <p class="mt-0">AssignmentX</p>
+                    <img src="/img/logo.png" alt="Logo" class="w-12 ml-n2 mt-0 mr-0">
+                    AssignmentX
                 </NuxtLink>
                 <!-- <div v-if="!tablet && mobile">
                     <div class="mt-0 ml-16" v-if="!user">
-                        <v-btn color="blue" class="text-white py-2 px-4 rounded ml-16" to="/auth">Login</v-btn>
+                        <v-btn color="blue" class="text-white py-2 px-4 rounded ml-16" to="/login">Login</v-btn>
                     </div>
                     <div class="mt-0" v-else>
                         <avartar />
@@ -54,10 +54,11 @@ router.beforeEach((to, from, next) => {
                 <div class="hidden md:flex space-x-4">
                     <NuxtLink class="hover:text-blue-500 py-2" to="/">Home</NuxtLink>
                     <NuxtLink class="hover:text-blue-500 py-2" to="/about">About</NuxtLink>
-                    <NuxtLink class="hover:text-blue-500 py-2" to="/resources">Facilitator Resources</NuxtLink>
-                    <NuxtLink class="hover:text-blue-500 py-2" to="/workbook/">Learning Modules</NuxtLink>
+                    <NuxtLink class="hover:text-blue-500 py-2" to="/learning-modules/">Learning Modules</NuxtLink>
+                    <NuxtLink class="hover:text-blue-500 py-2" to="/facilitator-resources/">Facilitator Resources</NuxtLink>
+                    
                     <div v-if="!user">
-                        <v-btn color="blue" class=" text-white py-2 px-4 rounded" to="/auth">Login</v-btn>
+                        <v-btn color="blue" class=" text-white py-2 px-4 rounded" to="/login">Login</v-btn>
                     </div>
                     <div v-else>
                         <avartar />
@@ -80,21 +81,22 @@ router.beforeEach((to, from, next) => {
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/about">About
                 </NuxtLink>
                 <div v-if="!user">
-                    <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/auth">Edit Profile
+                    <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/login">Edit Profile
                     </NuxtLink>
                 </div>
                 <div v-else>
                     <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/edit-profile">Edit Profile
                     </NuxtLink>
                 </div>
-                <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/resources">Facilitator Resources
+                <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/learning-modules/">Learning Modules
                 </NuxtLink>
-                <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/workbook/">Learning Modules
+                <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/facilitator-resources/">Facilitator Resources
                 </NuxtLink>
+                
 
                 <template v-slot:append>
                     <div v-if="!user" class="px-4 py-2">
-                        <v-btn color="blue" class=" text-white py-2 px-4 rounded w-full" to="/auth">Login</v-btn>
+                        <v-btn color="blue" class=" text-white py-2 px-4 rounded w-full" to="/login">Login</v-btn>
                     </div>
                     <div v-else class="px-4 py-2">
                         <v-btn color="blue" class=" text-white py-2 px-4 rounded w-full" @click="signout">Logout</v-btn>

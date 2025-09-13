@@ -32,7 +32,7 @@ console.log(strandtitle);
                 <v-row class="mt-n5" v-for="substrand in substrands" :key="substrand.id">
                     <v-col>
                         <NuxtLink
-                            :to="'/workbook/workbook1/strand-' + substrand.strand_ref + '/substrand-' + substrand.route + '/'">
+                            :to="'/learning-modules/assignment_workbook3/strand-' + substrand.strand_ref + '/substrand-' + substrand.route + '/'">
                             <v-card>
                                 <v-card-title class="font-weight-light text-left">{{ substrand.title }}</v-card-title>
                             </v-card>

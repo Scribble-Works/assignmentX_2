@@ -21,7 +21,7 @@ const { grade, assignment, image, bookNum } = defineProps([
 
 const onSuccessfulPayment = async () => {
     if (!user.value) {
-        router.push('/auth');
+        router.push('/login');
         return;
     } else {
         if (bookNum === '1') {

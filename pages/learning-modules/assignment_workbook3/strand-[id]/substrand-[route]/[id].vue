@@ -41,8 +41,7 @@ const bece = files[0].BECE_Qquestions;
 
 console.log(files);
 // console.log(substrand_ref_id);
-
-
+const relatedVids = ref([vid2, vid3]);
 
 
 
@@ -76,6 +75,13 @@ const markCourseAsCompleted = () => {
     console.log(`Course ${id} marked as completed`);
 };
 
+function swapVideo(video) {
+  const oldMain = mainVideo.value
+  mainVideo.value = video
+  relatedVideos.value = relatedVideos.value.map(v =>
+    v === video ? oldMain : v
+  )
+};
 
 
 
@@ -83,17 +89,17 @@ const markCourseAsCompleted = () => {
 <template>
     <div class="body">
         <v-container>
-            <h2 class="text-center text-h4 text-uppercase text-bold mb-10 mt-15" style="font-weight: bold;">{{
+            <h2 class="text-left text-uppercase text-bold mb-0 mt-0" style="font-weight: bold; font-size: 1.2rem;">{{
                 heading
             }}</h2>
             <v-row>
-
                 <v-col cols="" lg="9" md="6" sm="12">
                     <vids :url="vid1" />
                 </v-col>
-                <v-col cols="" lg="3" md="6" sm="12">
-                    <vids :url="vid2" />
-                    <vids :url="vid3" />
+                <v-col  cols="" lg="3" md="6" sm="12">
+                    <div v-for="(video, index) in relatedVids" :key="index">
+                        <vids class="mb-4 cursor-pointer" :url="video" @click="swapVideo(video)" />
+                    </div>
                 </v-col>
             </v-row>
             <v-row class="mt-n5 mr-10">

@@ -24,7 +24,7 @@ const client = useSupabaseClient();
           <v-btn to="/register" size="large" color="blue" rounded="sm">Sign Up</v-btn>
         </div>
         <div v-else>
-          <v-btn to="/workbook/" size="large" color="blue" rounded="sm">Get Started</v-btn>
+          <v-btn to="/learning-modules/" size="large" color="blue" rounded="sm">Get Started</v-btn>
         </div>
       </div>
     </section>
@@ -175,10 +175,10 @@ const client = useSupabaseClient();
               Cool concept videos that explain things in simple ways
             </p>
             <div v-if="!user">
-              <v-btn to="/auth" color="yellow-darken-2" class="text-white">Explore</v-btn>
+              <v-btn to="/login" color="yellow-darken-2" class="text-white">Explore</v-btn>
             </div>
             <div v-else>
-              <v-btn to="/workbook/" color="yellow-darken-2" class="text-white">Explore</v-btn>
+              <v-btn to="/learning-modules/" color="yellow-darken-2" class="text-white">Explore</v-btn>
             </div>
           </div>
 
@@ -196,10 +196,10 @@ const client = useSupabaseClient();
               Detailed study notes to deepen your knowledge.
             </p>
             <div v-if="!user">
-              <v-btn to="/auth" color="yellow-darken-2" class="text-white">Explore</v-btn>
+              <v-btn to="/login" color="yellow-darken-2" class="text-white">Explore</v-btn>
             </div>
             <div v-else>
-              <v-btn to="/workbook/" color="yellow-darken-2" class="text-white">Explore</v-btn>
+              <v-btn to="/learning-modules/" color="yellow-darken-2" class="text-white">Explore</v-btn>
             </div>
           </div>
 
@@ -217,10 +217,10 @@ const client = useSupabaseClient();
               Test yourself with interactive quizzes and challenges
             </p>
             <div v-if="!user">
-              <v-btn to="/auth" color="yellow-darken-2" class="text-white">Explore</v-btn>
+              <v-btn to="/login" color="yellow-darken-2" class="text-white">Explore</v-btn>
             </div>
             <div v-else>
-              <v-btn to="/workbook/" color="yellow-darken-2" class="text-white">Explore</v-btn>
+              <v-btn to="/learning-modules/" color="yellow-darken-2" class="text-white">Explore</v-btn>
             </div>
           </div>
 
@@ -238,10 +238,10 @@ const client = useSupabaseClient();
                Downloadable worksheets to help you practice for class and exams
             </p>
             <div v-if="!user">
-              <v-btn to="/auth" color="yellow-darken-2" class="text-white">Explore</v-btn>
+              <v-btn to="/login" color="yellow-darken-2" class="text-white">Explore</v-btn>
             </div>
             <div v-else>
-              <v-btn to="/workbook/" color="yellow-darken-2" class="text-white">Explore</v-btn>
+              <v-btn to="/learning-modules/" color="yellow-darken-2" class="text-white">Explore</v-btn>
             </div>
           </div>
         </div>
@@ -269,7 +269,7 @@ const client = useSupabaseClient();
               Get your Assignment Workbook today and unlock a <br> complete blended learning experience.
             </p>
             <br />
-            <v-btn href="/pricing" size="large" width="150" color="blue">Buy the Book</v-btn>
+            <v-btn href="/store" size="large" width="150" color="blue">Buy the Book</v-btn>
           </v-col>
         </v-row>
       </div>
@@ -286,7 +286,7 @@ const client = useSupabaseClient();
               <v-btn to="/register" size="large" class="mt-n10" width="150" color="blue">Get Started</v-btn>
             </div>
             <div v-else>
-              <v-btn to="/workbook/" size="large" class="mt-n10" width="150" color="blue">Get Started</v-btn>
+              <v-btn to="/learning-modules/" size="large" class="mt-n10" width="150" color="blue">Get Started</v-btn>
             </div>
           </v-col>
           <v-col cols="" lg="7" md="6" sm="12">

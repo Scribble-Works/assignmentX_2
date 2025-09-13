@@ -86,7 +86,7 @@ const startQuiz = (contentId) => {
 };
 
 const handleContentClick = (contentId) => {
-    navigateTo(`/workbook/workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/${contentId}`);
+    navigateTo(`/learning-modules/assignment_workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/${contentId}`);
     // Check if quiz is already completed
     // if (!isQuizCompleted(contentId)) {
     //     // Set status to in progress when starting
