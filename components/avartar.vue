@@ -13,6 +13,8 @@ const profile = await client
   .select("firstName, lastName, school, DOB")
   .eq("id", user.value.id)
   .single();
+
+
 const signout = async () => {
   try {
     const { error } = await auth.signOut();

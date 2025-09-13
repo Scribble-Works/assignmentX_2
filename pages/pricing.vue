@@ -61,11 +61,7 @@ const scrollToCheckout = () => {
 
     <!-- Banner Image -->
     <section>
-      <img
-        src="/img/pricing_hero.jpg"
-        alt="Banner"
-        class="w-full object-cover h-64 md:h-[600px]"
-      />
+      <img src="/img/pricing_hero.jpg" alt="Banner" class="w-full object-cover h-64 md:h-[600px]" />
     </section>
 
     <!-- Intro Text -->
@@ -81,20 +77,8 @@ const scrollToCheckout = () => {
 
     <!-- Product Cards -->
     <section class="container mx-auto space-y-32 p-4">
-      <ProductCard
-        v-for="(product, index) in products"
-        :key="index"
-        :title="product.title"
-        :level="product.level"
-        :price="product.price"
-        :image="product.image"
-        :reverse="product.reverse"
-        :description="product.description"
-      />
+      <ProductCard v-for="(product, index) in products" :key="index" :title="product.title" :level="product.level"
+        :price="product.price" :image="product.image" :reverse="product.reverse" :description="product.description" />
     </section>
   </div>
 </template>
-
-
-
-
