@@ -38,10 +38,10 @@ router.beforeEach((to, from, next) => {
 <template>
     <div>
         <header class="bg-white shadow">
-            <nav class="container mx-auto flex items-center justify-between p-4">
+            <nav class="container mx-auto flex items-center justify-between p-5">
                 <NuxtLink class="flex items-center font-bold text-xl" to="/">
-                    <img src="/img/logo.png" alt="Logo" class="w-12 ml-n2 mt-n5 mr-2">
-                    <p class="mt-n5">AssignmentX</p>
+                    <img src="/img/logo.png" alt="Logo" class="w-12 ml-n2 mt-0 mr-2">
+                    <p class="mt-0">AssignmentX</p>
                 </NuxtLink>
                 <!-- <div v-if="!tablet && mobile">
                     <div class="mt-0 ml-16" v-if="!user">
@@ -55,6 +55,7 @@ router.beforeEach((to, from, next) => {
                     <NuxtLink class="hover:text-blue-500 py-2" to="/">Home</NuxtLink>
                     <NuxtLink class="hover:text-blue-500 py-2" to="/about">About</NuxtLink>
                     <NuxtLink class="hover:text-blue-500 py-2" to="/resources">Facilitator Resources</NuxtLink>
+                    <NuxtLink class="hover:text-blue-500 py-2" to="/workbook/">Learning Modules</NuxtLink>
                     <div v-if="!user">
                         <v-btn color="blue" class=" text-white py-2 px-4 rounded" to="/auth">Login</v-btn>
                     </div>
@@ -63,7 +64,7 @@ router.beforeEach((to, from, next) => {
                     </div>
 
                 </div>
-                <button @click.stop="toggle = !toggle" class="md:hidden text-gray-500 focus:outline-none mt-n5"
+                <button @click.stop="toggle = !toggle" class="md:hidden text-gray-500 focus:outline-none mt-0"
                     id="navbar-toggler">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
@@ -87,6 +88,8 @@ router.beforeEach((to, from, next) => {
                     </NuxtLink>
                 </div>
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/resources">Facilitator Resources
+                </NuxtLink>
+                <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/workbook/">Learning Modules
                 </NuxtLink>
 
                 <template v-slot:append>

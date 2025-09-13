@@ -4,11 +4,18 @@ const client = useSupabaseClient();
 const user = useSupabaseUser();
 
 const config = useRuntimeConfig();
-const profile = await client.from('profiles').select('*').eq('id', user.value.id);
+let book1 = false;
+let book2 = false;
+let book3 = false;
 
-const book1 = profile.data[0].onePurchase;
-const book2 = profile.data[0].twoPurchase;
-const book3 = profile.data[0].threePurchase;
+if (user.value && user.value.id) {
+  const { data: profiles } = await client.from('profiles').select('*').eq('id', user.value.id).single();
+  if (profiles) {
+    book1 = profiles.onePurchase;
+    book2 = profiles.twoPurchase;
+    book3 = profiles.threePurchase;
+  }
+};
 
 </script>
 <template class="body">
