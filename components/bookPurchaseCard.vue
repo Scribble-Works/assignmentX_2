@@ -2,6 +2,7 @@
 const price = ref('Available');
 const client = useSupabaseClient();
 const user = useSupabaseUser();
+const router = useRouter();
 const { grade, assignment, image, bookNum } = defineProps([
     'grade',
     'assignment',
@@ -19,14 +20,20 @@ const { grade, assignment, image, bookNum } = defineProps([
 
 
 const onSuccessfulPayment = async () => {
-    if (bookNum === '1') {
-        await client.from('profiles').update({ onePurchase: true }).eq('id', user.value.id);
-    } else if (bookNum === '2') {
-        await client.from('profiles').update({ twoPurchase: true }).eq('id', user.value.id);
-    } else if (bookNum === '3') {
-        await client.from('profiles').update({ threePurchase: true }).eq('id', user.value.id);
+    if (!user.value) {
+        router.push('/auth');
+        return;
+    } else {
+        if (bookNum === '1') {
+            await client.from('profiles').update({ onePurchase: true }).eq('id', user.value.id);
+        } else if (bookNum === '2') {
+            await client.from('profiles').update({ twoPurchase: true }).eq('id', user.value.id);
+        } else if (bookNum === '3') {
+            await client.from('profiles').update({ threePurchase: true }).eq('id', user.value.id);
+        }
+        window.location.reload();
     }
-    window.location.reload();
+
 };
 </script>
 <template>

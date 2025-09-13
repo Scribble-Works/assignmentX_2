@@ -300,7 +300,7 @@ const client = useSupabaseClient();
   </div>
 </template>
 <style>
-.body {
+body {
   background-color: white;
 }
 
