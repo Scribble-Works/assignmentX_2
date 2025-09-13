@@ -18,7 +18,7 @@ if (user.value && user.value.id) {
 };
 
 </script>
-<template class="body">
+<template>
     <div class="mt-5">
         <v-container class="my-16">
             <h2 class="text-h2">Find Your Math Match</h2><br>
@@ -128,7 +128,7 @@ if (user.value && user.value.id) {
 </template>
 <style>
 .body {
-    background-color: #F6F6F6;
+    background-color: #ffffff;
 }
 
 .v-card--reveal {
