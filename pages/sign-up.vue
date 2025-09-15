@@ -163,7 +163,7 @@ const closeAlert = () => {
                         </v-col> -->
                     </v-row><br>
                     <p class="text-center">Have an account? <NuxtLink
-                            style="color: #2096F3; text-decoration: underline;" to="/auth">Sign In</NuxtLink>
+                            style="color: #2096F3; text-decoration: underline;" to="/login">Sign In</NuxtLink>
                     </p>
                 </v-container>
             </v-col>

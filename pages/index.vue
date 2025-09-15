@@ -21,7 +21,7 @@ const client = useSupabaseClient();
         </p>
         <br />
         <div v-if="!user">
-          <v-btn to="/register" size="large" color="blue" rounded="sm">Sign Up</v-btn>
+          <v-btn to="/sign-up" size="large" color="blue" rounded="sm">Sign Up</v-btn>
         </div>
         <div v-else>
           <v-btn to="/learning-modules/" size="large" color="blue" rounded="sm">Get Started</v-btn>

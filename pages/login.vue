@@ -176,7 +176,7 @@ const googleSignIN = async () => {
                         </v-col> -->
                     </v-row><br>
                     <p class="text-center">Don't have an account? <NuxtLink
-                            style="color: #2096F3; text-decoration: underline;" to="/register">Sign Up</NuxtLink>
+                            style="color: #2096F3; text-decoration: underline;" to="/sign-up">Sign Up</NuxtLink>
                     </p>
                 </v-container>
             </v-col>
