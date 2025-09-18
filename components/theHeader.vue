@@ -55,8 +55,9 @@ router.beforeEach((to, from, next) => {
                     <NuxtLink class="hover:text-blue-500 py-2" to="/">Home</NuxtLink>
                     <NuxtLink class="hover:text-blue-500 py-2" to="/about">About</NuxtLink>
                     <NuxtLink class="hover:text-blue-500 py-2" to="/learning-modules/">Learning Modules</NuxtLink>
-                    <NuxtLink class="hover:text-blue-500 py-2" to="/facilitator-resources/">Facilitator Resources</NuxtLink>
-                    
+                    <NuxtLink class="hover:text-blue-500 py-2" to="/facilitator-resources/">Facilitator Resources
+                    </NuxtLink>
+
                     <div v-if="!user">
                         <v-btn color="blue" class=" text-white py-2 px-4 rounded" to="/login">Login</v-btn>
                     </div>
@@ -80,19 +81,13 @@ router.beforeEach((to, from, next) => {
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/">Home</NuxtLink>
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/about">About
                 </NuxtLink>
-                <div v-if="!user">
-                    <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/login">Edit Profile
-                    </NuxtLink>
-                </div>
-                <div v-else>
-                    <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/edit-profile">Edit Profile
-                    </NuxtLink>
-                </div>
+                <NuxtLink v-if="user" class="block px-4 py-2 hover:bg-gray-200" to="/edit-profile">Edit Profile
+                </NuxtLink>
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/learning-modules/">Learning Modules
                 </NuxtLink>
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/facilitator-resources/">Facilitator Resources
                 </NuxtLink>
-                
+
 
                 <template v-slot:append>
                     <div v-if="!user" class="px-4 py-2">
