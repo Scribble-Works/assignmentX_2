@@ -5,10 +5,10 @@ const { data: unsortedStrands } = await client.from('Workbook1').select();
 
 // Sort the strands array based on the id property
 const strands = computed(() => {
-  if (unsortedStrands) {
-    return [...unsortedStrands].sort((a, b) => a.id - b.id);
-  }
-  return [];
+    if (unsortedStrands) {
+        return [...unsortedStrands].sort((a, b) => a.id - b.id);
+    }
+    return [];
 });
 
 console.log(strands)
@@ -55,6 +55,7 @@ console.log(strands)
 .body {
     background-color: #F6F6F6;
 }
+
 h2 {
     color: #3E4F5C;
     font-style: 'Inter', sans-serif;
