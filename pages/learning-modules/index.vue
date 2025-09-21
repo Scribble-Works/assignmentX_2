@@ -7,6 +7,9 @@ const config = useRuntimeConfig();
 let book1 = false;
 let book2 = false;
 let book3 = false;
+let grade4 = false;
+let grade5 = false;
+let grade6 = false;
 
 if (user.value && user.value.id) {
   const { data: profiles } = await client.from('profiles').select('*').eq('id', user.value.id).single();
@@ -14,6 +17,9 @@ if (user.value && user.value.id) {
     book1 = profiles.onePurchase;
     book2 = profiles.twoPurchase;
     book3 = profiles.threePurchase;
+    grade4 = profiles.grade4;
+    grade5 = profiles.grade5;
+    grade6 = profiles.grade6;
   }
 };
 
@@ -28,12 +34,12 @@ if (user.value && user.value.id) {
             <h2 class="text-h3">Ghanaian Curriculum</h2>
             <v-row class="mt-5">
                 <v-col cols="" lg="4" md="12" sm="12">
-                    <!-- <div v-if="book3 == true">
-                        <Workbookcard :grade="'Grade 4'" :assignment="'First Pre-Assignment'" :image="'/img/grade4.png'"
-                            :age="'Ages 8 - 10'" />
-                    </div> -->
-                    <div>
-                        <soonCard :book-num="'3'" :grade="'Grade 4'" :assignment="'The First Pre-Assignment'"
+                    <div v-if="grade4 == true">
+                        <Workbookcard :grade="'Grade 4'" :assignment="'The First Pre-Assignment'" :image="'/img/grade4.png'"
+                            :age="'Ages 8 - 10'" :route="'/learning-modules/preassignment_workbook1/'" />
+                    </div>
+                    <div v-else>
+                        <BookPurchaseCard :book-num="'3'" :grade="'Grade 4'" :assignment="'The First Pre-Assignment'"
                             :image="'/img/woman-teaching-kids-class.jpg'" :age="'Ages 8 - 10'" />
                     </div>
                 </v-col>
