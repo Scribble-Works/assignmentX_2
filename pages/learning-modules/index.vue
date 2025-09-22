@@ -44,12 +44,12 @@ if (user.value && user.value.id) {
                     </div>
                 </v-col>
                 <v-col cols="" lg="4" md="12" sm="12">
-                    <!-- <div v-if="book2 == true">
-                        <Workbookcard :grade="'Grade 5'" :assignment="'Second Pre-Assignment'"
-                            :image="'/img/grade5.png'" :age="'Ages 9 - 11'" />
-                    </div> -->
-                    <div>
-                        <soonCard :book-num="'2'" :grade="'Grade 5'" :assignment="'The Second Pre-Assignment'"
+                    <div v-if="grade5 == true">
+                        <Workbookcard :grade="'Grade 5'" :assignment="'The Second Pre-Assignment'"
+                            :image="'/img/grade5.png'" :age="'Ages 9 - 11'" :route="'/learning-modules/preassignment_workbook2/'" />
+                    </div>
+                    <div v-else>
+                        <BookPurchaseCard :book-num="'2'" :grade="'Grade 5'" :assignment="'The Second Pre-Assignment'"
                             :image="'/img/children_with_tab.png'" :age="'Ages 9 - 11'" />
                     </div>
                 </v-col>
