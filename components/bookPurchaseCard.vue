@@ -30,6 +30,12 @@ const onSuccessfulPayment = async () => {
             await client.from('profiles').update({ twoPurchase: true }).eq('id', user.value.id);
         } else if (bookNum === '3') {
             await client.from('profiles').update({ threePurchase: true }).eq('id', user.value.id);
+        }else if(bookNum === '4'){
+            await client.from('profiles').update({ grade4: true }).eq('id', user.value.id);
+        }else if(bookNum === '5'){
+            await client.from('profiles').update({ grade5: true }).eq('id', user.value.id);
+        }else if(bookNum === '6'){
+            await client.from('profiles').update({ grade6: true }).eq('id', user.value.id);
         }
         window.location.reload();
     }

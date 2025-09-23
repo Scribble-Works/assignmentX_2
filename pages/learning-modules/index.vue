@@ -39,7 +39,7 @@ if (user.value && user.value.id) {
                             :age="'Ages 8 - 10'" :route="'/learning-modules/preassignment_workbook1/'" />
                     </div>
                     <div v-else>
-                        <BookPurchaseCard :book-num="'3'" :grade="'Grade 4'" :assignment="'The First Pre-Assignment'"
+                        <BookPurchaseCard :book-num="'4'" :grade="'Grade 4'" :assignment="'The First Pre-Assignment'"
                             :image="'/img/woman-teaching-kids-class.jpg'" :age="'Ages 8 - 10'" />
                     </div>
                 </v-col>
@@ -49,7 +49,7 @@ if (user.value && user.value.id) {
                             :image="'/img/grade5.png'" :age="'Ages 9 - 11'" :route="'/learning-modules/preassignment_workbook2/'" />
                     </div>
                     <div v-else>
-                        <BookPurchaseCard :book-num="'2'" :grade="'Grade 5'" :assignment="'The Second Pre-Assignment'"
+                        <BookPurchaseCard :book-num="'5'" :grade="'Grade 5'" :assignment="'The Second Pre-Assignment'"
                             :image="'/img/children_with_tab.png'" :age="'Ages 9 - 11'" />
                     </div>
                 </v-col>
@@ -59,7 +59,7 @@ if (user.value && user.value.id) {
                             :age="'Ages 10 - 12'" :route="'/learning-modules/preassignment_workbook3/'" />
                     </div>
                     <div v-else>
-                        <BookPurchaseCard :book-num="'2'" :grade="'Grade 6'" :assignment="'The Last Pre-Assignment'"
+                        <BookPurchaseCard :book-num="'6'" :grade="'Grade 6'" :assignment="'The Last Pre-Assignment'"
                             :image="'/img/african-woman-teaching-children-class.jpg'" :age="'Ages 10 - 12'" />
                     </div>
                 </v-col>
