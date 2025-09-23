@@ -27,7 +27,7 @@ const { data: substrands } = await client.from('preassignment_workbook1_strand_s
 
 const strand_ref_id = substrands[0].strand_ref;
 const substrand_ref_id = substrands[0].id;
-const { data: files } = await client.from('preassignment_workbook1_strands').select().eq('id', substrand_ref_id);
+const { data: files } = await client.from('preassignment_workbook1_substrands_contents').select().eq('id', substrand_ref_id);
 
 const { data: indicators_content } = await client.from('preassignment_workbook1_substrand_indicators').select().eq('id', id);
 
@@ -39,7 +39,7 @@ const vid3 = indicators_content[0].vid3;
 const conceptNote = files[0].concept_notes;
 const bece = files[0].BECE_Qquestions;
 
-console.log(files);
+console.log(indicators_content);
 // console.log(substrand_ref_id);
 const relatedVids = ref([vid2, vid3]);
 
