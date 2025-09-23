@@ -34,7 +34,7 @@ const login = async () => {
             const text = 'Invalid Email or Password!';
             const title = 'Login Message';
             alert.value = true;
-            router.push('/auth');
+            router.push('/login');
             return;
         } else if (profile.data == null) {
             router.push('/bio');
@@ -61,7 +61,7 @@ const googleSignIN = async () => {
             const text = 'Invalid Email or Password!';
             const title = 'Login Message';
             alert.value = true;
-            router.push('/auth');
+            router.push('/login');
             return;
         } else if (profile.data == null) {
             router.push('/bio');
@@ -89,7 +89,7 @@ const googleSignIN = async () => {
 //         const { data, error } = await auth.signInWithOAuth({
 //             provider: 'apple',
 //             options: {
-//                 redirectTo: window.location.origin + '/auth'
+//                 redirectTo: window.location.origin + '/login'
 //             }
 //         });
 //         if (!user.value) {
@@ -97,7 +97,7 @@ const googleSignIN = async () => {
 //             alert.value = true;
 //             const message = 'Invalid Email or Password';
 //             const title = 'Login Error';
-//             router.push('/auth');
+//             router.push('/login');
 //             return;
 //         } else if (profile.data == null) {
 //             router.push('/bio');
