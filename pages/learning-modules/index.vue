@@ -35,7 +35,7 @@ if (user.value && user.value.id) {
             <v-row class="mt-5">
                 <v-col cols="" lg="4" md="12" sm="12">
                     <div v-if="grade4 == true">
-                        <Workbookcard :grade="'Grade 4'" :assignment="'The First Pre-Assignment'" :image="'/img/grade4.png'"
+                        <Workbookcard :grade="'Grade 4'" :assignment="'The First Pre-Assignment'" :image="'/img/woman-teaching-kids-class.jpg'"
                             :age="'Ages 8 - 10'" :route="'/learning-modules/preassignment_workbook1/'" />
                     </div>
                     <div v-else>
@@ -46,7 +46,7 @@ if (user.value && user.value.id) {
                 <v-col cols="" lg="4" md="12" sm="12">
                     <div v-if="grade5 == true">
                         <Workbookcard :grade="'Grade 5'" :assignment="'The Second Pre-Assignment'"
-                            :image="'/img/grade5.png'" :age="'Ages 9 - 11'" :route="'/learning-modules/preassignment_workbook2/'" />
+                            :image="'/img/children_with_tab.png'" :age="'Ages 9 - 11'" :route="'/learning-modules/preassignment_workbook2/'" />
                     </div>
                     <div v-else>
                         <BookPurchaseCard :book-num="'5'" :grade="'Grade 5'" :assignment="'The Second Pre-Assignment'"
@@ -55,7 +55,7 @@ if (user.value && user.value.id) {
                 </v-col>
                 <v-col cols="" lg="4" md="12" sm="12">
                     <div v-if="grade6 == true">
-                        <Workbookcard :grade="'Grade 6'" :assignment="'Third Pre-Assignment'" :image="'/img/grade6.png'"
+                        <Workbookcard :grade="'Grade 6'" :assignment="'Third Pre-Assignment'" :image="'/img/african-woman-teaching-children-class.jpg'"
                             :age="'Ages 10 - 12'" :route="'/learning-modules/preassignment_workbook3/'" />
                     </div>
                     <div v-else>
