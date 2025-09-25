@@ -31,7 +31,7 @@ console.log(strands)
             <div class="mt-10">
                 <v-row v-for="strand in strands" :key="strand.id">
                     <v-col cols=12>
-                        <NuxtLink :to="'/learning-modules/assignment_workbook1/strand-' + strand.id + '/'">
+                        <NuxtLink :to="'/learning-modules/assignment_workbook3/strand-' + strand.id + '/'">
                             <v-card class="mx-auto" color="white" max-width="1200">
 
                                 <v-card-text class="pt-6">

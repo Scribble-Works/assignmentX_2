@@ -19,8 +19,8 @@ const courseCompleted = ref(false);
 
 // Check if course is already completed on mount
 onMounted(() => {
-  loadStateFromStorage();
-  courseCompleted.value = isQuizCompleted(id);
+    loadStateFromStorage();
+    courseCompleted.value = isQuizCompleted(id);
 });
 
 const { data: substrands } = await client.from('preassignment_workbook1_strand_substrands_lists').select().eq('route', strand_ref);
@@ -76,11 +76,11 @@ const markCourseAsCompleted = () => {
 };
 
 function swapVideo(video) {
-  const oldMain = mainVideo.value
-  mainVideo.value = video
-  relatedVideos.value = relatedVideos.value.map(v =>
-    v === video ? oldMain : v
-  )
+    const oldMain = mainVideo.value
+    mainVideo.value = video
+    relatedVideos.value = relatedVideos.value.map(v =>
+        v === video ? oldMain : v
+    )
 };
 
 
@@ -91,12 +91,12 @@ function swapVideo(video) {
         <v-container>
             <h2 class="text-left text-uppercase text-bold mb-0 mt-0" style="font-weight: bold; font-size: 1.2rem;">{{
                 heading
-            }}</h2>
+                }}</h2>
             <v-row>
                 <v-col cols="" lg="9" md="6" sm="12">
                     <vids :url="vid1" />
                 </v-col>
-                <v-col  cols="" lg="3" md="6" sm="12">
+                <v-col cols="" lg="3" md="6" sm="12">
                     <div v-for="(video, index) in relatedVids" :key="index">
                         <vids class="mb-4 cursor-pointer" :url="video" @click="swapVideo(video)" />
                     </div>
@@ -114,12 +114,13 @@ function swapVideo(video) {
                 </v-col> -->
             </v-row>
 
-            <!-- <div class="mt-15">
+            <div class="mt-15">
                 <h3 class="text-h3 mb-5" style="font-family: 'Inter', sans-serif; font-weight: bold;">Worked Exam<span
                         style="text-decoration: underline; text-decoration-color: #FCC30C;">ples</span></h3>
                 <v-container style="background-color: #F3F4F6;">
                     <v-img class="mt-10 mb-10" src="/img/example.png"></v-img>
                     <v-img class="mb-10" src="/img/solution.png"></v-img>
+                </v-container>
             </div>
 
             <div class="mt-10">
@@ -134,9 +135,9 @@ function swapVideo(video) {
                     </div>
 
 
-                    <div class="mt-5 mb-10"> -->
-                        <!-- <compare /> -->
-                    <!-- </div> -->
+                    <div class="mt-5 mb-10">
+                        <compare />
+                    </div>
 
                 </v-container>
             </div>
@@ -185,6 +186,8 @@ function swapVideo(video) {
                     </div>
                 </div>
             </div> -->
+        </v-container>
+    </div>
 </template>
 <style>
 .body {

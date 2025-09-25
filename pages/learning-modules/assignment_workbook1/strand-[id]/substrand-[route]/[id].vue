@@ -19,8 +19,8 @@ const courseCompleted = ref(false);
 
 // Check if course is already completed on mount
 onMounted(() => {
-  loadStateFromStorage();
-  courseCompleted.value = isQuizCompleted(id);
+    loadStateFromStorage();
+    courseCompleted.value = isQuizCompleted(id);
 });
 
 const { data: substrands } = await client.from('book1_strand_substrands_lists').select().eq('route', strand_ref);
@@ -39,10 +39,18 @@ const vid3 = indicators_content[0].vid3;
 const conceptNote = files[0].concept_notes;
 const bece = files[0].BECE_Qquestions;
 
-console.log(files);
+console.log(indicators_content);
 // console.log(substrand_ref_id);
 const relatedVids = ref([vid2, vid3]);
 
+const worked_examples = ref([
+    { id: 1, url: indicators_content[0].worked_examples1 },
+    { id: 2, url: indicators_content[0].worked_examples2 },
+    { id: 3, url: indicators_content[0].worked_examples3 },
+    { id: 4, url: indicators_content[0].worked_examples4 },
+    { id: 5, url: indicators_content[0].worked_example5 }
+]);
+// console.log(indicators_content[0].worked_examples1);
 
 
 function openNotes() {
@@ -76,11 +84,11 @@ const markCourseAsCompleted = () => {
 };
 
 function swapVideo(video) {
-  const oldMain = mainVideo.value
-  mainVideo.value = video
-  relatedVideos.value = relatedVideos.value.map(v =>
-    v === video ? oldMain : v
-  )
+    const oldMain = mainVideo.value
+    mainVideo.value = video
+    relatedVideos.value = relatedVideos.value.map(v =>
+        v === video ? oldMain : v
+    )
 };
 
 
@@ -96,7 +104,7 @@ function swapVideo(video) {
                 <v-col cols="" lg="9" md="6" sm="12">
                     <vids :url="vid1" />
                 </v-col>
-                <v-col  cols="" lg="3" md="6" sm="12">
+                <v-col cols="" lg="3" md="6" sm="12">
                     <div v-for="(video, index) in relatedVids" :key="index">
                         <vids class="mb-4 cursor-pointer" :url="video" @click="swapVideo(video)" />
                     </div>
@@ -114,15 +122,25 @@ function swapVideo(video) {
                 </v-col> -->
             </v-row>
 
-            <!-- <div class="mt-15">
-                <h3 class="text-h3 mb-5" style="font-family: 'Inter', sans-serif; font-weight: bold;">Worked Exam<span
-                        style="text-decoration: underline; text-decoration-color: #FCC30C;">ples</span></h3>
-                <v-container style="background-color: #F3F4F6;">
-                    <v-img class="mt-10 mb-10" src="/img/example.png"></v-img>
-                    <v-img class="mb-10" src="/img/solution.png"></v-img>
+            <div class="mt-10">
+                <h3 class="text-h3 mb-5" style="font-family: 'Inter', sans-serif; font-weight: bold;">Worked
+                    Exam<span style="text-decoration: underline; text-decoration-color: #FCC30C;">ples</span></h3>
+                <div style="background-color: #F3F4F6;">
+                    <div v-for="example in worked_examples" :key="example.id">
+                        <div class="mt-0">
+                            <v-container>
+                                <v-img class="mt-10 mb-10" :src="example.url" :alt="`Worked Example ${example.id}`"
+                                    @error="example.url = '/default-image.png'"></v-img>
+                            </v-container>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
-            <div class="mt-10">
+
+
+            <!-- <div class="mt-10">
                 <h3 class="text-h3 mb-10" style="font-family: 'Inter', sans-serif;"> Now Let's have some math <span
                         style="text-decoration: underline; text-decoration-color: #FCC30C;">fun</span></h3>
                 <v-container style="background-color: #F3F4F6;">
@@ -134,12 +152,10 @@ function swapVideo(video) {
                     </div>
 
 
-                    <div class="mt-5 mb-10"> -->
-                        <!-- <compare /> -->
-                    <!-- </div> -->
+                   
 
                 </v-container>
-            </div>
+            </div> -->
 
             <!-- Course Completion Section -->
             <!-- <div class="mt-15">
@@ -185,6 +201,8 @@ function swapVideo(video) {
                     </div>
                 </div>
             </div> -->
+        </v-container>
+    </div>
 </template>
 <style>
 .body {
