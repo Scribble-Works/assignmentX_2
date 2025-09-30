@@ -43,13 +43,14 @@ console.log(indicators_content);
 // console.log(substrand_ref_id);
 const relatedVids = ref([vid2, vid3]);
 
-const worked_examples = ref([
-    { id: 1, url: indicators_content[0].worked_examples1 },
-    { id: 2, url: indicators_content[0].worked_examples2 },
-    { id: 3, url: indicators_content[0].worked_examples3 },
-    { id: 4, url: indicators_content[0].worked_examples4 },
-    { id: 5, url: indicators_content[0].worked_example5 }
-]);
+const worked_examples = ref(
+    Object.entries(indicators_content[0])
+        .filter(([key, value]) => key.startsWith('worked_examples') && value)
+        .map(([key, url], idx) => ({
+            id: idx + 1,
+            url
+        }))
+);
 // console.log(indicators_content[0].worked_examples1);
 
 
