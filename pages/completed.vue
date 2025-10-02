@@ -55,7 +55,7 @@ const router = useRouter();
 
 const handleStartLearning = () => {
   console.log("Starting learning journey...");
-  router.push("/workbook/")
+  router.push("/")
 };
 
 const handleGoToDashboard = () => {
