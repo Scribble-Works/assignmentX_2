@@ -16,18 +16,15 @@ export default defineNuxtConfig({
       PAYSTACK_PUBLIC_KEY: process.env.PAYSTACK_PUBLIC_KEY,
     },
   },
-  modules: [
-    // '@nuxtjs/tailwindcss',
-    [
-      "@nuxtjs/supabase",
-      {
-        url: process.env.SUPABASE_URL,
-        key: process.env.SUPABASE_GEN_KEY,
-        redirect: false,
-      },
-    ],
-    "@nuxt/fonts",
-  ],
+  modules: [// '@nuxtjs/tailwindcss',
+  [
+    "@nuxtjs/supabase",
+    {
+      url: process.env.SUPABASE_URL,
+      key: process.env.SUPABASE_GEN_KEY,
+      redirect: false,
+    },
+  ], "@nuxt/fonts", "@nuxtjs/ionic"],
   css: [
     "vuetify/lib/styles/main.sass",
     "@mdi/font/css/materialdesignicons.min.css",
