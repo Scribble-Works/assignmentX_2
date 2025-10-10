@@ -47,7 +47,7 @@
           v-model="selectedAccessibility"
         />
         <span class="ml-3 text-lg text-gray-800"
-          >Perl-Urban(e.g., Town or community on the outskirts of a city)</span
+          >Peri-Urban(e.g., Town or community on the outskirts of a city)</span
         >
       </label>
       <label class="inline-flex items-center cursor-pointer">

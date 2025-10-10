@@ -39,7 +39,7 @@
         class="next-btn flex-1 bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200"
         elevation="0"
       >
-        Go to Dashboard
+        Home
       </v-btn>
     </div>
   </main>
