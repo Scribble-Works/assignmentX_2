@@ -4,9 +4,17 @@ definePageMeta({
 });
 const client = useSupabaseClient();
 
-const { data: resources } = await client
+const { data: resourcesRaw } = await client
   .from("facilitator-resources")
   .select("*");
+
+const resources = computed(() => {
+  if (resourcesRaw) {
+    return [...resourcesRaw].sort((a, b) => a.id - b.id);
+  }
+  return [];
+});
+
 // const resources = data?.filter(item => item.metadata && item.name && item.id && item.type === 'folder') || [];
 
 console.log(resources);

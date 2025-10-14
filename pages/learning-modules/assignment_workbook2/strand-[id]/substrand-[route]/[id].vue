@@ -27,9 +27,9 @@ const { data: substrands } = await client.from('book1_strand_substrands_lists').
 
 const strand_ref_id = substrands[0].strand_ref;
 const substrand_ref_id = substrands[0].id;
-const { data: files } = await client.from('book1_strands').select().eq('id', substrand_ref_id);
+const { data: files } = await client.from('book2_strands').select().eq('id', substrand_ref_id);
 
-const { data: indicators_content } = await client.from('book1_substrand_indicators').select().eq('id', id);
+const { data: indicators_content } = await client.from('book2_substrand_indicators').select().eq('id', id);
 
 const heading = indicators_content[0].indicators;
 const vid1 = indicators_content[0].vid1;
