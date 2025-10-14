@@ -114,7 +114,7 @@ function swapVideo(video) {
                 </v-col> -->
             </v-row>
 
-            <div class="mt-15">
+            <!-- <div class="mt-15">
                 <h3 class="text-h3 mb-5" style="font-family: 'Inter', sans-serif; font-weight: bold;">Worked Exam<span
                         style="text-decoration: underline; text-decoration-color: #FCC30C;">ples</span></h3>
                 <v-container style="background-color: #F3F4F6;">
@@ -140,7 +140,7 @@ function swapVideo(video) {
                     </div>
 
                 </v-container>
-            </div>
+            </div> -->
 
             <!-- Course Completion Section -->
             <!-- <div class="mt-15">
