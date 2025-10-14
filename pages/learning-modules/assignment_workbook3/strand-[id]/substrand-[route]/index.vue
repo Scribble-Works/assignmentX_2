@@ -30,12 +30,12 @@ const strand_ref_id = substrand[0].strand_ref;
 const substrand_ref_id = substrand[0].id;
 
 const { data: strands } = await client
-    .from("book1_strands")
+    .from("book3_strands")
     .select()
     .eq("substrand_ref", substrand_ref_id);
 
 const { data: substrand_ls } = await client
-    .from("book1_substrand_indicators")
+    .from("book3_substrand_indicators")
     .select()
     .eq("substrand_ref", substrand_ref_id);
 
