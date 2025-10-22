@@ -19,6 +19,9 @@ const loadStateFromStorage = () => {
       console.log('Loading from localStorage - savedStatus:', savedStatus);
       console.log('Loading from localStorage - savedScores:', savedScores);
       
+      console.log('Loading from localStorage - savedCompleted:', savedCompleted);
+      console.log('Loading from localStorage - savedStatus:', savedStatus);
+      
       if (savedCompleted) {
         completedQuizzes.value = new Set(JSON.parse(savedCompleted));
         console.log('Loaded completed quizzes:', Array.from(completedQuizzes.value));

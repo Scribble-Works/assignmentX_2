@@ -301,114 +301,77 @@ const testimonials = [
         </v-col>
       </v-row>
       <div class="mt-10 text-center">
-        <h3 class="text-h3">Not Just Numbers - Real Results</h3>
-        <br />
-        <p>
-          We could talk about impact all day, but we'd rather let our users do
-          the talking.
-        </p>
-        <br />
-        <v-carousel hide-delimiter-background height="500">
-          <v-carousel-item v-for="(testimonial, i) in testimonials" :key="i">
-            <v-sheet elevation="2" class="mx-auto" max-width="800" height="400">
-              <v-container>
-                <v-card-text style="width: 100%">
-                  <div class="text-left mb-2 mt-10">
-                    {{ testimonial.quote }}
-                  </div>
-                  <div class="text-subtitle-1 text-left mt-10 font-italic">
-                    {{ testimonial.author }}
-                  </div>
-                  <div class="text-caption text-left mt-1" style="color: #888">
-                    {{ testimonial.school }}
-                  </div>
-                </v-card-text>
-              </v-container>
-            </v-sheet>
-          </v-carousel-item>
-        </v-carousel>
-      </div>
-      <v-row class="mt-10">
-        <v-col cols="" sm="12" md="12" lg="6" class="mt-16 pt-10">
-          <h4
-            style="color: #3e4f5c; font-family: 'Inter', sans-serif"
-            class="text-h4"
-          >
-            Don't Have The
-            <span
-              style="text-decoration: underline; text-decoration-color: #fcc30c"
-              >Book</span
-            ><br />
-            Yet?
-          </h4>
-          <p class="mt-5 mb-5">
-            Get your Assignment Maths Workbook now and unlock a <br />
-            world of learning with a digital companion!
-          </p>
-          <v-btn color="blue-darken-1" to="/store" size="large">Buy the Book</v-btn>
-        </v-col>
-        <v-col cols="" sm="12" md="12" lg="6">
-          <img src="/img/buyabout.png" alt="" />
-        </v-col>
-      </v-row>
-      <v-row class="mt-16 mb-10">
-        <v-col cols="" lg="6" md="12" sm="12" class="mt-10">
-          <h5 class="text-h5">Want to Get Involved?</h5>
-          <br />
-          <p>
-            Whether you're a school, parent, teacher, or education partner,
-            <br />we'd love to connect and explore how we can work <br />
-            together to empower learners.
-          </p>
-          <br />
-          <p>
-            <v-icon>mdi-phone</v-icon> +233 20 100 1041 <br /><br />
-            <v-icon>mdi-email</v-icon> scribbleworksonline@gmail.com
-          </p>
-        </v-col>
-        <v-col cols="" lg="6" md="12" sm="12">
-          <v-form @submit.prevent="sendMessage">
-            <label>Name</label>
-            <v-text-field
-              v-model="name"
-              type="text"
-              placeholder="Enter your name"
-              variant="underlined"
-            ></v-text-field>
-            <label>Email</label>
-            <v-text-field
-              v-model="email"
-              type="email"
-              placeholder="Enter your email"
-              variant="underlined"
-            ></v-text-field>
-            <label>Message</label>
-            <v-textarea type="text"
-              v-model="message"
-              placeholder="Enter your message"
-              variant="underlined"
-            ></v-textarea>
-            <v-btn color="blue-darken-1" size="large" type="submit"
-              >Send <v-icon>mdi-send</v-icon>
-            </v-btn>
-          </v-form>
+                <h3 class="text-h3">Not Just Numbers - Real Results</h3><br>
+                <p>We could talk about impact all day—but we’d rather let our users do the talking.</p>
+                <br>
+                <v-carousel hide-delimiter-background height="500">
+                    <v-carousel-item v-for="(testimonial, i) in testimonials" :key="i">
+                        <v-sheet elevation="2" class="mx-auto" max-width="800" height="400">
+                            <v-container>
+                                <v-card-text style="width: 100%;">
+                                    <div class="text-left mb-2 mt-10">{{ testimonial.quote }}</div>
+                                    <div class="text-subtitle-1 text-left mt-10 font-italic">{{ testimonial.author }}
+                                    </div>
+                                    <div class="text-caption text-left mt-1" style="color: #888;">{{ testimonial.school
+                                    }}</div>
+                                </v-card-text>
+                            </v-container>
+                        </v-sheet>
+                    </v-carousel-item>
+                </v-carousel>
+            </div>
+            <v-row class="mt-10">
+                <v-col cols="" sm="12" md="12" lg="6" class="mt-16 pt-10">
+                    <h4 style="color: #3E4F5C; font-family: 'Inter', sans-serif;" class="text-h4">Don't Have The <span
+                            style="text-decoration: underline; text-decoration-color: #FCC30C;">Book</span><br> Yet?
+                    </h4>
+                    <p class="mt-5 mb-5">Get your Assignment Maths Workbook now and unlock a <br> world of learning with a digital companion!</p>
+                    <v-btn color="blue-darken-1" to="/store" size="large">Buy the Book</v-btn>
+                </v-col>
+                <v-col cols="" sm="12" md="12" lg="6">
+                    <img src="/img/buyabout.png" alt="">
+                </v-col>
+            </v-row>
+            <v-row class="mt-16 mb-10">
+                <v-col cols="" lg="6" md="12" sm="12" class="mt-10">
+                    <h5 class="text-h5">Want to Get Involved?</h5>
+                    <br>
+                    <p>Whether you're a school, parent, teacher, or education partner,<br>we'd love to connect and
+                        explore how we can work <br> together to empower learners.</p><br>
+                    <p>
+                        <v-icon>mdi-phone</v-icon> +233 20 100 1041 <br><br>
+                        <v-icon>mdi-email</v-icon> scribbleworksonline@gmail.com
+                    </p>
+                </v-col>
+                <v-col cols="" lg="6" md="12" sm="12">
+                    <v-form @submit.prevent="sendMessage">
+                        <label>Name</label>
+                        <v-text-field v-model="name" type="text" placeholder="Enter your name" variant="underlined"></v-text-field>
+                        <label>Email</label>
+                        <v-text-field v-model="email" type="email" placeholder="Enter your email"
+                            variant="underlined"></v-text-field>
+                        <label>Message</label>
+                        <v-textarea v-model="message" type="text" placeholder="Enter your message"
+                            variant="underlined"></v-textarea>
+                        <v-btn color="blue-darken-1" size="large" type="submit">Send <v-icon>mdi-send</v-icon>
+                        </v-btn>
+                    </v-form>
 
-          <v-dialog v-model="dialog" max-width="600">
-            <v-card>
-              <v-card-title class="headline">Message Sent</v-card-title>
-              <v-card-text>
-                Thank you for your message! We will get back to you shortly.
-              </v-card-text>
-              <v-card-actions>
-                <v-btn color="blue-darken-1" text @click="dialog = false">Close</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </v-col>
-      </v-row>
-      </v-container>
+                    <v-dialog v-model="dialog" max-width="600">
+                        <v-card>
+                            <v-card-title class="headline">Message Sent</v-card-title>
+                            <v-card-text>
+                                Thank you for your message! We will get back to you shortly.
+                            </v-card-text>
+                            <v-card-actions>
+                                <v-btn color="blue-darken-1" text @click="dialog = false">Close</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </v-col>
+            </v-row>
+        </v-container>
     </div>
-  </div>
 </template>
 <style>
 .body {
