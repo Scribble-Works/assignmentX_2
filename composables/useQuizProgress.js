@@ -11,12 +11,17 @@ const loadStateFromStorage = () => {
       const savedCompleted = localStorage.getItem('completedQuizzes');
       const savedStatus = localStorage.getItem('contentStatus');
       
+      console.log('Loading from localStorage - savedCompleted:', savedCompleted);
+      console.log('Loading from localStorage - savedStatus:', savedStatus);
+      
       if (savedCompleted) {
         completedQuizzes.value = new Set(JSON.parse(savedCompleted));
+        console.log('Loaded completed quizzes:', Array.from(completedQuizzes.value));
       }
       
       if (savedStatus) {
         contentStatus.value = new Map(JSON.parse(savedStatus));
+        console.log('Loaded content status:', Array.from(contentStatus.value.entries()));
       }
     } catch (error) {
       console.error('Error loading quiz progress from localStorage:', error);
@@ -28,8 +33,14 @@ const loadStateFromStorage = () => {
 const saveStateToStorage = () => {
   if (process.client) {
     try {
-      localStorage.setItem('completedQuizzes', JSON.stringify(Array.from(completedQuizzes.value)));
-      localStorage.setItem('contentStatus', JSON.stringify(Array.from(contentStatus.value.entries())));
+      const completedArray = Array.from(completedQuizzes.value);
+      const statusArray = Array.from(contentStatus.value.entries());
+      
+      localStorage.setItem('completedQuizzes', JSON.stringify(completedArray));
+      localStorage.setItem('contentStatus', JSON.stringify(statusArray));
+      
+      console.log('Saving to localStorage - completedQuizzes:', completedArray);
+      console.log('Saving to localStorage - contentStatus:', statusArray);
     } catch (error) {
       console.error('Error saving quiz progress to localStorage:', error);
     }
@@ -47,6 +58,8 @@ export const useQuizProgress = () => {
     contentStatus.value.set(contentId, 'completed');
     saveStateToStorage();
     console.log(`Marked course ${contentId} as completed. Status:`, contentStatus.value.get(contentId));
+    console.log('Current completed quizzes:', Array.from(completedQuizzes.value));
+    console.log('Current content status:', Array.from(contentStatus.value.entries()));
   };
 
   const markQuizInProgress = (contentId) => {
@@ -59,6 +72,10 @@ export const useQuizProgress = () => {
   };
 
   const getContentStatus = (contentId) => {
+    // If quiz is completed, always return 'completed' regardless of contentStatus
+    if (completedQuizzes.value.has(contentId)) {
+      return 'completed';
+    }
     return contentStatus.value.get(contentId) || 'not-started';
   };
 

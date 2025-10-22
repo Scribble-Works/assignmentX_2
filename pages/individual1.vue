@@ -32,7 +32,7 @@
         </svg>
         Bookmarks
         <span class="bg-yellow-400 text-white rounded-full px-2 py-0.5 text-xs">
-          {{ bookmarkCount }}
+          {{ bookmarks.length }}
         </span>
       </NuxtLink>
     </div>
@@ -62,7 +62,7 @@
           <!-- Filename as link -->
           <NuxtLink
             :to="`/individualtopic/${encodeURIComponent(file)}`"
-            class="text-sm text-blue-600 hover:text-blue-800 transition"
+            class="text-sm text-blue-600 underline hover:text-blue-800 transition"
           >
             {{ file }}
           </NuxtLink>
@@ -71,7 +71,7 @@
         <!-- Bookmark Icon -->
         <button @click="toggleBookmark(file)">
           <svg
-            v-if="isBookmarked(file)"
+            v-if="bookmarks.includes(file)"
             xmlns="http://www.w3.org/2000/svg"
             class="h-6 w-6 text-yellow-500"
             viewBox="0 0 20 20"
@@ -102,7 +102,6 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import { useBookmarks } from "~/composables/useBookmarks";
 
 definePageMeta({
   layout: "default",
@@ -110,21 +109,24 @@ definePageMeta({
 
 const files = ref([
   "1_Identifying even, odd, prime and composite numbers_1.png",
-  "2_Finding prime factors of natural numbers_2.png",
+  "2_Finding prime factors of natural numbers2.png",
   "3_Finding the HCF of natural numbers_3.png",
   "4_Finding the LCM of natural numbers_4.png",
   "5_Addition and subtraction of whole numbers_5.png",
   "6_Multiplication of whole numbers_6.png",
   "7_Division of whole numbers_7.png",
-  "1. Identifying even, odd, prime and composite numbers_1.png",
-  "1. Identifying even, odd, prime and composite numbers_1.png",
-  "1. Identifying even, odd, prime and composite numbers_1.png",
-  "1. Identifying even, odd, prime and composite numbers_1.png",
-  "1. Identifying even, odd, prime and composite numbers_1.png",
-  "1. Identifying even, odd, prime and composite numbers_1.png",
 ]);
 
-const { bookmarks, toggleBookmark, isBookmarked, bookmarkCount } = useBookmarks();
+const bookmarks = ref([]);
+
+const toggleBookmark = (file) => {
+  const index = bookmarks.value.indexOf(file);
+  if (index > -1) {
+    bookmarks.value.splice(index, 1);
+  } else {
+    bookmarks.value.push(file);
+  }
+};
 
 const searchQuery = ref("");
 

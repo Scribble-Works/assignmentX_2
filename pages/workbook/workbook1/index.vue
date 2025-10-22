@@ -16,7 +16,9 @@ console.log(strands)
 </script>
 <template>
     <div>
-        <v-container>
+        <!-- Main content with consistent alignment -->
+        <div class="container mx-auto">
+            <v-container>
             <introvid :intro="'https://www.youtube.com/embed/Ec7zLUi16JU'" />
             <br>
             <h2 class="text-h3">📘 Welcome to Your Math Companion!</h2><br>
@@ -32,7 +34,7 @@ console.log(strands)
                 <v-row v-for="strand in strands" :key="strand.id">
                     <v-col cols=12>
                         <NuxtLink :to="'/workbook/workbook1/strand-' + strand.id + '/'">
-                            <v-card class="mx-auto" color="grey-lighten-4" max-width="1200">
+                            <v-card color="grey-lighten-4">
 
                                 <v-card-text class="pt-6">
                                     <div class="font-weight-light text-grey text-h6 mb-2">
@@ -48,7 +50,8 @@ console.log(strands)
                     </v-col>
                 </v-row>
             </div>
-        </v-container>
+            </v-container>
+        </div>
     </div>
 </template>
 <style>

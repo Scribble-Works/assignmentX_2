@@ -32,7 +32,7 @@
         </svg>
         Bookmarks
         <span class="bg-yellow-400 text-white rounded-full px-2 py-0.5 text-xs">
-          {{ bookmarks.length }}
+          {{ bookmarkCount }}
         </span>
       </NuxtLink>
     </div>
@@ -62,7 +62,7 @@
           <!-- Filename as link -->
           <NuxtLink
             :to="`/individual/${encodeURIComponent(file)}`"
-            class="text-sm text-blue-600 underline hover:text-blue-800 transition"
+            class="text-sm text-blue-600 hover:text-blue-800 transition"
           >
             {{ file }}
           </NuxtLink>
@@ -71,7 +71,7 @@
         <!-- Bookmark Icon -->
         <button @click="toggleBookmark(file)">
           <svg
-            v-if="bookmarks.includes(file)"
+            v-if="isBookmarked(file)"
             xmlns="http://www.w3.org/2000/svg"
             class="h-6 w-6 text-yellow-500"
             viewBox="0 0 20 20"
@@ -102,6 +102,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { useBookmarks } from "~/composables/useBookmarks";
 
 definePageMeta({
   layout: "default",
@@ -109,30 +110,16 @@ definePageMeta({
 
 const files = ref([
   "1_Identifying even, odd, prime and composite numbers_1.png",
-  "2_Finding prime factors of natural numbers2.png",
+  "2_Finding prime factors of natural numbers_2.png",
   "3_Finding the HCF of natural numbers_3.png",
   "4_Finding the LCM of natural numbers_4.png",
   "5_Addition and subtraction of whole numbers_5.png",
   "6_Multiplication of whole numbers_6.png",
   "7_Division of whole numbers_7.png",
-  "1. Identifying even, odd, prime and composite numbers_1.png",
-  "1. Identifying even, odd, prime and composite numbers_1.png",
-  "1. Identifying even, odd, prime and composite numbers_1.png",
-  "1. Identifying even, odd, prime and composite numbers_1.png",
-  "1. Identifying even, odd, prime and composite numbers_1.png",
-  "1. Identifying even, odd, prime and composite numbers_1.png",
 ]);
 
-const bookmarks = ref([]);
-
-const toggleBookmark = (file) => {
-  const index = bookmarks.value.indexOf(file);
-  if (index > -1) {
-    bookmarks.value.splice(index, 1);
-  } else {
-    bookmarks.value.push(file);
-  }
-};
+const { bookmarks, toggleBookmark, isBookmarked, bookmarkCount } =
+  useBookmarks();
 
 const searchQuery = ref("");
 
@@ -146,3 +133,6 @@ const filteredFiles = computed(() =>
 <style scoped>
 /* Optional styles */
 </style>
+
+
+curl -X 'GET' \   'http://localhost:5000/api/v1/companies/6f2b3bce-52c8-4b56-9e7c-d9b5d2b70f16/personnel-company?PageNumber=1&PageSize=10&SearchTerm=Abena' \   -H 'accept: text/plain; x-api-version=1.0' \   -H 'Authorization: Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJmdWxsTmFtZSI6Ikpvc2VwaGluZSIsInBob25lTnVtYmVyIjoiMDU1NjQwMjcyNyIsImdoYW5hQ2FyZElkIjoiR0hBLTAwMjE1MDQ1NS02IiwiZW1haWwiOiJqa3dha3llMDAxQGdtYWlsLmNvbSIsInVzZXJJZCI6InVzZXIxIiwicmVnaW9uIjoiR3JlYXRlciBBY2NyYSIsImRpc3RyaWN0IjoiR3JlYXRlciBBY2NyYSIsImNvbXBhbnlJZCI6IjZmMmIzYmNlLTUyYzgtNGI1Ni05ZTdjLWQ5YjVkMmI3MGYxNiIsImNvbXBhbnlOYW1lIjoiSHVidGVsIEx0ZCIsIm5iZiI6MTc1NTE4MjU0MSwiZXhwIjoxNzU1Nzg3MzQxLCJpc3MiOiJodHRwczovL2FwaS1hdXRoLmdvdi1naC5jb20iLCJhdWQiOiJodHRwczovL2FwcC1tb2JpbGUuZ292LWdoLmNvbSJ9.0nudkILreQiuGP42-rSUSR5PWZvs_4XSBYQiyEkv8ZQ'

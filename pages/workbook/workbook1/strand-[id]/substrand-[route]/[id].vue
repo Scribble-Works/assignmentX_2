@@ -70,10 +70,15 @@ function openBece() {
 
 // Course completion function
 const markCourseAsCompleted = () => {
-    courseCompleted.value = true;
-    markQuizCompleted(id);
-    // Force update the status to completed
-    console.log(`Course ${id} marked as completed`);
+    if (!isQuizCompleted(id)) {
+        markQuizCompleted(id);
+        courseCompleted.value = true;
+        console.log(`Course ${id} marked as completed`);
+    } else {
+        // If already completed, uncheck it
+        courseCompleted.value = false;
+        console.log(`Course ${id} already completed`);
+    }
 };
 
 
@@ -82,45 +87,62 @@ const markCourseAsCompleted = () => {
 </script>
 <template>
     <div class="body">
-        <v-container>
+        <div class="container mx-auto p-4">
             <h2 class="text-center text-h4 text-uppercase text-bold mb-10 mt-15" style="font-weight: bold;">{{
                 heading
             }}</h2>
-            <v-row>
-
-                <v-col cols="" lg="8" md="6" sm="12">
+            
+            <!-- Video Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-8 items-end">
+                <div class="lg:col-span-8">
                     <introvid :intro="vid1" />
-                </v-col>
-                <v-col cols="" lg="4" md="6" sm="12">
-                    <introvid :intro="vid2" />
-                    <introvid :intro="vid3" />
-                </v-col>
-            </v-row>
-            <v-row class="mt-n8">
-                <v-col cols="" lg="2" sm="12" md="3">
-                    <v-btn @click="openNotes" rounded color="grey-darken-3">Concept Note</v-btn>
-                </v-col>
-                <v-col cols="" lg="3" sm="12" md="5">
-                    <v-btn @click="openBece" rounded color="grey-darken-3">Sample Questions</v-btn>
-                </v-col>
-                <v-col cols="" lg="3" sm="12" md="4">
-                    <v-btn rounded color="grey-darken-3">Video transcription</v-btn>
-                </v-col>
-            </v-row>
+                </div>
+                <div class="lg:col-span-4">
+                    <div class="flex flex-col space-y-1 h-full justify-end">
+                        <div class="h-1/2">
+                            <introvid :intro="vid2" />
+                        </div>
+                        <div class="h-1/2">
+                            <introvid :intro="vid3" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap gap-4 mb-8">
+                <v-btn @click="openNotes" rounded color="grey-darken-3">Concept Note</v-btn>
+                <v-btn @click="openBece" rounded color="grey-darken-3">Sample Questions</v-btn>
+                <v-btn rounded color="grey-darken-3">Video transcription</v-btn>
+                
+                <!-- Course Completion Checkbox -->
+                <div class="flex items-center gap-2 ml-auto">
+                    <input 
+                        type="checkbox" 
+                        id="courseCompleted" 
+                        :checked="isQuizCompleted(id)"
+                        @change="markCourseAsCompleted"
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <label for="courseCompleted" class="text-sm text-gray-700 font-medium">
+                        Mark Course as completed
+                    </label>
+                </div>
+            </div>
 
             <div class="mt-15">
                 <h3 class="text-h3 mb-5" style="font-family: 'Inter', sans-serif; font-weight: bold;">Worked Exam<span
                         style="text-decoration: underline; text-decoration-color: #FCC30C;">ples</span></h3>
-                <v-container style="background-color: #F3F4F6;">
+                <div class="bg-gray-100 rounded-lg px-12 py-8">
                     <v-img class="mt-10 mb-10" src="/img/example.png"></v-img>
                     <v-img class="mb-10" src="/img/solution.png"></v-img>
-                </v-container>
+                </div>
             </div>
 
             <div class="mt-10">
                 <h3 class="text-h3 mb-10" style="font-family: 'Inter', sans-serif;"> Now Let's have some math <span
                         style="text-decoration: underline; text-decoration-color: #FCC30C;">fun</span></h3>
-                <v-container style="background-color: #F3F4F6;">
+                <div class="bg-gray-100 rounded-lg">
                     <div class="mt-10">
                         <h5 class="text-h5 text-center" style="font-family: 'Inter', sans-serif; font-weight: bold;">
                             Flip Card Compare Game</h5><br>
@@ -128,12 +150,10 @@ const markCourseAsCompleted = () => {
                         <p class="text-center"><v-icon>mdi-clock</v-icon> Score: 2/4</p>
                     </div>
 
-
                     <div class="mt-5 mb-10">
                         <!-- <compare /> -->
                     </div>
-
-                </v-container>
+                </div>
             </div>
 
             <!-- Course Completion Section -->
@@ -151,7 +171,7 @@ const markCourseAsCompleted = () => {
                             class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 flex items-center justify-center mx-auto"
                         >
                             <span class="mr-2">✓</span>
-                            Mark Course as Completed
+                            Mark Course as Completeds
                         </button>
                     </div>
 
@@ -180,7 +200,7 @@ const markCourseAsCompleted = () => {
                     </div>
                 </div>
             </div>
-        </v-container>
+        </div>
     </div>
 </template>
 <style>

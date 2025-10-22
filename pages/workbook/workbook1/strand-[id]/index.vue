@@ -22,12 +22,14 @@ console.log(strandtitle);
 </script>
 <template>
     <div class="mt-5" style="height: auto;">
-        <v-container>
+        <!-- Main content with consistent alignment -->
+        <div class="container mx-auto">
+            <v-container>
             <h1 class="text-center text-uppercase text-bold" style="font-size: 3em; color: #3E4F5C;">STRAND
                 {{ strandNumber }} - {{ title }}
             </h1>
             <ConceptNotes :concept-note="conceptNote" />
-            <v-row class="mt-10" v-for="substrand in substrands" :key="substrand.id">
+            <v-row class="" v-for="substrand in substrands" :key="substrand.id">
                 <v-col>
                     <NuxtLink
                         :to="'/workbook/workbook1/strand-' + substrand.strand_ref + '/substrand-' + substrand.route + '/'">
@@ -39,6 +41,7 @@ console.log(strandtitle);
                     <br>
                 </v-col>
             </v-row>
-        </v-container>
+            </v-container>
+        </div>
     </div>
 </template>
