@@ -17,7 +17,7 @@
       </h1>
 
       <p class="intro-text text-gray-600 leading-relaxed">
-        Hi [User's First Name], now that you're here, a few quick questions will
+        Hi {{ firstName }}, now that you're here, a few quick questions will
         help us tailor AssignmentX to your unique learning needs. This helps us
         provide the most relevant content, features, and support just for you.
         It'll only take a moment!
@@ -99,23 +99,40 @@ definePageMeta({
   layout: "onboarding",
 });
 import { ref } from "vue";
+const user = useSupabaseUser();
+const client = useSupabaseClient();
+const router = useRouter();
 
-const selectedRole = ref("student"); // Default to 'student' as per image
+const selectedRole = ref(""); // Default to 'student' as per image
+
+const profile = await client.from("profiles")
+  .select("*")
+  .eq("id", user.value.id)
+  .single();
+
+const firstName = profile.data.firstName;
 
 const handleSkip = () => {
   console.log("Skipping role selection...");
   // Add skip logic here
+  router.push("/");
 };
 
 const handlePrevious = () => {
-  console.log("Going to previous step...");
-  // Add previous step navigation logic here
+  console.log("Going back to the previous step...");
+  router.push("/onboarding"); // Adjust the route as needed
 };
 
-const handleNext = () => {
-  console.log("Selected role:", selectedRole.value);
-  console.log("Going to next step...");
-  // Add next step navigation logic here, passing selectedRole.value
+const handleNext = async () => {
+  try {
+    const {data, error} = await client.from("onboarding").insert({
+    id: user.value.id,
+    role: selectedRole.value
+  });
+  router.push('/location');
+  }catch (error) {
+    console.error("Error saving role:", error);
+  }
 };
 </script>
 

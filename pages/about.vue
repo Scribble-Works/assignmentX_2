@@ -23,7 +23,7 @@ const testimonials = [
                 <v-col cols="" lg="" md="" sm="12">
                     <h4 class="text-h4">
                         <span style="color: #FCC30C; font-weight: bold;">AssignmentX</span> is a learning platform built
-                        to help students truly understand mathematics — not just memorize it.
+                        to help students truly understand mathematics, not just memorize it.
                     </h4><br>
                     <p>
                         We use storytelling, real-life examples, games, and guided practice to make math engaging,
@@ -38,15 +38,15 @@ const testimonials = [
                 <v-col cols="" lg="6" sm="12" md="6" class="mb-8">
                     <img src="/img/mission.png" alt="">
                 </v-col>
-                <v-col cols="" lg="6" sm="12" md="6" class="mt-15">
-                    <h4 class="text-h3">Our <span style="color: #4C9F38;">Mission</span></h4><br>
-                    <p>Our mission is to empower young learners across Africa to discover the power of math by
-                        transforming their experience to be:</p><br>
+                <v-col cols="" lg="6" sm="12" md="6" class="mt-10">
+                    <h4 class="text-h3">The AssignmentX <span style="color: #4C9F38;">Mission</span></h4><br>
+                    <p>Our mission is to make mathematics engaging and simple, transforming the way students learn by moving beyond rote memorization. We aim to cultivate a love for math by connecting concepts to their real-world applications and historical context. By guiding learners from</p><br>
                     <ul class="missionList">
-                        <li><strong>Understandable</strong> - not confusing</li><br>
-                        <li><strong>Relatable</strong> - not abstract</li><br>
-                        <li><strong>Enjoyable</strong> - not intimidating</li><br>
+                        <li><strong>Discovery</strong></li><br>
+                        <li><strong>Practice</strong></li><br>
+                        <li><strong>Creation</strong></li><br>
                     </ul>
+                    <p>we help them build a deep understanding and achieve skill mastery and innovation. Our platform is also a resource for teachers, helping them create effective and differentiated content.</p>
                 </v-col>
             </v-row>
             <v-row class="mt-15">
@@ -78,7 +78,7 @@ const testimonials = [
                             </v-container>
                         </v-col>
                         <v-col lg="9" md="9" sm="8" class="mt-5">
-                            <h4 class="text-h5">Practice – Build the How</h4>
+                            <h4 class="text-h5">Practice – Master the How</h4>
                             <p>Learn step-by-step through videos, notes, games, and worked examples.</p>
                         </v-col>
                     </v-row>
@@ -92,8 +92,8 @@ const testimonials = [
                             </v-container>
                         </v-col>
                         <v-col lg="9" md="9" sm="8" class="mt-5">
-                            <h4 class="text-h5">Practice – Build the How</h4>
-                            <p>Learn step-by-step through videos, notes, games, and worked examples.</p>
+                            <h4 class="text-h5">Create – Show the Wow</h4>
+                            <p>Show the wow by solving challenges, projects, and creative tasks that connect math to innovation.</p>
                         </v-col>
                     </v-row>
                 </v-col>
@@ -106,7 +106,7 @@ const testimonials = [
                 <v-col cols="" lg="6" md="12" sm="12">
                     <h3 class="text-h3">Why It Matters</h3>
                     <br>
-                    <p>Many learners struggle with math not because they aren’t smart — but because math was never shown
+                    <p>Many learners struggle with math not because they aren’t smart, but because math was never shown
                         to them in a way that made sense. We’re changing that.</p><br>
                     <p>AssignmentX is designed to work online or offline, in low-resource schools, and with localized
                         content to meet learners where they are, ensuring access and relevance for all.
@@ -148,7 +148,7 @@ const testimonials = [
                         </v-col>
                         <v-col sm="9" lg="9" md="9">
                             <h5 class="text-h5">Curriculum-aligned content</h5>
-                            <p>Specifically tailored for Ghanaian JHS (B7–B9), ensuring relevance to local educational
+                            <p>Specifically tailored for Ghanaian JHS (B4–B9), ensuring relevance to local educational
                                 standards.</p>
                         </v-col>
                     </v-row>
@@ -198,8 +198,7 @@ const testimonials = [
                     <h4 style="color: #3E4F5C; font-family: 'Inter', sans-serif;" class="text-h4">Don't Have The <span
                             style="text-decoration: underline; text-decoration-color: #FCC30C;">Book</span><br> Yet?
                     </h4>
-                    <p class="mt-5 mb-5">Get your Assignment Workbook now and unlock a <br> world of learning with QR
-                        code scanning!</p>
+                    <p class="mt-5 mb-5">Get your Assignment Maths Workbook now and unlock a <br> world of learning with a digital companion!</p>
                     <v-btn color="blue-darken-1" size="large">Buy the Book</v-btn>
                 </v-col>
                 <v-col cols="" sm="12" md="12" lg="6">
@@ -210,10 +209,10 @@ const testimonials = [
                 <v-col cols="" lg="6" md="12" sm="12" class="mt-10">
                     <h5 class="text-h5">Want to Get Involved?</h5>
                     <br>
-                    <p>Whether you're a school, parent, teacher, or education partner <br>— we’d love to connect and
+                    <p>Whether you're a school, parent, teacher, or education partner, <br>we’d love to connect and
                         explore how we can work <br> together to empower learners.</p><br>
                     <p>
-                        <v-icon>mdi-phone</v-icon> +233 556 402 828 <br><br>
+                        <v-icon>mdi-phone</v-icon> +233 20 100 1041 <br><br>
                         <v-icon>mdi-email</v-icon> scribbleworksonline@gmail.com
                     </p>
                 </v-col>

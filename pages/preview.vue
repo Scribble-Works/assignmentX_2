@@ -22,8 +22,8 @@ const previewImages = [
           Take a Peek Inside the Workbook
         </h2>
         <p className="text-sm text-slate-600 max-w-4xl ">
-          Explore a few sample pages from our math workbook. Get a feel for how
-          AssignmentX brings math to life through real-world examples,
+          Explore a few sample pages from our math workbook. Get a feel for how the
+          Assignment Maths Workbooks brings math to life through real-world examples,
           storytelling, and guided practice.
         </p>
       </div>

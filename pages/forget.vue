@@ -1,4 +1,6 @@
 <script setup>
+import { useMediaQuery } from '@vueuse/core';
+const mobile = useMediaQuery('(max-width: 600px)');
 definePageMeta({
     layout: 'auth',
 });
@@ -7,20 +9,30 @@ const user = useSupabaseUser();
 const router = useRouter();
 const email = ref('');
 const alert = ref(false);
+const text = ref('');
 const resetPassword = async () => {
+    // Simple email validation
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.value || !emailPattern.test(email.value)) {
+        text.value = 'Please enter a valid email address.';
+        alert.value = true;
+        return;
+    }
     try {
         const { data, error } = await auth.resetPasswordForEmail(email.value);
         console.log(data);
         if (error) {
-            alert('An error occurred. Please try again later.');
+            text.value = error.message || 'An error occurred. Please try again later.';
+            alert.value = true;
             console.error(error);
         } else {
-            // alert('Password reset email sent! Please check your inbox.');
+            text.value = 'Password reset email sent! Please check your inbox.';
             alert.value = true;
             // router.push('/auth');
         }
     } catch (error) {
-        // alert('An error occurred. Please try again later.');
+        text.value = error.message || 'An error occurred. Please try again later.';
+        alert.value = true;
         console.error(error);
     }
 };
@@ -53,16 +65,19 @@ const backLogin = () => {
                     </form>
                 </v-col>
                 <v-col cols="" lg="6" md="12" sm="12">
-                    <img src="/img/forget.png" alt="Forget Password">
+                    <img v-if="!mobile" src="/img/forget.png" alt="Forget Password">
                 </v-col>
             </v-row>
 
 
-            <v-dialog v-model="alert" width="auto">
-                <v-card max-width="400" title="Reset Password" text="Please check your email for the reset link.">
-                    <template v-slot:actions>
-                        <v-btn class="ms-auto" text="Ok" @click="alert = false"></v-btn>
-                    </template>
+            <v-dialog v-model="alert" max-width="400">
+                <v-card>
+                    <v-card-title class="headline">Reset Password</v-card-title>
+                    <v-card-text>{{ text }}</v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="primary" text @click="alert = false">OK</v-btn>
+                    </v-card-actions>
                 </v-card>
             </v-dialog>
         </v-container>

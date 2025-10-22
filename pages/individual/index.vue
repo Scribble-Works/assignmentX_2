@@ -1,3 +1,37 @@
+<script setup>
+import { ref, computed } from "vue";
+import { useBookmarks } from "~/composables/useBookmarks";
+
+definePageMeta({
+  layout: "default",
+});
+const route = useRoute();
+const client = useSupabaseClient();
+// const { data: resources } = await client
+//   .from("facilitator-resources")
+//   .select("*");
+
+const { data: files } = await client
+  .from("facilitator-resources")
+  .select("route, files->files")
+  .eq("route", route.params.route);
+
+const fileDisp = files[0].files;
+
+const { bookmarks, toggleBookmark, isBookmarked, bookmarkCount } =
+  useBookmarks();
+
+const searchQuery = ref("");
+
+// const filteredFiles = computed(() =>
+//   files.value.filter((file) =>
+//     file.toLowerCase().includes(searchQuery.value.toLowerCase())
+//   )
+// );
+console.log(files);
+console.log(fileDisp);
+</script>
+
 <template>
   <div class="w-[80%] mx-auto px-4 py-10">
     <!-- Search -->
@@ -40,8 +74,8 @@
     <!-- File List -->
     <ul class="space-y-4">
       <li
-        v-for="(file, index) in filteredFiles"
-        :key="index"
+        v-for="file in fileDisp"
+        :key="file"
         class="flex items-center justify-between bg-white p-4 rounded-md shadow-sm border border-gray-100"
       >
         <div class="flex items-center space-x-4">
@@ -61,10 +95,14 @@
 
           <!-- Filename as link -->
           <NuxtLink
+<<<<<<<< HEAD:pages/individual/index.vue
             :to="`/individual/${encodeURIComponent(file)}`"
+========
+            :to="`/facilitator-resources/`+files[0].route+`/`+file.slug"
+>>>>>>>> 6c60c38f26915ca5d4a45b1aba38645376269a0e:pages/facilitator-resources/[route]/index.vue
             class="text-sm text-blue-600 hover:text-blue-800 transition"
           >
-            {{ file }}
+            {{ file.name }}
           </NuxtLink>
         </div>
 
@@ -100,6 +138,7 @@
   </div>
 </template>
 
+<<<<<<<< HEAD:pages/individual/index.vue
 <script setup>
 import { ref, computed } from "vue";
 import { useBookmarks } from "~/composables/useBookmarks";
@@ -130,6 +169,8 @@ const filteredFiles = computed(() =>
 );
 </script>
 
+========
+>>>>>>>> 6c60c38f26915ca5d4a45b1aba38645376269a0e:pages/facilitator-resources/[route]/index.vue
 <style scoped>
 /* Optional styles */
 </style>

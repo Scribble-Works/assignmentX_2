@@ -47,7 +47,7 @@
           v-model="selectedAccessibility"
         />
         <span class="ml-3 text-lg text-gray-800"
-          >Perl-Urban(e.g., Town or community on the outskirts of a city)</span
+          >Peri-Urban(e.g., Town or community on the outskirts of a city)</span
         >
       </label>
       <label class="inline-flex items-center cursor-pointer">
@@ -106,22 +106,35 @@ definePageMeta({
   layout: "onboarding",
 });
 
-const selectedAccessibility = ref("yes"); // Default to 'yes' as per image
+const user = useSupabaseUser();
+const client = useSupabaseClient();
+const router = useRouter();
+
+const selectedAccessibility = ref(""); // Default to 'yes' as per image
 
 const handleSkip = () => {
   console.log("Skipping accessibility question...");
-  // Add skip logic here
+  router.push("/");
 };
 
 const handlePrevious = () => {
   console.log("Going to previous step...");
   // Add previous step navigation logic here
+  router.push('/role');
 };
 
-const handleNext = () => {
-  console.log("Selected accessibility option:", selectedAccessibility.value);
-  console.log("Going to next step...");
-  // Add next step navigation logic here, passing selectedAccessibility.value
+const handleNext = async() => {
+  try {
+   const {data, error} = await client
+     .from("onboarding")
+     .update({
+       location: selectedAccessibility.value
+     })
+     .eq('id', user.value.id);
+     router.push('/accessibility');
+  } catch (error) {
+    console.log("Error updating location:", error);
+  }
 };
 </script>
 

@@ -1,7 +1,28 @@
 <script setup>
 const user = useSupabaseUser();
+const client = useSupabaseClient();
+const { auth } = useSupabaseClient();
 const router = useRouter();
 const toggle = ref(false);
+import { useMediaQuery } from '@vueuse/core';
+const mobile = useMediaQuery('(max-width: 600px)');
+const tablet = useMediaQuery('(min-width: 601px) and (max-width: 1024px)');
+
+
+const signout = async () => {
+    try {
+        const { error } = await auth.signOut();
+        if (error) {
+            console.error(error);
+        } else {
+            router.push("/");
+        }
+    } catch (error) {
+        alert("An error occurred. Please try again later.");
+        console.error(error);
+    }
+};
+
 
 router.beforeEach((to, from, next) => {
     if (from.name && to.name !== from.name) {
@@ -17,25 +38,35 @@ router.beforeEach((to, from, next) => {
 <template>
     <div>
         <header class="bg-white shadow">
-            <nav class="container mx-auto flex items-center justify-between p-4">
+            <nav class="container mx-auto flex items-center justify-between p-3">
                 <NuxtLink class="flex items-center font-bold text-xl" to="/">
-                    <img src="/img/logo.png" alt="Logo" class="w-12 mr-2">
+                    <img src="/img/logo.png" alt="Logo" class="w-12 ml-n2 mt-0 mr-0">
                     AssignmentX
                 </NuxtLink>
+                <!-- <div v-if="!tablet && mobile">
+                    <div class="mt-0 ml-16" v-if="!user">
+                        <v-btn color="blue" class="text-white py-2 px-4 rounded ml-16" to="/login">Login</v-btn>
+                    </div>
+                    <div class="mt-0" v-else>
+                        <avartar />
+                    </div><br>
+                </div> -->
                 <div class="hidden md:flex space-x-4">
                     <NuxtLink class="hover:text-blue-500 py-2" to="/">Home</NuxtLink>
                     <NuxtLink class="hover:text-blue-500 py-2" to="/about">About</NuxtLink>
-                    <NuxtLink class="hover:text-blue-500 py-2" to="/resources">Facilitator Resources</NuxtLink>
+                    <NuxtLink class="hover:text-blue-500 py-2" to="/learning-modules/">Learning Modules</NuxtLink>
+                    <NuxtLink class="hover:text-blue-500 py-2" to="/facilitator-resources/">Facilitator Resources
+                    </NuxtLink>
+
                     <div v-if="!user">
-                        <v-btn color="blue" class=" text-white py-2 px-4 rounded" to="/auth">Get
-                            Started</v-btn>
+                        <v-btn color="blue" class=" text-white py-2 px-4 rounded" to="/login">Login</v-btn>
                     </div>
                     <div v-else>
                         <avartar />
                     </div>
 
                 </div>
-                <button @click.stop="toggle = !toggle" class="md:hidden text-gray-500 focus:outline-none"
+                <button @click.stop="toggle = !toggle" class="md:hidden text-gray-500 focus:outline-none mt-0"
                     id="navbar-toggler">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
@@ -44,20 +75,39 @@ router.beforeEach((to, from, next) => {
                     </svg>
                 </button>
             </nav>
-            <div v-if="toggle" class="md:hidden overflow-hidden transition-all duration-500 ease-in-out"
+            <v-navigation-drawer v-model="toggle" temporary right class="md:hidden">
+                <drawer-avatar />
+                <v-divider v-if="user" class="border-opacity-100"></v-divider>
+                <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/">Home</NuxtLink>
+                <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/about">About
+                </NuxtLink>
+                <NuxtLink v-if="user" class="block px-4 py-2 hover:bg-gray-200" to="/edit-profile">Edit Profile
+                </NuxtLink>
+                <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/learning-modules/">Learning Modules
+                </NuxtLink>
+                <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/facilitator-resources/">Facilitator Resources
+                </NuxtLink>
+
+
+                <template v-slot:append>
+                    <div v-if="!user" class="px-4 py-2">
+                        <v-btn color="blue" class=" text-white py-2 px-4 rounded w-full" to="/login">Login</v-btn>
+                    </div>
+                    <div v-else class="px-4 py-2">
+                        <v-btn color="blue" class=" text-white py-2 px-4 rounded w-full" @click="signout">Logout</v-btn>
+                    </div>
+                </template>
+            </v-navigation-drawer>
+
+
+            <!-- <div v-if="toggle" class="md:hidden overflow-hidden transition-all duration-500 ease-in-out"
                 :class="toggle ? 'max-h-40' : 'max-h-0'" id="navbar-menu">
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/">Home</NuxtLink>
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/about">About
                 </NuxtLink>
-                <NuxtLink class="hover:text-blue-500 py-2" to="/resources">Facilitator Resources</NuxtLink>
-                <div v-if="!user">
-                    <v-btn color="blue" class=" text-white py-2 px-4 rounded" to="/auth">Get
-                        Started</v-btn>
-                </div>
-                <div v-else>
-                    <avartar />
-                </div><br>
-            </div>
+                <NuxtLink class="hover:text-blue-500 py-2 block px-4" to="/resources">Facilitator Resources</NuxtLink>
+               
+            </div> -->
         </header>
     </div>
 </template>

@@ -4,11 +4,17 @@ const { auth } = useSupabaseClient();
 const client = useSupabaseClient();
 const router = useRouter();
 
+const googleUser = user.value?.user_metadata?.provider === 'google';
+
+// console.log(googleUser);
+
 const profile = await client
   .from("profiles")
   .select("firstName, lastName, school, DOB")
   .eq("id", user.value.id)
   .single();
+
+
 const signout = async () => {
   try {
     const { error } = await auth.signOut();
@@ -22,6 +28,16 @@ const signout = async () => {
     console.error(error);
   }
 };
+
+const editProfile = () => {
+  if (profile.data == null) {
+    router.push('/bio');
+  } else {
+    router.push('/edit-profile');
+  }
+};
+
+
 </script>
 <template>
   <div>
@@ -32,10 +48,13 @@ const signout = async () => {
           <div v-if="profile.data == null">
             <h3>Fill Bio Data</h3>
           </div>
+          <!-- <div v-else-if="googleUser">
+            <span class="ml-2">{{ user.user_metadata.full_name }}
+              <v-icon>mdi-menu-down</v-icon></span>
+          </div> -->
           <div v-else>
-            <span class="ml-2"
-              >{{ profile.data.fullName }} <v-icon>mdi-menu-down</v-icon></span
-            >
+            <span class="ml-2">{{ profile.data.firstName }} {{ profile.data.lastName }}
+              <v-icon>mdi-menu-down</v-icon></span>
           </div>
         </v-btn>
       </template>
@@ -49,13 +68,8 @@ const signout = async () => {
               {{ user.email }}
             </p>
             <v-divider class="my-3"></v-divider>
-            <v-btn variant="text" rounded>
-              <NuxtLink
-                to="/edit-profile"
-                class="text-sm text-blue-600 hover:text-blue-800 transition"
-              >
-                Edit Account
-              </NuxtLink>
+            <v-btn @click="editProfile" variant="text" rounded>
+              Edit Account
             </v-btn>
             <v-divider class="my-3"></v-divider>
             <v-btn @click="signout" variant="text" rounded> Sign Out </v-btn>

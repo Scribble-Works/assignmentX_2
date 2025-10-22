@@ -25,7 +25,6 @@
     <!-- Action Buttons -->
     <div class="flex flex-col sm:flex-row gap-4 w-full max-w-md">
       <v-btn
-        to="/"
         @click="handleStartLearning"
         size="large"
         class="start-btn flex-1 bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200"
@@ -35,13 +34,12 @@
       </v-btn>
 
       <v-btn
-        to="/"
         @click="handleGoToDashboard"
         size="large"
         class="next-btn flex-1 bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200"
         elevation="0"
       >
-        Go to Dashboard
+        Home
       </v-btn>
     </div>
   </main>
@@ -51,15 +49,19 @@
 definePageMeta({
   layout: "onboarding",
 });
+const user = useSupabaseUser();
+const client = useSupabaseClient();
+const router = useRouter();
 
 const handleStartLearning = () => {
   console.log("Starting learning journey...");
-  // Add navigation logic to the learning content
+  router.push("/")
 };
 
 const handleGoToDashboard = () => {
   console.log("Navigating to dashboard...");
   // Add navigation logic to the user dashboard
+  router.push('/')
 };
 </script>
 
