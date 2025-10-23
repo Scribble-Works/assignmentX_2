@@ -17,7 +17,7 @@ console.log(strands)
 <template>
     <div class="body">
         <v-container>
-            <introvid :intro="'https://www.youtube.com/embed/ysQypSDx6Cg'" />
+            <introvid :intro="'https://www.youtube.com/embed/Ec7zLUi16JU'" />
             <br>
             <h2 class="text-h3">Welcome to Your maths Companion!</h2><br>
             <p style="width: 100%;">Not every explanation in a textbook will make sense right away, and that’s okay.
