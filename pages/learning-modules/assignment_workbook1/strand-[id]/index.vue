@@ -22,6 +22,29 @@ console.log(strandtitle);
 </script>
 <template>
     <div class="mt-5" style="height: auto;">
+<<<<<<< HEAD:pages/workbook/workbook1/strand-[id]/index.vue
+        <!-- Main content with consistent alignment -->
+        <div class="container mx-auto">
+            <v-container>
+            <h1 class="text-center text-uppercase text-bold" style="font-size: 3em; color: #3E4F5C;">STRAND
+                {{ strandNumber }} - {{ title }}
+            </h1>
+            <ConceptNotes :concept-note="conceptNote" />
+            <v-row class="" v-for="substrand in substrands" :key="substrand.id">
+                <v-col>
+                    <NuxtLink
+                        :to="'/workbook/workbook1/strand-' + substrand.strand_ref + '/substrand-' + substrand.route + '/'">
+                        <v-card>
+                            <v-card-title class="font-weight-light text-left mb-2">{{ substrand.title }}</v-card-title>
+                        </v-card>
+                    </NuxtLink>
+                    <v-spacer></v-spacer>
+                    <br>
+                </v-col>
+            </v-row>
+            </v-container>
+        </div>
+=======
         <v-container>
             <h1 class="text-left font-weight-bold text-uppercase text-bold" style="font-size: 1.5em; color: #3E4F5C;">
                 STRAND
@@ -43,6 +66,7 @@ console.log(strandtitle);
                 </v-row>
             </div>
         </v-container>
+>>>>>>> 6c60c38f26915ca5d4a45b1aba38645376269a0e:pages/learning-modules/assignment_workbook1/strand-[id]/index.vue
     </div>
 </template>
 <style>

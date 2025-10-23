@@ -1,3 +1,37 @@
+<script setup>
+import { ref, computed } from "vue";
+import { useBookmarks } from "~/composables/useBookmarks";
+
+definePageMeta({
+  layout: "default",
+});
+const route = useRoute();
+const client = useSupabaseClient();
+// const { data: resources } = await client
+//   .from("facilitator-resources")
+//   .select("*");
+
+const { data: files } = await client
+  .from("facilitator-resources")
+  .select("route, files->files")
+  .eq("route", route.params.route);
+
+const fileDisp = files[0].files;
+
+const { bookmarks, toggleBookmark, isBookmarked, bookmarkCount } =
+  useBookmarks();
+
+const searchQuery = ref("");
+
+// const filteredFiles = computed(() =>
+//   files.value.filter((file) =>
+//     file.toLowerCase().includes(searchQuery.value.toLowerCase())
+//   )
+// );
+console.log(files);
+console.log(fileDisp);
+</script>
+
 <template>
   <div class="w-[80%] mx-auto px-4 py-10">
     <!-- Search -->
@@ -32,7 +66,7 @@
         </svg>
         Bookmarks
         <span class="bg-yellow-400 text-white rounded-full px-2 py-0.5 text-xs">
-          {{ bookmarks.length }}
+          {{ bookmarkCount }}
         </span>
       </NuxtLink>
     </div>
@@ -40,8 +74,8 @@
     <!-- File List -->
     <ul class="space-y-4">
       <li
-        v-for="(file, index) in filteredFiles"
-        :key="index"
+        v-for="file in fileDisp"
+        :key="file"
         class="flex items-center justify-between bg-white p-4 rounded-md shadow-sm border border-gray-100"
       >
         <div class="flex items-center space-x-4">
@@ -62,16 +96,16 @@
           <!-- Filename as link -->
           <NuxtLink
             :to="`/individual/${encodeURIComponent(file)}`"
-            class="text-sm text-blue-600 underline hover:text-blue-800 transition"
+            class="text-sm text-blue-600 hover:text-blue-800 transition"
           >
-            {{ file }}
+            {{ file.name }}
           </NuxtLink>
         </div>
 
         <!-- Bookmark Icon -->
         <button @click="toggleBookmark(file)">
           <svg
-            v-if="bookmarks.includes(file)"
+            v-if="isBookmarked(file)"
             xmlns="http://www.w3.org/2000/svg"
             class="h-6 w-6 text-yellow-500"
             viewBox="0 0 20 20"
@@ -99,49 +133,6 @@
     </ul>
   </div>
 </template>
-
-<script setup>
-import { ref, computed } from "vue";
-
-definePageMeta({
-  layout: "default",
-});
-
-const files = ref([
-  "1_Identifying even, odd, prime and composite numbers_1.png",
-  "2_Finding prime factors of natural numbers2.png",
-  "3_Finding the HCF of natural numbers_3.png",
-  "4_Finding the LCM of natural numbers_4.png",
-  "5_Addition and subtraction of whole numbers_5.png",
-  "6_Multiplication of whole numbers_6.png",
-  "7_Division of whole numbers_7.png",
-  "1. Identifying even, odd, prime and composite numbers_1.png",
-  "1. Identifying even, odd, prime and composite numbers_1.png",
-  "1. Identifying even, odd, prime and composite numbers_1.png",
-  "1. Identifying even, odd, prime and composite numbers_1.png",
-  "1. Identifying even, odd, prime and composite numbers_1.png",
-  "1. Identifying even, odd, prime and composite numbers_1.png",
-]);
-
-const bookmarks = ref([]);
-
-const toggleBookmark = (file) => {
-  const index = bookmarks.value.indexOf(file);
-  if (index > -1) {
-    bookmarks.value.splice(index, 1);
-  } else {
-    bookmarks.value.push(file);
-  }
-};
-
-const searchQuery = ref("");
-
-const filteredFiles = computed(() =>
-  files.value.filter((file) =>
-    file.toLowerCase().includes(searchQuery.value.toLowerCase())
-  )
-);
-</script>
 
 <style scoped>
 /* Optional styles */

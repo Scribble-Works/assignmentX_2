@@ -29,7 +29,9 @@ const client = useSupabaseClient();
       </div>
     </section>
 
-    <v-container class="mt-20">
+    <!-- Main content with consistent alignment -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <v-container class="my-20">
       <v-row>
         <v-col cols="" lg="7" sm="12" md="6">
           <v-img src="/img/strug.png" height="550" width="auto" cover></v-img>
@@ -296,7 +298,8 @@ const client = useSupabaseClient();
           </v-col>
         </v-row>
       </div>
-    </v-container>
+      </v-container>
+    </div>
   </div>
 </template>
 <style>

@@ -170,6 +170,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useQuizProgress } from '~/composables/useQuizProgress';
+import { getQuestionsForContent } from '~/data/quizQuestions.js';
 
 const route = useRoute();
 const router = useRouter();
@@ -184,98 +185,6 @@ const answers = ref([]);
 const quizCompleted = ref(false);
 const score = ref(0);
 const correctAnswers = ref(0);
-
-// Quiz questions based on content type
-const getQuestionsForContent = (contentId) => {
-  // This would typically come from your database
-  // For now, I'll create sample questions based on common math topics
-  const questionSets = {
-    '1': [
-      {
-        question: "What is the smallest prime number?",
-        options: ["0", "1", "2", "3"],
-        correct: 2
-      },
-      {
-        question: "Which of the following is an even number?",
-        options: ["7", "13", "24", "31"],
-        correct: 2
-      },
-      {
-        question: "What is the sum of the first 5 natural numbers?",
-        options: ["10", "12", "15", "20"],
-        correct: 2
-      },
-      {
-        question: "Which number is a multiple of both 3 and 4?",
-        options: ["8", "12", "15", "18"],
-        correct: 1
-      },
-      {
-        question: "What is the value of 2³?",
-        options: ["4", "6", "8", "10"],
-        correct: 2
-      }
-    ],
-    '2': [
-      {
-        question: "What is the prime factorization of 12?",
-        options: ["2 × 3", "2² × 3", "3 × 4", "2 × 6"],
-        correct: 1
-      },
-      {
-        question: "Which of these is a prime number?",
-        options: ["15", "21", "23", "25"],
-        correct: 2
-      },
-      {
-        question: "What is the greatest common factor of 8 and 12?",
-        options: ["2", "4", "6", "8"],
-        correct: 1
-      },
-      {
-        question: "What is the least common multiple of 6 and 8?",
-        options: ["12", "24", "36", "48"],
-        correct: 1
-      },
-      {
-        question: "How many factors does 16 have?",
-        options: ["3", "4", "5", "6"],
-        correct: 2
-      }
-    ],
-    '3': [
-      {
-        question: "What is 15 + 27?",
-        options: ["40", "42", "43", "45"],
-        correct: 1
-      },
-      {
-        question: "What is 50 - 23?",
-        options: ["25", "27", "28", "30"],
-        correct: 1
-      },
-      {
-        question: "What is 8 × 7?",
-        options: ["54", "56", "58", "60"],
-        correct: 1
-      },
-      {
-        question: "What is 72 ÷ 8?",
-        options: ["7", "8", "9", "10"],
-        correct: 2
-      },
-      {
-        question: "What is the value of 5² + 3?",
-        options: ["13", "23", "28", "33"],
-        correct: 2
-      }
-    ]
-  };
-
-  // Default to first set if contentId not found
-  return questionSets[contentId] || questionSets['1'];
-};
 
 const questions = ref(getQuestionsForContent(contentId));
 const quizTitle = computed(() => `Pre-Course Quiz - Content ${contentId}`);
@@ -324,8 +233,8 @@ const completeQuiz = () => {
 
 const goToContent = () => {
   // Navigate to the actual course content page with worked examples and videos
-  // Using the correct route structure based on the live application
-  router.push(`/workbook/workbook1/strand-${strandId}/${substrandRoute}/${contentId}`);
+  // Using the correct route structure for preassignment_workbook1
+  router.push(`/learning-modules/preassignment_workbook1/strand-${strandId}/${substrandRoute}/${contentId}`);
 };
 
 const retakeQuiz = () => {

@@ -12,7 +12,9 @@ const testimonials = [
             </div>
             >
         </v-parallax>
-        <v-container>
+        <!-- Main content with consistent alignment -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+            <v-container>
             <v-row>
                 <v-col cols="" lg="" md="" sm="12">
                     <h2 class="text-h3">Discover <br>AssignmentX</h2>
@@ -33,7 +35,7 @@ const testimonials = [
             </v-row>
             <br>
             <v-row class="mt-16">
-                <v-col cols="" lg="6" sm="12" md="6">
+                <v-col cols="" lg="6" sm="12" md="6" class="mb-8">
                     <img src="/img/mission.png" alt="">
                 </v-col>
                 <v-col cols="" lg="6" sm="12" md="6" class="mt-10">
@@ -229,7 +231,8 @@ const testimonials = [
                     </v-form>
                 </v-col>
             </v-row>
-        </v-container>
+            </v-container>
+        </div>
     </div>
 </template>
 <style>

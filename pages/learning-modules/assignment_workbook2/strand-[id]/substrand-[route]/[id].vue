@@ -69,10 +69,15 @@ function openBece() {
 
 // Course completion function
 const markCourseAsCompleted = () => {
-    courseCompleted.value = true;
-    markQuizCompleted(id);
-    // Force update the status to completed
-    console.log(`Course ${id} marked as completed`);
+    if (!isQuizCompleted(id)) {
+        markQuizCompleted(id);
+        courseCompleted.value = true;
+        console.log(`Course ${id} marked as completed`);
+    } else {
+        // If already completed, uncheck it
+        courseCompleted.value = false;
+        console.log(`Course ${id} already completed`);
+    }
 };
 
 function swapVideo(video) {
@@ -109,40 +114,10 @@ function swapVideo(video) {
                 <v-col cols="" lg="6" sm="12" md="5">
                     <v-btn @click="openBece" rounded color="grey-darken-3">Sample Questions</v-btn>
                 </v-col>
-                <!-- <v-col cols="" lg="3" sm="12" md="4">
-                    <v-btn rounded color="grey-darken-3">Video transcription</v-btn>
-                </v-col> -->
             </v-row>
 
-            <!-- <div class="mt-15">
-                <h3 class="text-h3 mb-5" style="font-family: 'Inter', sans-serif; font-weight: bold;">Worked Exam<span
-                        style="text-decoration: underline; text-decoration-color: #FCC30C;">ples</span></h3>
-                <v-container style="background-color: #F3F4F6;">
-                    <v-img class="mt-10 mb-10" src="/img/example.png"></v-img>
-                    <v-img class="mb-10" src="/img/solution.png"></v-img>
-            </div>
-
-            <div class="mt-10">
-                <h3 class="text-h3 mb-10" style="font-family: 'Inter', sans-serif;"> Now Let's have some math <span
-                        style="text-decoration: underline; text-decoration-color: #FCC30C;">fun</span></h3>
-                <v-container style="background-color: #F3F4F6;">
-                    <div class="mt-10">
-                        <h5 class="text-h5 text-center" style="font-family: 'Inter', sans-serif; font-weight: bold;">
-                            Flip Card Compare Game</h5><br>
-                        <p class="text-center">Time Left: 20s</p><br>
-                        <p class="text-center"><v-icon>mdi-clock</v-icon> Score: 2/4</p>
-                    </div>
-
-
-                    <div class="mt-5 mb-10"> -->
-                        <!-- <compare /> -->
-                    <!-- </div> -->
-
-                </v-container>
-            </div>
-
             <!-- Course Completion Section -->
-            <!-- <div class="mt-15">
+            <div class="mt-15">
                 <div class="bg-white rounded-lg shadow-md p-8 text-center">
                     <div v-if="!courseCompleted && !isQuizCompleted(id)" class="mb-6">
                         <h3 class="text-2xl font-bold text-gray-800 mb-4">
@@ -184,7 +159,9 @@ function swapVideo(video) {
                         </div>
                     </div>
                 </div>
-            </div> -->
+            </div>
+        </v-container>
+    </div>
 </template>
 <style>
 .body {

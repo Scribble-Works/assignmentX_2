@@ -67,12 +67,20 @@ function openBece() {
     });
 };
 
+function openTranscript() {
+    // For now, we'll show an alert. In a real implementation, this would open a transcript modal or page
+    alert('Video transcript feature coming soon!');
+};
+
 // Course completion function
-const markCourseAsCompleted = () => {
-    courseCompleted.value = true;
-    markQuizCompleted(id);
-    // Force update the status to completed
-    console.log(`Course ${id} marked as completed`);
+const toggleCourseCompletion = () => {
+    if (courseCompleted.value) {
+        markQuizCompleted(id);
+        console.log(`Course ${id} marked as completed`);
+    } else {
+        // If unchecking, we could implement logic to unmark completion
+        console.log(`Course ${id} completion status changed`);
+    }
 };
 
 function swapVideo(video) {
@@ -102,45 +110,117 @@ function swapVideo(video) {
                     </div>
                 </v-col>
             </v-row>
-            <v-row class="mt-n5 mr-10">
-                <v-col cols="" lg="6" sm="12" md="3">
-                    <v-btn @click="openNotes" rounded color="grey-darken-3">Concept Note</v-btn>
+            
+            <!-- Action Buttons Row -->
+            <v-row class="mt-4">
+                <v-col cols="12" lg="6" md="6" sm="12">
+                    <div class="d-flex gap-3">
+                        <v-btn @click="openNotes" rounded color="grey-darken-3" height="40">
+                            <v-icon left>mdi-file-document</v-icon>
+                            Concept Note
+                        </v-btn>
+                        <v-btn @click="openBece" rounded color="grey-darken-3" height="40">
+                            <v-icon left>mdi-help-circle</v-icon>
+                            Sample Questions
+                        </v-btn>
+                    </div>
                 </v-col>
-                <v-col cols="" lg="6" sm="12" md="5">
-                    <v-btn @click="openBece" rounded color="grey-darken-3">Sample Questions</v-btn>
+                <v-col cols="12" lg="6" md="6" sm="12">
+                    <div class="d-flex align-center gap-3 ml-16">
+                        <v-btn @click="openTranscript" rounded color="grey-darken-3" height="40">
+                            <v-icon left>mdi-text</v-icon>
+                            Video Transcript
+                        </v-btn>
+                        
+                        <div class="d-flex align-center">
+                            <v-checkbox
+                                v-model="courseCompleted"
+                                @change="toggleCourseCompletion"
+                                color="green"
+                                hide-details
+                                class="mr-2"
+                                size="small"
+                            ></v-checkbox>
+                            <span class="text-body-2 font-weight-medium">Mark Complete</span>
+                        </div>
+                    </div>
                 </v-col>
-                <!-- <v-col cols="" lg="3" sm="12" md="4">
-                    <v-btn rounded color="grey-darken-3">Video transcription</v-btn>
-                </v-col> -->
             </v-row>
 
-            <!-- <div class="mt-15">
-                <h3 class="text-h3 mb-5" style="font-family: 'Inter', sans-serif; font-weight: bold;">Worked Exam<span
-                        style="text-decoration: underline; text-decoration-color: #FCC30C;">ples</span></h3>
-                <v-container style="background-color: #F3F4F6;">
-                    <v-img class="mt-10 mb-10" src="/img/example.png"></v-img>
-                    <v-img class="mb-10" src="/img/solution.png"></v-img>
+            <!-- Worked Examples Section -->
+            <div class="mt-15">
+                <h3 class="text-h3 mb-5" style="font-family: 'Inter', sans-serif; font-weight: bold;">
+                    Worked <span style="position: relative; text-decoration: none;">
+                        Examples
+                        <svg style="position: absolute; bottom: -3px; right: 0; width: 40%; height: 6px;" viewBox="0 0 100 6" preserveAspectRatio="none">
+                            <path d="M0,6 Q50,-2 100,6" stroke="#FCC30C" stroke-width="3" fill="none"/>
+                        </svg>
+                    </span>
+                </h3>
+                <v-container style="background-color: #F3F4F6; min-height: 800px; padding: 3rem;">
+                    <!-- Fun Activity Image -->
+                    <div class="mb-6">
+                        <v-img 
+                            src="/img/example.png" 
+                            alt="Fun Activity"
+                            class="rounded-lg elevation-2"
+                            max-height="400"
+                        ></v-img>
+                    </div>
+
+                    <!-- Solution Image -->
+                    <div>
+                        <v-img 
+                            src="/img/solution.png" 
+                            alt="Solution"
+                            class="rounded-lg elevation-2"
+                            max-height="400"
+                        ></v-img>
+                    </div>
                 </v-container>
             </div>
 
+            <!-- Flashcard Game Section -->
             <div class="mt-10">
-                <h3 class="text-h3 mb-10" style="font-family: 'Inter', sans-serif;"> Now Let's have some math <span
-                        style="text-decoration: underline; text-decoration-color: #FCC30C;">fun</span></h3>
+                <h3 class="text-h3 mb-10 font-weight-bold" style="font-family: 'Inter', sans-serif;">
+                    Now Let's have some math <span style="position: relative; text-decoration: none;">
+                        fun
+                        <svg style="position: absolute; bottom: -3px; left: 0; width: 100%; height: 6px;" viewBox="0 0 100 6" preserveAspectRatio="none">
+                            <path d="M0,6 Q50,-2 100,6" stroke="#FCC30C" stroke-width="3" fill="none"/>
+                        </svg>
+                    </span>
+                </h3>
                 <v-container style="background-color: #F3F4F6;">
                     <div class="mt-10">
-                        <h5 class="text-h5 text-center" style="font-family: 'Inter', sans-serif; font-weight: bold;">
-                            Flip Card Compare Game</h5><br>
-                        <p class="text-center">Time Left: 20s</p><br>
-                        <p class="text-center"><v-icon>mdi-clock</v-icon> Score: 2/4</p>
+                        <h5 class="text-h5 text-center mb-4" style="font-family: 'Inter', sans-serif; font-weight: bold;">
+                            Flip Card Compare Game
+                        </h5>
+                        
+                        <!-- Instructions -->
+                        <div class="text-center mb-4">
+                            <p class="text-body-1" style="color: #666; max-width: 600px; margin: 0 auto;">
+                                Click on the card below to reveal the answer to the math equation. 
+                                Try to solve it in your head first, then flip to check your answer!
+                            </p>
+                        </div>
+                        
+                        <div class="d-flex justify-center align-center mt-4 mb-6">
+                            <v-chip color="orange" class="mr-4">
+                                <v-icon left>mdi-clock</v-icon>
+                                Time Left: 20s
+                            </v-chip>
+                            <v-chip color="green">
+                                <v-icon left>mdi-trophy</v-icon>
+                                Score: 2/4
+                            </v-chip>
+                        </div>
                     </div>
-
 
                     <div class="mt-5 mb-10">
                         <compare />
                     </div>
-
                 </v-container>
-            </div> -->
+            </div>
 
             <!-- Course Completion Section -->
             <!-- <div class="mt-15">
