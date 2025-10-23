@@ -165,62 +165,78 @@ watch(contentStatus, (newStatus) => {
 
       <v-row v-for="content in substrand_ls" :key="content.id">
         <v-col>
-          <v-card>
-            <v-card-title>
+          <v-card class="mb-4">
+            <v-card-text class="pa-6">
+              <!-- Topic Title -->
               <div 
                 @click="handleContentClick(content.id)"
-                class="cursor-pointer hover:text-gray-600 transition-colors"
+                class="cursor-pointer hover:text-gray-600 transition-colors mb-4"
               >
-                <strong>{{ content.indicators }}</strong>
-              </div>
-            </v-card-title>
-            <v-card-actions class="flex items-center justify-between">
-              <div class="flex gap-2">
-                <v-btn @click="openNotes" color="primary">concept note</v-btn>
-                <v-btn @click="openBece" color="success">BECE Questions</v-btn>
+                <div class="text-sm text-gray-500 mb-1">{{ content.id }}</div>
+                <div class="text-lg font-medium">{{ content.indicators }}</div>
               </div>
               
-              <!-- Status Indicator -->
-              <div class="flex items-center">
-                <span 
-                  :class="[
-                    'px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-1',
-                    getStatusInfo(getContentStatus(content.id)).bgColor,
-                    getStatusInfo(getContentStatus(content.id)).color
-                  ]"
-                  style="border-radius: 10px;"
+              <!-- Three Action Elements -->
+              <div class="flex items-center justify-between">
+                <!-- Concept Note (Blue) -->
+                <button 
+                  @click="openNotes" 
+                  class="text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors"
                 >
-                  <span>{{ getStatusInfo(getContentStatus(content.id)).icon }}</span>
-                  {{ getStatusInfo(getContentStatus(content.id)).text }}
-                </span>
+                  CONCEPT NOTE
+                </button>
+                
+                <!-- BECE Questions (Green) -->
+                <button 
+                  @click="openBece" 
+                  class="text-green-600 hover:text-green-800 font-medium text-sm transition-colors"
+                >
+                  BECE QUESTIONS
+                </button>
+                
+                <!-- Completed Status (Green) -->
+                <div class="flex items-center">
+                  <span 
+                    :class="[
+                      'px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-1',
+                      isQuizCompleted(content.id) ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-500'
+                    ]"
+                    style="border-radius: 10px;"
+                  >
+                    <span v-if="isQuizCompleted(content.id)">✓</span>
+                    <span v-else>○</span>
+                    {{ isQuizCompleted(content.id) ? 'COMPLETED' : 'NOT STARTED' }}
+                  </span>
+                </div>
               </div>
-            </v-card-actions>
+            </v-card-text>
           </v-card>
-
-          <v-spacer></v-spacer>
-          <br />
         </v-col>
       </v-row>
 
       <!-- Problem Set Section - Only shown when all quizzes are completed -->
       <div v-if="allQuizzesCompleted" class="mt-10">
-        <div class="text-h3">Problem Set</div>
-        <p>Time to apply and show the Wow!</p>
-        <br />
+        <div class="text-h3 font-bold mb-2">Problem Set</div>
+        <p class="text-lg mb-6">Time to apply and show the Wow!</p>
+        
         <v-row>
-          <v-col>
-            <v-img src="/img/problem.png"></v-img>
+          <v-col cols="12" md="6">
+            <v-img src="/img/problem.png" class="rounded-lg"></v-img>
           </v-col>
-          <v-col class="mt-15">
-            <p>
-              Now it’s your turn to apply what you’ve learned. These problems
+          <v-col cols="12" md="6" class="d-flex flex-column justify-center">
+            <p class="text-gray-700 mb-6">
+              Now it's your turn to apply what you've learned. These problems
               challenge you to think, connect ideas, and solve real-world
               situations using math. There might be more than one way — so be
               bold, be creative, and show the wow!
             </p>
-            <v-btn @click="solveProblem" class="mt-5" color="blue-grey-darken-4"
-              >Solve Problem Set</v-btn
+            <v-btn 
+              @click="solveProblem" 
+              class="mt-5 bg-gray-800 text-white hover:bg-gray-700 transition-colors"
+              size="large"
             >
+              Solve Problem Set
+            </v-btn>
           </v-col>
         </v-row>
       </div>

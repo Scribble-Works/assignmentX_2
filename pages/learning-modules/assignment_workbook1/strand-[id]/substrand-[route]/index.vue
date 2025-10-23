@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
 import { useQuizProgress } from '~/composables/useQuizProgress';
+import ConceptNotes from '~/components/conceptNotes.vue';
+import QuizModal from '~/components/QuizModal.vue';
 
 const client = useSupabaseClient();
 const route = useRoute();
@@ -134,7 +136,7 @@ watch(contentStatus, (newStatus) => {
 }, { deep: true });
 </script>
 <template>
-    <div class="mt-5" style="height: auto; background-color: #f6f6f6">
+    <div class="mt-5 bg-red-500" style="height: auto; background-color: #f6f6f6">
         <div class="container mx-auto p-4">
             <v-row>
                 <v-col cols="" lg="8" sm="12">
@@ -163,45 +165,50 @@ watch(contentStatus, (newStatus) => {
             <div class="mt-10" style="height: auto; background-color: #f6f6f6">
                 <div class="container mx-auto p-4">
                     <v-row v-for="content in substrand_ls" :key="content.id">
-
                         <v-col>
-                            <v-card>
-                                <v-card-title>
+                            <v-card class="mb-4">
+                                <v-card-text>
+                                    <!-- Topic ID -->
+                                    <div class="text-caption text-grey-darken-1 mb-1">{{ content.id }}</div>
                                     
+                                    <!-- Topic Title -->
                                     <div @click="handleContentClick(content.id)"
-                                        class="cursor-pointer hover:text-gray-600 transition-colors">
-                                        <div>
-                                            <strong
-                                                style="font-size: .9em; max-width: 100%; white-space: normal; word-break: break-word;"
-                                                class="d-inline-block"
-                                            >
-                                                {{ content.indicators }}
-                                            </strong>
+                                        class="cursor-pointer mb-4">
+                                        <h3 class="text-h6 font-weight-bold">{{ content.indicators }}</h3>
+                                    </div>
+                                    
+                                    <!-- Three Action Elements -->
+                                    <div class="d-flex align-center justify-space-between">
+                                        <!-- Concept Note Button -->
+                                        <v-btn @click="openNotes" 
+                                            variant="text"
+                                            color="blue-darken-2"
+                                            class="text-none font-weight-medium">
+                                            CONCEPT NOTE
+                                        </v-btn>
+                                        
+                                        <!-- BECE Questions Button -->
+                                        <v-btn @click="openBece" 
+                                            variant="text"
+                                            color="green-darken-2"
+                                            class="text-none font-weight-medium">
+                                            BECE QUESTIONS
+                                        </v-btn>
+                                        
+                                        <!-- Completed Status -->
+                                        <div v-if="isQuizCompleted(content.id)" 
+                                            class="d-flex align-center text-green-darken-2 font-weight-medium">
+                                            <v-icon size="small" class="mr-1">mdi-check</v-icon>
+                                            COMPLETED
+                                        </div>
+                                        <div v-else 
+                                            class="d-flex align-center text-grey-darken-1 font-weight-medium">
+                                            <v-icon size="small" class="mr-1">mdi-circle-outline</v-icon>
+                                            NOT STARTED
                                         </div>
                                     </div>
-                                </v-card-title>
-                                <!-- <v-card-actions class="flex items-center justify-between"> -->
-                                    <!-- <div class="gap-2">
-                                        <v-btn @click="openNotes" color="primary">concept note</v-btn>
-                                        <v-btn @click="openBece" color="success">BECE Questions</v-btn>
-                                    </div> -->
-
-                                    <!-- Status Indicator -->
-                                    <!-- <div class="flex items-center">
-                                        <span :class="[
-                                            'px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-1',
-                                            getStatusInfo(getContentStatus(content.id)).bgColor,
-                                            getStatusInfo(getContentStatus(content.id)).color
-                                        ]" style="border-radius: 10px;">
-                                            <span>{{ getStatusInfo(getContentStatus(content.id)).icon }}</span>
-                                            {{ getStatusInfo(getContentStatus(content.id)).text }}
-                                        </span>
-                                    </div> -->
-                                <!-- </v-card-actions> -->
+                                </v-card-text>
                             </v-card>
-
-                            <v-spacer></v-spacer>
-                            <br />
                         </v-col>
                     </v-row>
                     <v-spacer></v-spacer>
@@ -210,43 +217,28 @@ watch(contentStatus, (newStatus) => {
 
                     <!-- Problem Set Section - Only shown when all quizzes are completed -->
                     <div v-if="allQuizzesCompleted" class="mt-10">
-                        <div class="text-h3">Problem Set</div>
-                        <p>Time to apply and show the Wow!</p>
-                        <br />
+                        <div class="text-h3 font-weight-bold mb-2">Problem Set</div>
+                        <p class="text-h6 mb-6">Time to apply and show the Wow!</p>
+                        
                         <v-row>
-                            <v-col>
-                                <v-img src="/img/problem.png"></v-img>
+                            <v-col cols="12" md="6">
+                                <v-img src="/img/problem.png" class="rounded-lg"></v-img>
                             </v-col>
-                            <v-col class="mt-15">
-                                <p>
-                                    Now it’s your turn to apply what you’ve learned. These problems
+                            <v-col cols="12" md="6" class="d-flex flex-column justify-center">
+                                <p class="text-body-1 mb-6">
+                                    Now it's your turn to apply what you've learned. These problems
                                     challenge you to think, connect ideas, and solve real-world
                                     situations using math. There might be more than one way — so be
                                     bold, be creative, and show the wow!
                                 </p>
-                                <v-btn @click="solveProblem" class="mt-5" color="blue-grey-darken-4">Solve Problem
-                                    Set</v-btn>
-                            </v-col>
-                        </v-row>
-                    </div>
-                    <!-- Problem Set Section - Only shown when all quizzes are completed -->
-                    <div v-if="allQuizzesCompleted" class="mt-10">
-                        <div class="text-h3">Problem Set</div>
-                        <p>Time to apply and show the Wow!</p>
-                        <br />
-                        <v-row>
-                            <v-col>
-                                <v-img src="/img/problem.png"></v-img>
-                            </v-col>
-                            <v-col class="mt-15">
-                                <p>
-                                    Now it’s your turn to apply what you’ve learned. These problems
-                                    challenge you to think, connect ideas, and solve real-world
-                                    situations using math. There might be more than one way — so be
-                                    bold, be creative, and show the wow!
-                                </p>
-                                <v-btn @click="solveProblem" class="mt-5" color="blue-grey-darken-4">Solve Problem
-                                    Set</v-btn>
+                                <v-btn 
+                                    @click="solveProblem" 
+                                    color="grey-darken-3"
+                                    size="large"
+                                    class="mt-5"
+                                >
+                                    Solve Problem Set
+                                </v-btn>
                             </v-col>
                         </v-row>
                     </div>
@@ -257,10 +249,6 @@ watch(contentStatus, (newStatus) => {
                         @close="closeQuizModal" @start-quiz="startQuiz" />
                 </div>
             </div>
-            <!-- Quiz Modal -->
-            <QuizModal :is-open="showQuizModal" :content-id="selectedContentId"
-                :substrand-route="`substrand-${substrand_ref}`" :strand-id="strand_ref_id" @close="closeQuizModal"
-                @start-quiz="startQuiz" />
         </div>
     </div>
 </template>

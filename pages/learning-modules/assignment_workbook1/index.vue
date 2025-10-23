@@ -15,15 +15,8 @@ console.log(strands)
 
 </script>
 <template>
-<<<<<<< HEAD:pages/workbook/workbook1/index.vue
-    <div>
-        <!-- Main content with consistent alignment -->
-        <div class="container mx-auto">
-            <v-container>
-=======
     <div class="body">
         <v-container>
->>>>>>> 6c60c38f26915ca5d4a45b1aba38645376269a0e:pages/learning-modules/assignment_workbook1/index.vue
             <introvid :intro="'https://www.youtube.com/embed/Ec7zLUi16JU'" />
             <br>
             <h2 class="text-h3">Welcome to Your Math Companion!</h2><br>
@@ -38,13 +31,8 @@ console.log(strands)
             <div class="mt-10">
                 <v-row v-for="strand in strands" :key="strand.id">
                     <v-col cols=12>
-<<<<<<< HEAD:pages/workbook/workbook1/index.vue
-                        <NuxtLink :to="'/workbook/workbook1/strand-' + strand.id + '/'">
-                            <v-card color="grey-lighten-4">
-=======
                         <NuxtLink :to="'/learning-modules/assignment_workbook1/strand-' + strand.id + '/'">
                             <v-card class="mx-auto" color="white" max-width="1200">
->>>>>>> 6c60c38f26915ca5d4a45b1aba38645376269a0e:pages/learning-modules/assignment_workbook1/index.vue
 
                                 <v-card-text class="pt-6">
                                     <div style="color: #2096f3;" class="font-weight-light text-h6 mb-2">
@@ -60,8 +48,7 @@ console.log(strands)
                     </v-col>
                 </v-row>
             </div>
-            </v-container>
-        </div>
+        </v-container>
     </div>
 </template>
 <style>
