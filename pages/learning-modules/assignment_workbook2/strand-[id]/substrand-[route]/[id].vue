@@ -16,6 +16,7 @@ const substrand = route.params.substrand;
 // Quiz progress management
 const { markQuizCompleted, isQuizCompleted, loadStateFromStorage } = useQuizProgress();
 const courseCompleted = ref(false);
+const game = indicators_content[0].games;
 
 // Check if course is already completed on mount
 onMounted(() => {
@@ -112,7 +113,27 @@ function swapVideo(video) {
                 <!-- <v-col cols="" lg="3" sm="12" md="4">
                     <v-btn rounded color="grey-darken-3">Video transcription</v-btn>
                 </v-col> -->
-            </v-row>
+            </v-row><br>
+            <v-container style="background-color: #f3f4f6">
+          <div class="mt-10">
+            <h5
+              class="text-h5 text-center"
+              style="font-family: 'Inter', sans-serif; font-weight: bold"
+            >
+              Flip Card Compare Game
+            </h5>
+            <br />
+            <!-- <p class="text-center">Time Left: 20s</p> -->
+            <br />
+            <p class="text-center"><v-icon>mdi-clock</v-icon> Score: 2/4</p>
+          </div>
+
+          <iframe
+            :src="game"
+            style="width: 100%; height: 40em"
+            frameborder="0"
+          ></iframe>
+        </v-container>
 
             <!-- <div class="mt-15">
                 <h3 class="text-h3 mb-5" style="font-family: 'Inter', sans-serif; font-weight: bold;">Worked Exam<span

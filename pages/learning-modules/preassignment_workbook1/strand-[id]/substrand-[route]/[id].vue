@@ -1,7 +1,7 @@
 <script setup>
-import compare from '~/components/flipcards/compare.vue';
-import { useQuizProgress } from '~/composables/useQuizProgress';
-import { ref, onMounted } from 'vue';
+import compare from "~/components/flipcards/compare.vue";
+import { useQuizProgress } from "~/composables/useQuizProgress";
+import { ref, onMounted } from "vue";
 
 // import strand1 from '~/strand1.json';
 // definePageMeta({
@@ -14,22 +14,32 @@ const strand_ref = route.params.route;
 const substrand = route.params.substrand;
 
 // Quiz progress management
-const { markQuizCompleted, isQuizCompleted, loadStateFromStorage } = useQuizProgress();
+const { markQuizCompleted, isQuizCompleted, loadStateFromStorage } =
+  useQuizProgress();
 const courseCompleted = ref(false);
 
 // Check if course is already completed on mount
 onMounted(() => {
-    loadStateFromStorage();
-    courseCompleted.value = isQuizCompleted(id);
+  loadStateFromStorage();
+  courseCompleted.value = isQuizCompleted(id);
 });
 
-const { data: substrands } = await client.from('preassignment_workbook1_strand_substrands_lists').select().eq('route', strand_ref);
+const { data: substrands } = await client
+  .from("preassignment_workbook1_strand_substrands_lists")
+  .select()
+  .eq("route", strand_ref);
 
 const strand_ref_id = substrands[0].strand_ref;
 const substrand_ref_id = substrands[0].id;
-const { data: files } = await client.from('preassignment_workbook1_substrands_contents').select().eq('id', substrand_ref_id);
+const { data: files } = await client
+  .from("preassignment_workbook1_substrands_contents")
+  .select()
+  .eq("id", substrand_ref_id);
 
-const { data: indicators_content } = await client.from('preassignment_workbook1_substrand_indicators').select().eq('id', id);
+const { data: indicators_content } = await client
+  .from("preassignment_workbook1_substrand_indicators")
+  .select()
+  .eq("id", id);
 
 const heading = indicators_content[0].indicators;
 const vid1 = indicators_content[0].vid1;
@@ -38,83 +48,110 @@ const vid3 = indicators_content[0].vid3;
 
 const conceptNote = files[0].concept_notes;
 const bece = files[0].BECE_Qquestions;
+const game = indicators_content[0].games;
 
 console.log(indicators_content);
 // console.log(substrand_ref_id);
 const relatedVids = ref([vid2, vid3]);
 
-
-
 function openNotes() {
-    navigateTo(conceptNote, {
-        open: {
-            windowFeatures: {
-                width: 500,
-                height: 500,
-            }
-        }
-    })
-};
+  navigateTo(conceptNote, {
+    open: {
+      windowFeatures: {
+        width: 500,
+        height: 500,
+      },
+    },
+  });
+}
 
 function openBece() {
-    navigateTo(bece, {
-        open: {
-            windowFeatures: {
-                width: 500,
-                height: 500,
-            }
-        }
-    });
-};
+  navigateTo(bece, {
+    open: {
+      windowFeatures: {
+        width: 500,
+        height: 500,
+      },
+    },
+  });
+}
 
 // Course completion function
 const markCourseAsCompleted = () => {
-    courseCompleted.value = true;
-    markQuizCompleted(id);
-    // Force update the status to completed
-    console.log(`Course ${id} marked as completed`);
+  courseCompleted.value = true;
+  markQuizCompleted(id);
+  // Force update the status to completed
+  console.log(`Course ${id} marked as completed`);
 };
 
 function swapVideo(video) {
-    const oldMain = mainVideo.value
-    mainVideo.value = video
-    relatedVideos.value = relatedVideos.value.map(v =>
-        v === video ? oldMain : v
-    )
-};
-
-
-
+  const oldMain = mainVideo.value;
+  mainVideo.value = video;
+  relatedVideos.value = relatedVideos.value.map((v) =>
+    v === video ? oldMain : v
+  );
+}
 </script>
 <template>
-    <div class="body">
-        <v-container>
-            <h2 class="text-left text-uppercase text-bold mb-0 mt-0" style="font-weight: bold; font-size: 1.2rem;">{{
-                heading
-                }}</h2>
-            <v-row>
-                <v-col cols="" lg="9" md="6" sm="12">
-                    <vids :url="vid1" />
-                </v-col>
-                <v-col cols="" lg="3" md="6" sm="12">
-                    <div v-for="(video, index) in relatedVids" :key="index">
-                        <vids class="mb-4 cursor-pointer" :url="video" @click="swapVideo(video)" />
-                    </div>
-                </v-col>
-            </v-row>
-            <v-row class="mt-n5 mr-10">
-                <v-col cols="" lg="6" sm="12" md="3">
-                    <v-btn @click="openNotes" rounded color="grey-darken-3">Concept Note</v-btn>
-                </v-col>
-                <v-col cols="" lg="6" sm="12" md="5">
-                    <v-btn @click="openBece" rounded color="grey-darken-3">Sample Questions</v-btn>
-                </v-col>
-                <!-- <v-col cols="" lg="3" sm="12" md="4">
+  <div class="body">
+    <v-container>
+      <h2
+        class="text-left text-uppercase text-bold mb-0 mt-0"
+        style="font-weight: bold; font-size: 1.2rem"
+      >
+        {{ heading }}
+      </h2>
+      <v-row>
+        <v-col cols="" lg="9" md="6" sm="12">
+          <vids :url="vid1" />
+        </v-col>
+        <v-col cols="" lg="3" md="6" sm="12">
+          <div v-for="(video, index) in relatedVids" :key="index">
+            <vids
+              class="mb-4 cursor-pointer"
+              :url="video"
+              @click="swapVideo(video)"
+            />
+          </div>
+        </v-col>
+      </v-row>
+      <v-row class="mt-n5 mr-10">
+        <v-col cols="" lg="6" sm="12" md="3">
+          <v-btn @click="openNotes" rounded color="grey-darken-3"
+            >Concept Note</v-btn
+          >
+        </v-col>
+        <v-col cols="" lg="6" sm="12" md="5">
+          <v-btn @click="openBece" rounded color="grey-darken-3"
+            >Sample Questions</v-btn
+          >
+        </v-col>
+        <!-- <v-col cols="" lg="3" sm="12" md="4">
                     <v-btn rounded color="grey-darken-3">Video transcription</v-btn>
                 </v-col> -->
-            </v-row>
+      </v-row><br>
+      <v-container style="background-color: #f3f4f6">
+        <div class="mt-10">
+          <h5
+            class="text-h5 text-center"
+            style="font-family: 'Inter', sans-serif; font-weight: bold"
+          >
+            Flip Card Compare Game
+          </h5>
+          <br />
+          <p class="text-center">Time Left: 20s</p>
+          <br />
+          <p class="text-center"><v-icon>mdi-clock</v-icon> Score: 2/4</p>
+        </div>
 
-            <!-- <div class="mt-15">
+        <iframe
+          :src="game"
+          style="width: 100%; height: 40em"
+          frameborder="0"
+        ></iframe>
+      </v-container>
+
+      <!-- <div class="mt-15">
                 <h3 class="text-h3 mb-5" style="font-family: 'Inter', sans-serif; font-weight: bold;">Worked Exam<span
                         style="text-decoration: underline; text-decoration-color: #FCC30C;">ples</span></h3>
                 <v-container style="background-color: #F3F4F6;">
@@ -142,8 +179,8 @@ function swapVideo(video) {
                 </v-container>
             </div> -->
 
-            <!-- Course Completion Section -->
-            <!-- <div class="mt-15">
+      <!-- Course Completion Section -->
+      <!-- <div class="mt-15">
                 <div class="bg-white rounded-lg shadow-md p-8 text-center">
                     <div v-if="!courseCompleted && !isQuizCompleted(id)" class="mb-6">
                         <h3 class="text-2xl font-bold text-gray-800 mb-4">
@@ -186,11 +223,11 @@ function swapVideo(video) {
                     </div>
                 </div>
             </div> -->
-        </v-container>
-    </div>
+    </v-container>
+  </div>
 </template>
 <style>
 .body {
-    background: white;
+  background: white;
 }
 </style>

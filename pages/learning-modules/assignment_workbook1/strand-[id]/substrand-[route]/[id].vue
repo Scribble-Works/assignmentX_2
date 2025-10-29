@@ -175,7 +175,7 @@ function swapVideo(video) {
             style="text-decoration: underline; text-decoration-color: #fcc30c"
             >fun</span
           >
-        </h3>
+        </h3><br />
         <v-container style="background-color: #f3f4f6">
           <div class="mt-10">
             <h5
@@ -185,7 +185,7 @@ function swapVideo(video) {
               Flip Card Compare Game
             </h5>
             <br />
-            <p class="text-center">Time Left: 20s</p>
+            <!-- <p class="text-center">Time Left: 20s</p> -->
             <br />
             <p class="text-center"><v-icon>mdi-clock</v-icon> Score: 2/4</p>
           </div>
