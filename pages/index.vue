@@ -266,7 +266,7 @@ const client = useSupabaseClient();
             </h3>
             <br />
             <p style="font-family: 'Inter', sans-serif">
-              Get your Assignment Workbook today and unlock a <br> complete blended learning experience.
+              Get your Assignment Workbook today and unlock a complete blended learning experience.
             </p>
             <br />
             <v-btn href="/store" size="large" width="150" color="blue">Buy the Book</v-btn>
