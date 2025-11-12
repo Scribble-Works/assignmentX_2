@@ -13,6 +13,7 @@ const id = route.params.id;
 const strand_ref = route.params.route;
 const substrand = route.params.substrand;
 
+const { data: indicators_content } = await client.from('book2_substrand_indicators').select().eq('id', id);
 // Quiz progress management
 const { markQuizCompleted, isQuizCompleted, loadStateFromStorage } = useQuizProgress();
 const courseCompleted = ref(false);
@@ -30,7 +31,6 @@ const strand_ref_id = substrands[0].strand_ref;
 const substrand_ref_id = substrands[0].id;
 const { data: files } = await client.from('book2_strands').select().eq('id', substrand_ref_id);
 
-const { data: indicators_content } = await client.from('book2_substrand_indicators').select().eq('id', id);
 
 const heading = indicators_content[0].indicators;
 const vid1 = indicators_content[0].vid1;
