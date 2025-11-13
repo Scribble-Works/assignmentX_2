@@ -34,7 +34,7 @@ const { data: strands } = await client
     .select()
     .eq("substrand_ref", substrand_ref_id);
 
-const { data: substrand_ls } = await client
+const { data: unsortedSubstrand_ls } = await client
     .from("preassignment_workbook1_substrand_indicators")
     .select()
     .eq("substrand_ref", substrand_ref_id);
@@ -132,6 +132,13 @@ watch(completedQuizzes, (newCompleted) => {
 watch(contentStatus, (newStatus) => {
     console.log('Content status updated:', Array.from(newStatus.entries()));
 }, { deep: true });
+
+const substrand_ls = computed(() => {
+  if (unsortedSubstrand_ls) {
+    return [...unsortedSubstrand_ls].sort((a, b) => a.id - b.id);
+  }
+  return [];
+});
 </script>
 <template>
     <div class="mt-5" style="height: auto; background-color: #f6f6f6">
