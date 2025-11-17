@@ -11,6 +11,7 @@ const products = [
     price: "80",
     image: "/img/AssignmentX Book 1 Book Sale AD Final.png",
     reverse: false,
+    link: "/first-assignment-preview",
   },
   {
     title: "The Second Assignment",
@@ -20,6 +21,7 @@ const products = [
     price: "80",
     image: "/img/AssignmentX Book 2 Book Sale AD Final.png",
     reverse: true,
+    link: "/second-assignment-preview",
   },
   {
     title: "The Last Assignment",
@@ -29,6 +31,7 @@ const products = [
     price: "80",
     image: "/img/AssignmentX Book 3 Book Sale AD Final.png",
     reverse: false,
+    link: "/last-assignment-preview",
   },
 ];
 const checkout = ref(null);
@@ -78,7 +81,7 @@ const scrollToCheckout = () => {
     <!-- Product Cards -->
     <section class="container mx-auto space-y-32 p-4">
       <ProductCard v-for="(product, index) in products" :key="index" :title="product.title" :level="product.level"
-        :price="product.price" :image="product.image" :reverse="product.reverse" :description="product.description" />
+        :price="product.price" :image="product.image" :reverse="product.reverse" :description="product.description" :link="product.link" />
     </section>
   </div>
 </template>
