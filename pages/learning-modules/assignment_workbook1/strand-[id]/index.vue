@@ -14,7 +14,8 @@ const conceptNote = workbook[0].concept_notes;
 const strandNumber = substrands[0].strand_ref;
 const { data: strandtitle } = await client.from('Workbook1').select().eq('id', strandNumber);
 const title = strandtitle[0].strand_name;
-console.log(strand1);
+const vid = strandtitle[0].vid;
+console.log(vid);
 console.log(substrands);
 console.log(workbook)
 console.log(strandtitle);
@@ -27,7 +28,7 @@ console.log(strandtitle);
                 STRAND
                 {{ strandNumber }} - {{ title }}
             </h1>
-            <introvid :intro="'https://www.youtube.com/embed/Ec7zLUi16JU'" />
+            <introvid :intro="vid" />
             <div class="mt-10">
                 <v-row class="mt-n5" v-for="substrand in substrands" :key="substrand.id">
                     <v-col>
