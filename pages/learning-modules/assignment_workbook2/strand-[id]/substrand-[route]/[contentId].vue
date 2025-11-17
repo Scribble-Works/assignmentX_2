@@ -9,9 +9,11 @@ import { ref, onMounted } from 'vue';
 // });
 const client = useSupabaseClient();
 const route = useRoute();
-const id = route.params.id;
+const contentIdParam = route.params.contentId;
 const strand_ref = route.params.route;
 const substrand = route.params.substrand;
+
+const courseContentId = Array.isArray(contentIdParam) ? contentIdParam[0] : contentIdParam;
 
 // Quiz progress management
 const { markQuizCompleted, isQuizCompleted, loadStateFromStorage } = useQuizProgress();
@@ -20,7 +22,9 @@ const courseCompleted = ref(false);
 // Check if course is already completed on mount
 onMounted(() => {
   loadStateFromStorage();
-  courseCompleted.value = isQuizCompleted(id);
+  if (courseContentId) {
+    courseCompleted.value = isQuizCompleted(String(courseContentId)) || isQuizCompleted(courseContentId);
+  }
 });
 
 const { data: substrands } = await client.from('book1_strand_substrands_lists').select().eq('route', strand_ref);
@@ -29,7 +33,7 @@ const strand_ref_id = substrands[0].strand_ref;
 const substrand_ref_id = substrands[0].id;
 const { data: files } = await client.from('book2_strands').select().eq('id', substrand_ref_id);
 
-const { data: indicators_content } = await client.from('book2_substrand_indicators').select().eq('id', id);
+const { data: indicators_content } = await client.from('book2_substrand_indicators').select().eq('id', courseContentId);
 
 const heading = indicators_content[0].indicators;
 const vid1 = indicators_content[0].vid1;
@@ -69,14 +73,18 @@ function openBece() {
 
 // Course completion function
 const markCourseAsCompleted = () => {
-    if (!isQuizCompleted(id)) {
-        markQuizCompleted(id);
+    if (!courseContentId) {
+        return;
+    }
+    const courseKey = String(courseContentId);
+    if (!isQuizCompleted(courseKey)) {
+        markQuizCompleted(courseKey);
         courseCompleted.value = true;
-        console.log(`Course ${id} marked as completed`);
+        console.log(`Course ${courseKey} marked as completed`);
     } else {
         // If already completed, uncheck it
         courseCompleted.value = false;
-        console.log(`Course ${id} already completed`);
+        console.log(`Course ${courseKey} already completed`);
     }
 };
 
@@ -119,7 +127,7 @@ function swapVideo(video) {
             <!-- Course Completion Section -->
             <div class="mt-15">
                 <div class="bg-white rounded-lg shadow-md p-8 text-center">
-                    <div v-if="!courseCompleted && !isQuizCompleted(id)" class="mb-6">
+                    <div v-if="!courseCompleted && !isQuizCompleted(courseContentId)" class="mb-6">
                         <h3 class="text-2xl font-bold text-gray-800 mb-4">
                             🎯 Ready to Complete This Course?
                         </h3>
@@ -135,7 +143,7 @@ function swapVideo(video) {
                         </button>
                     </div>
 
-                    <div v-else-if="courseCompleted || isQuizCompleted(id)" class="mb-6">
+                    <div v-else-if="courseCompleted || isQuizCompleted(courseContentId)" class="mb-6">
                         <div class="text-green-600 text-6xl mb-4">🎉</div>
                         <h3 class="text-2xl font-bold text-gray-800 mb-4">
                             Course Completed!

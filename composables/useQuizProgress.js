@@ -62,6 +62,14 @@ export const useQuizProgress = () => {
     console.log('Current content status:', Array.from(contentStatus.value.entries()));
   };
 
+  const unmarkQuizCompleted = (contentId) => {
+    completedQuizzes.value.delete(contentId);
+    contentStatus.value.delete(contentId);
+    saveStateToStorage();
+    console.log(`Unmarked course ${contentId} as completed.`);
+    console.log('Current completed quizzes:', Array.from(completedQuizzes.value));
+  };
+
   const markQuizInProgress = (contentId) => {
     contentStatus.value.set(contentId, 'in-progress');
     saveStateToStorage();
@@ -103,6 +111,7 @@ export const useQuizProgress = () => {
     completedQuizzes,
     contentStatus,
     markQuizCompleted,
+    unmarkQuizCompleted,
     markQuizInProgress,
     isQuizCompleted,
     getContentStatus,

@@ -1,6 +1,8 @@
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, onActivated } from 'vue';
 import { useQuizProgress } from '~/composables/useQuizProgress';
+import { useStrapiQuiz } from '~/composables/useStrapiQuiz';
+import { getTopicIdFromSubstrand } from '~/composables/useSubstrandTopicMapping';
 import ConceptNotes from '~/components/conceptNotes.vue';
 import QuizModal from '~/components/QuizModal.vue';
 
@@ -18,11 +20,15 @@ const {
     completedQuizzes,
     contentStatus,
     markQuizInProgress,
+    markQuizCompleted,
     isQuizCompleted,
     getContentStatus,
     getStatusInfo,
     loadStateFromStorage
 } = useQuizProgress();
+
+// Use Strapi quiz composable for testing
+const { fetchQuizQuestions } = useStrapiQuiz();
 
 const { data: substrand } = await client
     .from("preassignment_workbook1_strand_substrands_lists")
@@ -45,9 +51,12 @@ const title = substrand[0].title;
 const conceptNote = strands[0].concept_notes;
 const bece = strands[0].BECE_Qquestions;
 
-// Check if all quizzes are completed
+// Check if all lessons are completed (for showing Problem Set section)
 const allQuizzesCompleted = computed(() => {
-    return substrand_ls && completedQuizzes.value.size === substrand_ls.length;
+    return substrand_ls ? substrand_ls.every(content => {
+        const contentIdStr = String(content.id);
+        return isQuizCompleted(contentIdStr) || isQuizCompleted(content.id);
+    }) : false;
 });
 
 function openNotes() {
@@ -82,21 +91,46 @@ const closeQuizModal = () => {
 };
 
 const startQuiz = (contentId) => {
-    console.log(`Starting quiz for content: ${contentId}`);
-    // Navigate to the quiz page first, then to the lesson
-    navigateTo(`/quiz/${contentId}`);
+    // Navigate to the quiz page with substrand and strand query params
+    // Use substrand_ref_id as the quiz identifier since quiz is per substrand
+    const substrandRoute = `substrand-${substrand_ref}`;
+    navigateTo(`/quiz/${substrand_ref_id}?substrand=${substrandRoute}&strand=${strand_ref_id}&contentId=${contentId}`);
 };
 
 const handleContentClick = (contentId) => {
-    console.log('Content clicked:', contentId);
-    // Show pre-quiz modal instead of directly navigating
+    loadStateFromStorage();
+    
+    // Check if pre-quiz for this topic (substrand) is already completed
+    const substrandQuizKey = `substrand-${substrand_ref_id}`;
+    const isQuizCompletedForTopic = isQuizCompleted(substrandQuizKey);
+    
     selectedContentId.value = contentId;
-    showQuizModal.value = true;
+    
+    if (isQuizCompletedForTopic) {
+        // Quiz already taken for this topic - go directly to lesson
+        const substrandRoute = `substrand-${substrand_ref}`;
+        navigateTo(`/learning-modules/preassignment_workbook1/strand-${strand_ref_id}/${substrandRoute}/${contentId}`);
+    } else {
+        // Quiz NOT taken yet - show modal
+        showQuizModal.value = true;
+    }
 };
 
-// Add a completion indicator to the title
-const completedCount = computed(() => {
-    return substrand_ls ? substrand_ls.filter(content => isQuizCompleted(content.id)).length : 0;
+const handleSkipQuiz = (contentId) => {
+    // DON'T mark as completed - user skipped, so modal will show again for other lessons
+    // Just navigate to the lesson content page
+    const substrandRoute = `substrand-${substrand_ref}`;
+    navigateTo(`/learning-modules/preassignment_workbook1/strand-${strand_ref_id}/${substrandRoute}/${contentId}`);
+};
+
+// Check if pre-quiz is completed for this substrand (quiz is per substrand, not per lesson)
+const isSubstrandQuizCompleted = computed(() => {
+    // Use the same key format as when marking completion: `substrand-${substrand_ref_id}`
+    const substrandQuizKey = `substrand-${substrand_ref_id}`;
+    
+    const isCompleted = isQuizCompleted(substrandQuizKey);
+    
+    return isCompleted;
 });
 
 const totalCount = computed(() => {
@@ -106,28 +140,157 @@ const totalCount = computed(() => {
 const solveProblem = () => {
     // Only allow access if all quizzes are completed
     if (allQuizzesCompleted.value) {
-        console.log('Opening problem set...');
         // Add your problem set logic here
     }
 };
 
-// Load state when page mounts
+
+// Test function to fetch questions from Strapi (console only)
+const testStrapiFetch = async () => {
+    const config = useRuntimeConfig();
+    const strapiUrl = config.public.STRAPI_URL || 'http://localhost:1337';
+    
+    console.log('═══════════════════════════════════════════════════════════');
+    console.log('🚀 TESTING STRAPI FETCH - START');
+    console.log('═══════════════════════════════════════════════════════════');
+    console.log('');
+    
+    console.log('📋 CONFIGURATION:');
+    console.log('  - Strapi URL:', strapiUrl);
+    console.log('  - Substrand ID:', substrand_ref_id);
+    console.log('  - Substrand ID Type:', typeof substrand_ref_id);
+    console.log('');
+    
+    // TEST 1: Fetch ALL questions (no filter)
+    console.log('═══════════════════════════════════════════════════════════');
+    console.log('📡 TEST 1: FETCHING ALL QUESTIONS (NO FILTER)');
+    console.log('═══════════════════════════════════════════════════════════');
+    console.log('');
+    
+    try {
+        console.log('⏳ Calling:', `${strapiUrl}/api/questions`);
+        const startTime = Date.now();
+        
+        const allQuestionsResponse = await $fetch(`${strapiUrl}/api/questions`, {
+            params: {
+                'populate': '*'
+            },
+            timeout: 10000
+        });
+        
+        const endTime = Date.now();
+        const duration = endTime - startTime;
+        
+        console.log('✅ FETCH COMPLETED in', duration, 'ms');
+        console.log('');
+        console.log('📊 RESPONSE:');
+        console.log(JSON.stringify(allQuestionsResponse, null, 2));
+        console.log('');
+        
+        if (allQuestionsResponse?.data) {
+            console.log('📦 DATA FOUND:');
+            console.log('  - Is Array:', Array.isArray(allQuestionsResponse.data));
+            console.log('  - Length:', allQuestionsResponse.data?.length || 0);
+            if (allQuestionsResponse.data.length > 0) {
+                console.log('');
+                console.log('  - First item:', JSON.stringify(allQuestionsResponse.data[0], null, 2));
+                console.log('');
+                console.log('  - ALL ITEMS:');
+                console.log(JSON.stringify(allQuestionsResponse.data, null, 2));
+            } else {
+                console.log('⚠️ Data array is empty');
+            }
+        } else {
+            console.log('⚠️ No data property in response');
+            console.log('Full response structure:', Object.keys(allQuestionsResponse || {}));
+        }
+    } catch (error) {
+        console.log('');
+        console.log('❌ FETCH FAILED');
+        console.log('');
+        console.log('📊 ERROR DETAILS:');
+        console.error('  - Error:', error);
+        console.error('  - Message:', error.message);
+        if (error.statusCode) {
+            console.error('  - Status Code:', error.statusCode);
+        }
+        if (error.data) {
+            console.error('  - Error Data:', error.data);
+        }
+    }
+    
+    console.log('');
+    console.log('═══════════════════════════════════════════════════════════');
+    console.log('📡 TEST 2: FETCHING FILTERED QUESTIONS (using fetchQuizQuestions)');
+    console.log('═══════════════════════════════════════════════════════════');
+    console.log('');
+    
+    // TEST 2: Fetch filtered questions by topic ID
+    console.log('');
+    console.log('📋 MAPPING:');
+    const topicId = getTopicIdFromSubstrand(substrand_ref_id);
+    console.log('  - Substrand ID:', substrand_ref_id);
+    console.log('  - Mapped to Topic ID:', topicId);
+    console.log('');
+    
+    if (!topicId) {
+        console.log('⚠️ No topic ID mapping found. Please update useSubstrandTopicMapping.js');
+        console.log('   Add mapping: {', substrand_ref_id, ': YOUR_STRAPI_TOPIC_ID }');
+    } else {
+        try {
+            console.log('⏳ Calling fetchQuizQuestions() with topic ID:', topicId);
+            const startTime = Date.now();
+            
+            const questions = await fetchQuizQuestions(topicId);
+        const endTime = Date.now();
+        const duration = endTime - startTime;
+        
+        console.log('');
+        console.log('✅ FETCH COMPLETED in', duration, 'ms');
+        console.log('');
+        console.log('📊 RESULT:');
+        console.log('  - Returned value:', questions);
+        console.log('  - Type:', typeof questions);
+        console.log('  - Is Array:', Array.isArray(questions));
+        console.log('  - Is Null:', questions === null);
+        console.log('  - Length:', questions?.length || 0);
+        console.log('');
+        
+        if (questions && questions.length > 0) {
+            console.log('🎉 SUCCESS: Fetched', questions.length, 'questions');
+            console.log('');
+            console.log('📝 FIRST QUESTION:');
+            console.log(JSON.stringify(questions[0], null, 2));
+        } else if (questions === null) {
+            console.log('❌ ERROR: Returned null');
+        } else {
+            console.log('⚠️ WARNING: Empty result');
+        }
+        } catch (error) {
+            console.log('');
+            console.log('❌ FETCH FAILED');
+            console.error('  - Error:', error);
+            console.error('  - Message:', error.message);
+        }
+    }
+    
+    console.log('');
+    console.log('═══════════════════════════════════════════════════════════');
+    console.log('🏁 TESTING STRAPI FETCH - END');
+    console.log('═══════════════════════════════════════════════════════════');
+};
+
+// Load state when page mounts and test Strapi fetch
 onMounted(() => {
     loadStateFromStorage();
-    console.log('Loaded quiz progress state:', {
-        completedQuizzes: Array.from(completedQuizzes.value),
-        contentStatus: Array.from(contentStatus.value.entries())
-    });
+    // Test Strapi fetch automatically (console only)
+    testStrapiFetch();
 });
 
-// Watch for changes in completion status
-watch(completedQuizzes, (newCompleted) => {
-    console.log('Completed quizzes updated:', Array.from(newCompleted));
-}, { deep: true });
-
-watch(contentStatus, (newStatus) => {
-    console.log('Content status updated:', Array.from(newStatus.entries()));
-}, { deep: true });
+// Reload state when page is activated (e.g., when navigating back from course detail)
+onActivated(() => {
+    loadStateFromStorage();
+});
 </script>
 <template>
     <div class="mt-5" style="height: auto; background-color: #f6f6f6">
@@ -156,6 +319,14 @@ watch(contentStatus, (newStatus) => {
                 </v-col> -->
             </v-row>
             <ConceptNotes :concept-note="conceptNote" />
+            
+            <!-- Test Button for Strapi Fetch -->
+            <div class="mt-4 mb-4">
+                <v-btn @click="testStrapiFetch" color="primary" size="small">
+                    🔍 Test Strapi Fetch (Check Console)
+                </v-btn>
+            </div>
+            
             <div class="mt-10" style="height: auto; background-color: #f6f6f6">
                 <div class="container mx-auto p-4">
                     <v-row v-for="content in substrand_ls" :key="content.id">
@@ -163,7 +334,7 @@ watch(contentStatus, (newStatus) => {
                             <v-card class="mb-4">
                                 <v-card-text>
                                     <!-- Topic Title -->
-                                    <div @click="handleContentClick(content.id)"
+                                    <div @click.stop="handleContentClick(content.id)"
                                         class="cursor-pointer mb-4">
                                         <h3 class="text-h6 font-weight-bold">{{ content.indicators }}</h3>
                                     </div>
@@ -171,15 +342,15 @@ watch(contentStatus, (newStatus) => {
                                     <!-- Action Elements -->
                                     <div class="d-flex align-center justify-space-between">
                                         <!-- Left Side: Concept Note and BECE Questions -->
-                                        <div class="d-flex align-center gap-3">
-                                            <v-btn @click="openNotes" 
+                                        <div class="d-flex align-center gap-3" @click.stop>
+                                            <v-btn @click.stop="openNotes" 
                                                 variant="text"
                                                 color="blue-darken-2"
                                                 class="text-none font-weight-medium">
                                                 CONCEPT NOTE
                                             </v-btn>
                                             
-                                            <v-btn @click="openBece" 
+                                            <v-btn @click.stop="openBece" 
                                                 variant="text"
                                                 color="green-darken-2"
                                                 class="text-none font-weight-medium">
@@ -187,11 +358,11 @@ watch(contentStatus, (newStatus) => {
                                             </v-btn>
                                         </div>
                                         
-                                        <!-- Right Side: Completed Status -->
-                                        <div v-if="isQuizCompleted(content.id)" 
+                                        <!-- Right Side: Course Completion Status (per lesson) -->
+                                        <div v-if="isQuizCompleted(String(content.id)) || isQuizCompleted(content.id)" 
                                             class="d-flex align-center text-green-darken-2 font-weight-medium">
                                             <v-icon size="small" class="mr-1">mdi-check</v-icon>
-                                            COMPLETED
+                                            COURSE COMPLETED
                                         </div>
                                         <div v-else 
                                             class="d-flex align-center text-grey-darken-1 font-weight-medium">
@@ -234,13 +405,18 @@ watch(contentStatus, (newStatus) => {
                             </v-col>
                         </v-row>
                     </div>
-
-                    <!-- Quiz Modal -->
-                    <QuizModal :is-open="showQuizModal" :content-id="selectedContentId"
-                        :substrand-route="`substrand-${substrand_ref}`" :strand-id="strand_ref_id"
-                        @close="closeQuizModal" @start-quiz="startQuiz" />
                 </div>
             </div>
         </div>
+        
+        <!-- Quiz Modal - Moved outside container for proper z-index -->
+        <QuizModal 
+            :is-open="showQuizModal" 
+            :content-id="selectedContentId ? String(selectedContentId) : null"
+            :substrand-route="'substrand-' + substrand_ref" 
+            :strand-id="String(strand_ref_id)"
+            @close="closeQuizModal" 
+            @start-quiz="startQuiz" 
+            @skip-quiz="handleSkipQuiz" />
     </div>
 </template>

@@ -9,18 +9,22 @@ import { ref, onMounted } from 'vue';
 // });
 const client = useSupabaseClient();
 const route = useRoute();
-const id = route.params.id;
+const contentIdParam = route.params.contentId;
 const strand_ref = route.params.route;
 const substrand = route.params.substrand;
 
+const courseContentId = Array.isArray(contentIdParam) ? contentIdParam[0] : contentIdParam;
+
 // Quiz progress management
-const { markQuizCompleted, isQuizCompleted, loadStateFromStorage } = useQuizProgress();
+const { markQuizCompleted, unmarkQuizCompleted, isQuizCompleted, loadStateFromStorage } = useQuizProgress();
 const courseCompleted = ref(false);
 
 // Check if course is already completed on mount
 onMounted(() => {
     loadStateFromStorage();
-    courseCompleted.value = isQuizCompleted(id);
+    if (courseContentId) {
+        courseCompleted.value = isQuizCompleted(String(courseContentId)) || isQuizCompleted(courseContentId);
+    }
 });
 
 const { data: substrands } = await client.from('preassignment_workbook1_strand_substrands_lists').select().eq('route', strand_ref);
@@ -29,7 +33,7 @@ const strand_ref_id = substrands[0].strand_ref;
 const substrand_ref_id = substrands[0].id;
 const { data: files } = await client.from('preassignment_workbook1_substrands_contents').select().eq('id', substrand_ref_id);
 
-const { data: indicators_content } = await client.from('preassignment_workbook1_substrand_indicators').select().eq('id', id);
+const { data: indicators_content } = await client.from('preassignment_workbook1_substrand_indicators').select().eq('id', courseContentId);
 
 const heading = indicators_content[0].indicators;
 const vid1 = indicators_content[0].vid1;
@@ -74,12 +78,18 @@ function openTranscript() {
 
 // Course completion function
 const toggleCourseCompletion = () => {
+    if (!courseContentId) return;
+    
+    const courseKey = String(courseContentId);
+    
     if (courseCompleted.value) {
-        markQuizCompleted(id);
-        console.log(`Course ${id} marked as completed`);
+        // Checked - mark as completed
+        markQuizCompleted(courseKey);
+        console.log(`Course ${courseKey} marked as completed`);
     } else {
-        // If unchecking, we could implement logic to unmark completion
-        console.log(`Course ${id} completion status changed`);
+        // Unchecked - unmark as completed
+        unmarkQuizCompleted(courseKey);
+        console.log(`Course ${courseKey} unmarked as completed`);
     }
 };
 
@@ -91,12 +101,35 @@ function swapVideo(video) {
     )
 };
 
+// Navigate back to substrand list (topics page)
+const goBackToSubstrand = () => {
+    // Clear the returnFromQuiz sessionStorage to prevent modal from showing
+    if (typeof window !== 'undefined') {
+        sessionStorage.removeItem('returnFromQuiz');
+    }
+    const substrandRoute = `substrand-${strand_ref}`;
+    navigateTo(`/learning-modules/preassignment_workbook1/strand-${strand_ref_id}/${substrandRoute}`);
+};
+
 
 
 </script>
 <template>
     <div class="body">
         <v-container>
+            <!-- Back Button -->
+            <div class="mb-4">
+                <v-btn 
+                    @click="goBackToSubstrand" 
+                    variant="text" 
+                    color="grey-darken-1"
+                    class="text-none"
+                >
+                    <v-icon left>mdi-arrow-left</v-icon>
+                    Back to Topics
+                </v-btn>
+            </div>
+            
             <h2 class="text-left text-uppercase text-bold mb-0 mt-0" style="font-weight: bold; font-size: 1.2rem;">{{
                 heading
                 }}</h2>
@@ -225,7 +258,7 @@ function swapVideo(video) {
             <!-- Course Completion Section -->
             <!-- <div class="mt-15">
                 <div class="bg-white rounded-lg shadow-md p-8 text-center">
-                    <div v-if="!courseCompleted && !isQuizCompleted(id)" class="mb-6">
+                    <div v-if="!courseCompleted && !isQuizCompleted(courseContentId)" class="mb-6">
                         <h3 class="text-2xl font-bold text-gray-800 mb-4">
                             🎯 Ready to Complete This Course?
                         </h3>
@@ -241,7 +274,7 @@ function swapVideo(video) {
                         </button>
                     </div>
 
-                    <div v-else-if="courseCompleted || isQuizCompleted(id)" class="mb-6">
+                    <div v-else-if="courseCompleted || isQuizCompleted(courseContentId)" class="mb-6">
                         <div class="text-green-600 text-6xl mb-4">🎉</div>
                         <h3 class="text-2xl font-bold text-gray-800 mb-4">
                             Course Completed!

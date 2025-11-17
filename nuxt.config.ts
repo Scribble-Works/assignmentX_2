@@ -14,6 +14,7 @@ export default defineNuxtConfig({
       GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
       SHEET_ID: process.env.SHEET_ID,
       PAYSTACK_PUBLIC_KEY: process.env.PAYSTACK_PUBLIC_KEY,
+      STRAPI_URL: process.env.STRAPI_URL || 'http://localhost:1337',
     },
   },
   modules: [

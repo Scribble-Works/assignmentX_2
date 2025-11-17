@@ -9,9 +9,11 @@ import { ref, onMounted } from 'vue';
 // });
 const client = useSupabaseClient();
 const route = useRoute();
-const id = route.params.id;
+const contentIdParam = route.params.contentId;
 const strand_ref = route.params.route;
 const substrand = route.params.substrand;
+
+const courseContentId = Array.isArray(contentIdParam) ? contentIdParam[0] : contentIdParam;
 
 // Quiz progress management
 const { markQuizCompleted, isQuizCompleted, loadStateFromStorage } = useQuizProgress();
@@ -20,24 +22,26 @@ const courseCompleted = ref(false);
 // Check if course is already completed on mount
 onMounted(() => {
   loadStateFromStorage();
-  courseCompleted.value = isQuizCompleted(id);
+  if (courseContentId) {
+    courseCompleted.value = isQuizCompleted(String(courseContentId)) || isQuizCompleted(courseContentId);
+  }
 });
 
-const { data: substrands } = await client.from('preassignment_workbook3_strand_substrands_lists').select().eq('route', strand_ref);
+const { data: substrands } = await client.from('book1_strand_substrands_lists').select().eq('route', strand_ref);
 
 const strand_ref_id = substrands[0].strand_ref;
 const substrand_ref_id = substrands[0].id;
-const { data: files } = await client.from('preassignment_workbook3_substrands_contents').select().eq('id', substrand_ref_id);
+const { data: files } = await client.from('book3_strands').select().eq('id', substrand_ref_id);
 
-const { data: indicators_content } = await client.from('preassignment_workbook3_substrand_indicators').select().eq('id', id);
+const { data: indicators_content } = await client.from('book3_substrand_indicators').select().eq('id', courseContentId);
 
 const heading = indicators_content[0].indicators;
 const vid1 = indicators_content[0].vid1;
 const vid2 = indicators_content[0].vid2;
 const vid3 = indicators_content[0].vid3;
 
-// const conceptNote = files[0].concept_notes;
-// const bece = files[0].BECE_Qquestions;
+const conceptNote = files[0].concept_notes;
+const bece = files[0].BECE_Qquestions;
 
 console.log(files);
 // console.log(substrand_ref_id);
@@ -69,10 +73,14 @@ function openBece() {
 
 // Course completion function
 const markCourseAsCompleted = () => {
+    if (!courseContentId) {
+        return;
+    }
     courseCompleted.value = true;
-    markQuizCompleted(id);
+    const courseKey = String(courseContentId);
+    markQuizCompleted(courseKey);
     // Force update the status to completed
-    console.log(`Course ${id} marked as completed`);
+    console.log(`Course ${courseKey} marked as completed`);
 };
 
 function swapVideo(video) {
@@ -144,7 +152,7 @@ function swapVideo(video) {
             <!-- Course Completion Section -->
             <!-- <div class="mt-15">
                 <div class="bg-white rounded-lg shadow-md p-8 text-center">
-                    <div v-if="!courseCompleted && !isQuizCompleted(id)" class="mb-6">
+                    <div v-if="!courseCompleted && !isQuizCompleted(courseContentId)" class="mb-6">
                         <h3 class="text-2xl font-bold text-gray-800 mb-4">
                             🎯 Ready to Complete This Course?
                         </h3>
@@ -160,7 +168,7 @@ function swapVideo(video) {
                         </button>
                     </div>
 
-                    <div v-else-if="courseCompleted || isQuizCompleted(id)" class="mb-6">
+                    <div v-else-if="courseCompleted || isQuizCompleted(courseContentId)" class="mb-6">
                         <div class="text-green-600 text-6xl mb-4">🎉</div>
                         <h3 class="text-2xl font-bold text-gray-800 mb-4">
                             Course Completed!
