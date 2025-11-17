@@ -182,12 +182,8 @@ function swapVideo(video) {
               class="text-h5 text-center"
               style="font-family: 'Inter', sans-serif; font-weight: bold"
             >
-              Flip Card Compare Game
+              Gamified Learning Zone
             </h5>
-            <br />
-            <!-- <p class="text-center">Time Left: 20s</p> -->
-            <br />
-            <p class="text-center"><v-icon>mdi-clock</v-icon> Score: 2/4</p>
           </div>
 
           <iframe
