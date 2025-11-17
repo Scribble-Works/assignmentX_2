@@ -1,4 +1,26 @@
 <script setup>
+const mail = useMail();
+
+const name = ref("");
+const email = ref("");
+const message = ref("");
+const dialog = ref(false);
+
+const sendMessage = async () => {
+    try {
+        mail.send({
+            from: 'AssignmentX',
+            subject:'ASSIGNMENTX USER MESSAGE',
+            text:`\n Name: ${name.value} \n \n Email: ${email.value} \n \n Message: ${message.value}`,
+        })
+        dialog.value = true;
+        name.value = "";
+        email.value = "";
+        message.value = "";
+    } catch (error) {
+        console.log(error);
+    }
+};
 const testimonials = [
   {
     quote:
@@ -331,7 +353,7 @@ const testimonials = [
             Get your Assignment Maths Workbook now and unlock a <br />
             world of learning with a digital companion!
           </p>
-          <v-btn color="blue-darken-1" size="large">Buy the Book</v-btn>
+          <v-btn color="blue-darken-1" to="/store" size="large">Buy the Book</v-btn>
         </v-col>
         <v-col cols="" sm="12" md="12" lg="6">
           <img src="/img/buyabout.png" alt="" />
@@ -353,10 +375,11 @@ const testimonials = [
           </p>
         </v-col>
         <v-col cols="" lg="6" md="12" sm="12">
-          <v-form>
+          <v-form @submit.prevent="sendMessage">
             <label>Name</label>
             <v-text-field
               v-model="name"
+              type="text"
               placeholder="Enter your name"
               variant="underlined"
             ></v-text-field>
@@ -368,15 +391,27 @@ const testimonials = [
               variant="underlined"
             ></v-text-field>
             <label>Message</label>
-            <v-textarea
+            <v-textarea type="text"
               v-model="message"
               placeholder="Enter your message"
               variant="underlined"
             ></v-textarea>
-            <v-btn color="blue-darken-1" size="large" @click="submitForm"
+            <v-btn color="blue-darken-1" size="large" type="submit"
               >Send <v-icon>mdi-send</v-icon>
             </v-btn>
           </v-form>
+
+          <v-dialog v-model="dialog" max-width="600">
+            <v-card>
+              <v-card-title class="headline">Message Sent</v-card-title>
+              <v-card-text>
+                Thank you for your message! We will get back to you shortly.
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="blue-darken-1" text @click="dialog = false">Close</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-col>
       </v-row>
     </v-container>

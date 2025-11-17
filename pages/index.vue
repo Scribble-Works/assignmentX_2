@@ -51,7 +51,7 @@ const client = useSupabaseClient();
           <br />
 
           <div>
-            <v-btn to="/resources/" class="text-white" color="yellow-darken-2" rounded="lg">Learn More</v-btn>
+            <v-btn to="/facilitator-resources/" class="text-white" color="yellow-darken-2" rounded="lg">Learn More</v-btn>
           </div>
 
 
