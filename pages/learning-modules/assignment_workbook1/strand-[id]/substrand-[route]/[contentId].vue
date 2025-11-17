@@ -9,9 +9,13 @@ import { ref, onMounted } from "vue";
 // });
 const client = useSupabaseClient();
 const route = useRoute();
-const id = route.params.id;
+const contentIdParam = route.params.contentId;
 const strand_ref = route.params.route;
 const substrand = route.params.substrand;
+
+const courseContentId = Array.isArray(contentIdParam)
+  ? contentIdParam[0]
+  : contentIdParam;
 
 // Quiz progress management
 const { markQuizCompleted, isQuizCompleted, loadStateFromStorage } =
@@ -21,8 +25,10 @@ const courseCompleted = ref(false);
 // Check if course is already completed on mount
 onMounted(() => {
   loadStateFromStorage();
-  if (id) {
-    courseCompleted.value = isQuizCompleted(String(id)) || isQuizCompleted(id);
+  if (courseContentId) {
+    courseCompleted.value =
+      isQuizCompleted(String(courseContentId)) ||
+      isQuizCompleted(courseContentId);
   }
 });
 
@@ -41,7 +47,7 @@ const { data: files } = await client
 const { data: indicators_content } = await client
   .from("book1_substrand_indicators")
   .select()
-  .eq("id", id);
+  .eq("id", courseContentId);
 
 const heading = indicators_content[0].indicators;
 const vid1 = indicators_content[0].vid1;
@@ -89,10 +95,10 @@ function openBece() {
 
 // Course completion function
 const markCourseAsCompleted = () => {
-  if (!id) {
+  if (!courseContentId) {
     return;
   }
-  const courseKey = String(id);
+  const courseKey = String(courseContentId);
   if (!isQuizCompleted(courseKey)) {
     markQuizCompleted(courseKey);
     courseCompleted.value = true;
@@ -103,6 +109,22 @@ const markCourseAsCompleted = () => {
     console.log(`Course ${courseKey} already completed`);
   }
 };
+
+function openBece() {
+  navigateTo(bece, {
+    open: {
+      windowFeatures: {
+        width: 500,
+        height: 500,
+      },
+    },
+  });
+}
+
+function openTranscript() {
+  // For now, we'll show an alert. In a real implementation, this would open a transcript modal or page
+  alert("Video transcript feature coming soon!");
+}
 
 function swapVideo(video) {
   const oldMain = mainVideo.value;

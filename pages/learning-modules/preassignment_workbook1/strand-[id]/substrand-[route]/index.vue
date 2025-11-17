@@ -29,22 +29,25 @@ const {
     loadStateFromStorage
 } = useQuizProgress();
 
+// Use Strapi quiz composable for testing
+const { fetchQuizQuestions } = useStrapiQuiz();
+
 const { data: substrand } = await client
-    .from("preassignment_workbook1_strand_substrands_lists")
-    .select()
-    .eq("route", substrand_ref);
+  .from("preassignment_workbook1_strand_substrands_lists")
+  .select()
+  .eq("route", substrand_ref);
 const strand_ref_id = substrand[0].strand_ref;
 const substrand_ref_id = substrand[0].id;
 
 const { data: strands } = await client
-    .from("preassignment_workbook1_substrands_contents")
-    .select()
-    .eq("substrand_ref", substrand_ref_id);
+  .from("preassignment_workbook1_substrands_contents")
+  .select()
+  .eq("substrand_ref", substrand_ref_id);
 
 const { data: unsortedSubstrand_ls } = await client
-    .from("preassignment_workbook1_substrand_indicators")
-    .select()
-    .eq("substrand_ref", substrand_ref_id);
+  .from("preassignment_workbook1_substrand_indicators")
+  .select()
+  .eq("substrand_ref", substrand_ref_id);
 
 const title = substrand[0].title;
 const conceptNote = strands[0].concept_notes;
@@ -69,34 +72,34 @@ const allQuizzesCompleted = computed(() => {
 });
 
 function openNotes() {
-    navigateTo(conceptNote, {
-        open: {
-            windowFeatures: {
-                width: 500,
-                height: 500,
-            },
-        },
-    });
+  navigateTo(conceptNote, {
+    open: {
+      windowFeatures: {
+        width: 500,
+        height: 500,
+      },
+    },
+  });
 }
 
 function openBece() {
-    const link = document.createElement("a");
-    link.href = bece;
-    link.download = "BECE_Questions.pdf";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const link = document.createElement("a");
+  link.href = bece;
+  link.download = "BECE_Questions.pdf";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 
 // Quiz modal functions
 const openQuizModal = (contentId) => {
-    selectedContentId.value = contentId;
-    showQuizModal.value = true;
+  selectedContentId.value = contentId;
+  showQuizModal.value = true;
 };
 
 const closeQuizModal = () => {
-    showQuizModal.value = false;
-    selectedContentId.value = null;
+  showQuizModal.value = false;
+  selectedContentId.value = null;
 };
 
 const startQuiz = (contentId) => {
@@ -187,16 +190,151 @@ onMounted(() => {
         completedQuizzes: Array.from(completedQuizzes.value),
         contentStatus: Array.from(contentStatus.value.entries())
     });
+
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+
+    console.log("✅ FETCH COMPLETED in", duration, "ms");
+    console.log("");
+    console.log("📊 RESPONSE:");
+    console.log(JSON.stringify(allQuestionsResponse, null, 2));
+    console.log("");
+
+    if (allQuestionsResponse?.data) {
+      console.log("📦 DATA FOUND:");
+      console.log("  - Is Array:", Array.isArray(allQuestionsResponse.data));
+      console.log("  - Length:", allQuestionsResponse.data?.length || 0);
+      if (allQuestionsResponse.data.length > 0) {
+        console.log("");
+        console.log(
+          "  - First item:",
+          JSON.stringify(allQuestionsResponse.data[0], null, 2),
+        );
+        console.log("");
+        console.log("  - ALL ITEMS:");
+        console.log(JSON.stringify(allQuestionsResponse.data, null, 2));
+      } else {
+        console.log("⚠️ Data array is empty");
+      }
+    } else {
+      console.log("⚠️ No data property in response");
+      console.log(
+        "Full response structure:",
+        Object.keys(allQuestionsResponse || {}),
+      );
+    }
+  } catch (error) {
+    console.log("");
+    console.log("❌ FETCH FAILED");
+    console.log("");
+    console.log("📊 ERROR DETAILS:");
+    console.error("  - Error:", error);
+    console.error("  - Message:", error.message);
+    if (error.statusCode) {
+      console.error("  - Status Code:", error.statusCode);
+    }
+    if (error.data) {
+      console.error("  - Error Data:", error.data);
+    }
+  }
+
+  console.log("");
+  console.log("═══════════════════════════════════════════════════════════");
+  console.log(
+    "📡 TEST 2: FETCHING FILTERED QUESTIONS (using fetchQuizQuestions)",
+  );
+  console.log("═══════════════════════════════════════════════════════════");
+  console.log("");
+
+  // TEST 2: Fetch filtered questions by topic ID
+  console.log("");
+  console.log("📋 MAPPING:");
+  const topicId = getTopicIdFromSubstrand(substrand_ref_id);
+  console.log("  - Substrand ID:", substrand_ref_id);
+  console.log("  - Mapped to Topic ID:", topicId);
+  console.log("");
+
+  if (!topicId) {
+    console.log(
+      "⚠️ No topic ID mapping found. Please update useSubstrandTopicMapping.js",
+    );
+    console.log(
+      "   Add mapping: {",
+      substrand_ref_id,
+      ": YOUR_STRAPI_TOPIC_ID }",
+    );
+  } else {
+    try {
+      console.log("⏳ Calling fetchQuizQuestions() with topic ID:", topicId);
+      const startTime = Date.now();
+
+      const questions = await fetchQuizQuestions(topicId);
+      const endTime = Date.now();
+      const duration = endTime - startTime;
+
+      console.log("");
+      console.log("✅ FETCH COMPLETED in", duration, "ms");
+      console.log("");
+      console.log("📊 RESULT:");
+      console.log("  - Returned value:", questions);
+      console.log("  - Type:", typeof questions);
+      console.log("  - Is Array:", Array.isArray(questions));
+      console.log("  - Is Null:", questions === null);
+      console.log("  - Length:", questions?.length || 0);
+      console.log("");
+
+      if (questions && questions.length > 0) {
+        console.log("🎉 SUCCESS: Fetched", questions.length, "questions");
+        console.log("");
+        console.log("📝 FIRST QUESTION:");
+        console.log(JSON.stringify(questions[0], null, 2));
+      } else if (questions === null) {
+        console.log("❌ ERROR: Returned null");
+      } else {
+        console.log("⚠️ WARNING: Empty result");
+      }
+    } catch (error) {
+      console.log("");
+      console.log("❌ FETCH FAILED");
+      console.error("  - Error:", error);
+      console.error("  - Message:", error.message);
+    }
+  }
+
+  console.log("");
+  console.log("═══════════════════════════════════════════════════════════");
+  console.log("🏁 TESTING STRAPI FETCH - END");
+  console.log("═══════════════════════════════════════════════════════════");
+};
+
+// Load state when page mounts and test Strapi fetch
+onMounted(() => {
+  loadStateFromStorage();
+  // Test Strapi fetch automatically (console only)
+  testStrapiFetch();
+});
+
+// Reload state when page is activated (e.g., when navigating back from course detail)
+onActivated(() => {
+  loadStateFromStorage();
 });
 
 // Watch for changes in completion status
-watch(completedQuizzes, (newCompleted) => {
-    console.log('Completed quizzes updated:', Array.from(newCompleted));
-}, { deep: true });
+watch(
+  completedQuizzes,
+  (newCompleted) => {
+    console.log("Completed quizzes updated:", Array.from(newCompleted));
+  },
+  { deep: true },
+);
 
-watch(contentStatus, (newStatus) => {
-    console.log('Content status updated:', Array.from(newStatus.entries()));
-}, { deep: true });
+watch(
+  contentStatus,
+  (newStatus) => {
+    console.log("Content status updated:", Array.from(newStatus.entries()));
+  },
+  { deep: true },
+);
 
 // Reload state when page is activated (e.g., when navigating back from course detail)
 onActivated(() => {
