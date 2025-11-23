@@ -5,6 +5,7 @@ import { useStrapiQuiz } from '~/composables/useStrapiQuiz';
 import { getTopicIdFromSubstrand } from '~/composables/useSubstrandTopicMapping';
 import ConceptNotes from '~/components/conceptNotes.vue';
 import QuizModal from '~/components/QuizModal.vue';
+import ProblemSetModal from '~/components/ProblemSetModal.vue';
 
 const client = useSupabaseClient();
 const route = useRoute();
@@ -14,6 +15,9 @@ const substrand_ref = route.params.route;
 // Quiz modal state
 const showQuizModal = ref(false);
 const selectedContentId = ref(null);
+
+// Problem set modal state
+const showProblemSetModal = ref(false);
 
 // Use the quiz progress composable
 const {
@@ -140,8 +144,26 @@ const totalCount = computed(() => {
 const solveProblem = () => {
     // Only allow access if all quizzes are completed
     if (allQuizzesCompleted.value) {
-        // Add your problem set logic here
+        // Show the problem set modal
+        showProblemSetModal.value = true;
     }
+};
+
+const closeProblemSetModal = () => {
+    showProblemSetModal.value = false;
+};
+
+const startProblemSetQuiz = () => {
+    // Navigate to problem set quiz page
+    // You can customize this navigation based on your routing structure
+    const substrandRoute = `substrand-${substrand_ref}`;
+    navigateTo(`/quiz/problem-set/${substrand_ref_id}?substrand=${substrandRoute}&strand=${strand_ref_id}`);
+};
+
+const skipProblemSetQuiz = () => {
+    // Handle skip action - you can customize this behavior
+    // For now, just close the modal
+    showProblemSetModal.value = false;
 };
 
 
@@ -418,5 +440,12 @@ onActivated(() => {
             @close="closeQuizModal" 
             @start-quiz="startQuiz" 
             @skip-quiz="handleSkipQuiz" />
+        
+        <!-- Problem Set Modal -->
+        <ProblemSetModal 
+            :is-open="showProblemSetModal"
+            @close="closeProblemSetModal"
+            @start-quiz="startProblemSetQuiz"
+            @skip-quiz="skipProblemSetQuiz" />
     </div>
 </template>
