@@ -1,9 +1,16 @@
 <script setup>
-import { ref, computed, onMounted, onActivated, watch, onBeforeUnmount } from 'vue';
-import { useQuizProgress } from '~/composables/useQuizProgress';
-import ConceptNotes from '~/components/conceptNotes.vue';
-import QuizModal from '~/components/QuizModal.vue';
-import ProblemSetModal from '~/components/ProblemSetModal.vue';
+import {
+  ref,
+  computed,
+  onMounted,
+  onActivated,
+  watch,
+  onBeforeUnmount,
+} from "vue";
+import { useQuizProgress } from "~/composables/useQuizProgress";
+import ConceptNotes from "~/components/conceptNotes.vue";
+import QuizModal from "~/components/QuizModal.vue";
+import ProblemSetModal from "~/components/ProblemSetModal.vue";
 
 const client = useSupabaseClient();
 const route = useRoute();
@@ -19,14 +26,14 @@ const showProblemSetModal = ref(false);
 
 // Use the quiz progress composable
 const {
-    completedQuizzes,
-    contentStatus,
-    markQuizInProgress,
-    markQuizCompleted,
-    isQuizCompleted,                                                                                                    
-    getContentStatus,
-    getStatusInfo,
-    loadStateFromStorage
+  completedQuizzes,
+  contentStatus,
+  markQuizInProgress,
+  markQuizCompleted,
+  isQuizCompleted,
+  getContentStatus,
+  getStatusInfo,
+  loadStateFromStorage,
 } = useQuizProgress();
 
 // Use Strapi quiz composable for testing
@@ -63,12 +70,12 @@ const substrand_ls = computed(() => {
 
 // Check if all lessons are completed (for showing Problem Set section)
 const allQuizzesCompleted = computed(() => {
-    const list = substrand_ls.value;
-    if (!list || list.length === 0) return false;
-    return list.every(content => {
-        const contentIdStr = String(content.id);
-        return isQuizCompleted(contentIdStr) || isQuizCompleted(content.id);
-    });
+  const list = substrand_ls.value;
+  if (!list || list.length === 0) return false;
+  return list.every((content) => {
+    const contentIdStr = String(content.id);
+    return isQuizCompleted(contentIdStr) || isQuizCompleted(content.id);
+  });
 });
 
 function openNotes() {
@@ -103,215 +110,100 @@ const closeQuizModal = () => {
 };
 
 const startQuiz = (contentId) => {
-    // Close modal first before navigating
-    showQuizModal.value = false;
-    selectedContentId.value = null;
-    
-    // Navigate to the quiz page with substrand and strand query params
-    // Use substrand_ref_id as the quiz identifier since quiz is per substrand
-    const substrandRoute = `substrand-${substrand_ref}`;
-    navigateTo(`/quiz/${substrand_ref_id}?substrand=${substrandRoute}&strand=${strand_ref_id}&contentId=${contentId}`);
+  // Close modal first before navigating
+  showQuizModal.value = false;
+  selectedContentId.value = null;
+
+  // Navigate to the quiz page with substrand and strand query params
+  // Use substrand_ref_id as the quiz identifier since quiz is per substrand
+  const substrandRoute = `substrand-${substrand_ref}`;
+  navigateTo(
+    `/quiz/${substrand_ref_id}?substrand=${substrandRoute}&strand=${strand_ref_id}&contentId=${contentId}`,
+  );
 };
 
 const handleContentClick = (contentId) => {
-    loadStateFromStorage();
-    
-    // Check if pre-quiz for this topic (substrand) is already completed
-    const substrandQuizKey = `substrand-${substrand_ref_id}`;
-    const isQuizCompletedForTopic = isQuizCompleted(substrandQuizKey);
-    
-    selectedContentId.value = contentId;
-    
-    if (isQuizCompletedForTopic) {
-        // Quiz already taken for this topic - go directly to lesson
-        const substrandRoute = `substrand-${substrand_ref}`;
-        navigateTo(`/learning-modules/preassignment_workbook1/strand-${strand_ref_id}/${substrandRoute}/${contentId}`);
-    } else {
-        // Quiz NOT taken yet - show modal
-        showQuizModal.value = true;
-    }
+  loadStateFromStorage();
+
+  // Check if pre-quiz for this topic (substrand) is already completed
+  const substrandQuizKey = `substrand-${substrand_ref_id}`;
+  const isQuizCompletedForTopic = isQuizCompleted(substrandQuizKey);
+
+  selectedContentId.value = contentId;
+
+  if (isQuizCompletedForTopic) {
+    // Quiz already taken for this topic - go directly to lesson
+    const substrandRoute = `substrand-${substrand_ref}`;
+    navigateTo(
+      `/learning-modules/preassignment_workbook1/strand-${strand_ref_id}/${substrandRoute}/${contentId}`,
+    );
+  } else {
+    // Quiz NOT taken yet - show modal
+    showQuizModal.value = true;
+  }
 };
 
 const handleSkipQuiz = (contentId) => {
-    // Close modal first
-    showQuizModal.value = false;
-    selectedContentId.value = null;
-    
-    // DON'T mark as completed - user skipped, so modal will show again for other lessons
-    // Just navigate to the lesson content page
-    const substrandRoute = `substrand-${substrand_ref}`;
-    navigateTo(`/learning-modules/preassignment_workbook1/strand-${strand_ref_id}/${substrandRoute}/${contentId}`);
+  // Close modal first
+  showQuizModal.value = false;
+  selectedContentId.value = null;
+
+  // DON'T mark as completed - user skipped, so modal will show again for other lessons
+  // Just navigate to the lesson content page
+  const substrandRoute = `substrand-${substrand_ref}`;
+  navigateTo(
+    `/learning-modules/preassignment_workbook1/strand-${strand_ref_id}/${substrandRoute}/${contentId}`,
+  );
 };
 
 // Check if pre-quiz is completed for this substrand (quiz is per substrand, not per lesson)
 const isSubstrandQuizCompleted = computed(() => {
-    // Use the same key format as when marking completion: `substrand-${substrand_ref_id}`
-    const substrandQuizKey = `substrand-${substrand_ref_id}`;
-    
-    const isCompleted = isQuizCompleted(substrandQuizKey);
-    
-    return isCompleted;
+  // Use the same key format as when marking completion: `substrand-${substrand_ref_id}`
+  const substrandQuizKey = `substrand-${substrand_ref_id}`;
+
+  const isCompleted = isQuizCompleted(substrandQuizKey);
+
+  return isCompleted;
 });
 
 const totalCount = computed(() => {
-    return substrand_ls.value ? substrand_ls.value.length : 0;
+  return substrand_ls.value ? substrand_ls.value.length : 0;
 });
 
 const solveProblem = () => {
-    // Only allow access if all quizzes are completed
-    if (allQuizzesCompleted.value) {
-        // Show the problem set modal
-        showProblemSetModal.value = true;
-    }
+  // Only allow access if all quizzes are completed
+  if (allQuizzesCompleted.value) {
+    // Show the problem set modal
+    showProblemSetModal.value = true;
+  }
 };
 
 const closeProblemSetModal = () => {
-    showProblemSetModal.value = false;
+  showProblemSetModal.value = false;
 };
 
 const startProblemSetQuiz = () => {
-    // Navigate to problem set quiz page
-    // You can customize this navigation based on your routing structure
-    const substrandRoute = `substrand-${substrand_ref}`;
-    navigateTo(`/quiz/problem-set/${substrand_ref_id}?substrand=${substrandRoute}&strand=${strand_ref_id}`);
+  // Navigate to problem set quiz page
+  // You can customize this navigation based on your routing structure
+  const substrandRoute = `substrand-${substrand_ref}`;
+  navigateTo(
+    `/quiz/problem-set/${substrand_ref_id}?substrand=${substrandRoute}&strand=${strand_ref_id}`,
+  );
 };
 
 const skipProblemSetQuiz = () => {
-    // Handle skip action - you can customize this behavior
-    // For now, just close the modal
-    showProblemSetModal.value = false;
+  // Handle skip action - you can customize this behavior
+  // For now, just close the modal
+  showProblemSetModal.value = false;
 };
-
 
 // Load state when page mounts
 onMounted(() => {
-    loadStateFromStorage();
-    console.log('Loaded quiz progress state:', {
-        completedQuizzes: Array.from(completedQuizzes.value),
-        contentStatus: Array.from(contentStatus.value.entries())
-    });
-
-    const endTime = Date.now();
-    const duration = endTime - startTime;
-
-    console.log("✅ FETCH COMPLETED in", duration, "ms");
-    console.log("");
-    console.log("📊 RESPONSE:");
-    console.log(JSON.stringify(allQuestionsResponse, null, 2));
-    console.log("");
-
-    if (allQuestionsResponse?.data) {
-      console.log("📦 DATA FOUND:");
-      console.log("  - Is Array:", Array.isArray(allQuestionsResponse.data));
-      console.log("  - Length:", allQuestionsResponse.data?.length || 0);
-      if (allQuestionsResponse.data.length > 0) {
-        console.log("");
-        console.log(
-          "  - First item:",
-          JSON.stringify(allQuestionsResponse.data[0], null, 2),
-        );
-        console.log("");
-        console.log("  - ALL ITEMS:");
-        console.log(JSON.stringify(allQuestionsResponse.data, null, 2));
-      } else {
-        console.log("⚠️ Data array is empty");
-      }
-    } else {
-      console.log("⚠️ No data property in response");
-      console.log(
-        "Full response structure:",
-        Object.keys(allQuestionsResponse || {}),
-      );
-    }
-  } catch (error) {
-    console.log("");
-    console.log("❌ FETCH FAILED");
-    console.log("");
-    console.log("📊 ERROR DETAILS:");
-    console.error("  - Error:", error);
-    console.error("  - Message:", error.message);
-    if (error.statusCode) {
-      console.error("  - Status Code:", error.statusCode);
-    }
-    if (error.data) {
-      console.error("  - Error Data:", error.data);
-    }
-  }
-
-  console.log("");
-  console.log("═══════════════════════════════════════════════════════════");
-  console.log(
-    "📡 TEST 2: FETCHING FILTERED QUESTIONS (using fetchQuizQuestions)",
-  );
-  console.log("═══════════════════════════════════════════════════════════");
-  console.log("");
-
-  // TEST 2: Fetch filtered questions by topic ID
-  console.log("");
-  console.log("📋 MAPPING:");
-  const topicId = getTopicIdFromSubstrand(substrand_ref_id);
-  console.log("  - Substrand ID:", substrand_ref_id);
-  console.log("  - Mapped to Topic ID:", topicId);
-  console.log("");
-
-  if (!topicId) {
-    console.log(
-      "⚠️ No topic ID mapping found. Please update useSubstrandTopicMapping.js",
-    );
-    console.log(
-      "   Add mapping: {",
-      substrand_ref_id,
-      ": YOUR_STRAPI_TOPIC_ID }",
-    );
-  } else {
-    try {
-      console.log("⏳ Calling fetchQuizQuestions() with topic ID:", topicId);
-      const startTime = Date.now();
-
-      const questions = await fetchQuizQuestions(topicId);
-      const endTime = Date.now();
-      const duration = endTime - startTime;
-
-      console.log("");
-      console.log("✅ FETCH COMPLETED in", duration, "ms");
-      console.log("");
-      console.log("📊 RESULT:");
-      console.log("  - Returned value:", questions);
-      console.log("  - Type:", typeof questions);
-      console.log("  - Is Array:", Array.isArray(questions));
-      console.log("  - Is Null:", questions === null);
-      console.log("  - Length:", questions?.length || 0);
-      console.log("");
-
-      if (questions && questions.length > 0) {
-        console.log("🎉 SUCCESS: Fetched", questions.length, "questions");
-        console.log("");
-        console.log("📝 FIRST QUESTION:");
-        console.log(JSON.stringify(questions[0], null, 2));
-      } else if (questions === null) {
-        console.log("❌ ERROR: Returned null");
-      } else {
-        console.log("⚠️ WARNING: Empty result");
-      }
-    } catch (error) {
-      console.log("");
-      console.log("❌ FETCH FAILED");
-      console.error("  - Error:", error);
-      console.error("  - Message:", error.message);
-    }
-  }
-
-  console.log("");
-  console.log("═══════════════════════════════════════════════════════════");
-  console.log("🏁 TESTING STRAPI FETCH - END");
-  console.log("═══════════════════════════════════════════════════════════");
-};
-
-// Load state when page mounts and test Strapi fetch
-onMounted(() => {
   loadStateFromStorage();
-  // Test Strapi fetch automatically (console only)
-  testStrapiFetch();
+  console.log("Loaded quiz progress state:", {
+    completedQuizzes: Array.from(completedQuizzes.value),
+    contentStatus: Array.from(contentStatus.value.entries()),
+  });
 });
 
 // Reload state when page is activated (e.g., when navigating back from course detail)
@@ -338,18 +230,18 @@ watch(
 
 // Reload state when page is activated (e.g., when navigating back from course detail)
 onActivated(() => {
-    loadStateFromStorage();
+  loadStateFromStorage();
 });
 
 // Cleanup modals before unmount to prevent ref access errors
 onBeforeUnmount(() => {
-    showQuizModal.value = false;
-    showProblemSetModal.value = false;
-    selectedContentId.value = null;
+  showQuizModal.value = false;
+  showProblemSetModal.value = false;
+  selectedContentId.value = null;
 });
 </script>
 <template>
-    <div class="mt-15" style="height: auto; background-color: #f6f6f6">
+  <div class="mt-15" style="height: auto; background-color: #f6f6f6">
     <!-- Main content with consistent alignment -->
     <div class="container mx-auto p-4">
       <v-row>
@@ -476,6 +368,15 @@ onBeforeUnmount(() => {
         :strand-id="strand_ref_id"
         @close="closeQuizModal"
         @start-quiz="startQuiz"
+        @skip-quiz="handleSkipQuiz"
+      />
+
+      <!-- Problem Set Modal -->
+      <ProblemSetModal
+        :is-open="showProblemSetModal"
+        @close="closeProblemSetModal"
+        @start-quiz="startProblemSetQuiz"
+        @skip-quiz="skipProblemSetQuiz"
       />
     </div>
   </div>

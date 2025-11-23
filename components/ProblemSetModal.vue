@@ -8,15 +8,13 @@
     <v-card v-if="isOpen">
       <!-- Header -->
       <v-card-title class="d-flex justify-space-between align-center pa-6 pb-4">
-        <h2 class="text-h5 font-weight-bold text-center flex-grow-1" style="color: #333;">
+        <h2
+          class="text-h5 font-weight-bold text-center flex-grow-1"
+          style="color: #333"
+        >
           A Quick Note Before You Begin
         </h2>
-        <v-btn
-          icon
-          variant="text"
-          size="small"
-          @click="closeModal"
-        >
+        <v-btn icon variant="text" size="small" @click="closeModal">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -24,23 +22,29 @@
       <!-- Illustration -->
       <v-card-text class="pa-6 pb-4">
         <div class="text-center">
-          <img 
-            src="/img/modal2.png" 
-            alt="Problem set illustration" 
-            style="max-width: 400px; width: 100%; margin: 0 auto;"
+          <img
+            src="/img/modal2.png"
+            alt="Problem set illustration"
+            style="max-width: 400px; width: 100%; margin: 0 auto"
           />
         </div>
       </v-card-text>
 
       <!-- Text Content -->
       <v-card-text class="pa-6 pb-6 text-center">
-        <p class="text-body-1 mb-4" style="color: #333; line-height: 1.6;">
-          This quiz is an important part of your learning journey. Please answer the questions honestly and on your own—this helps us truly understand how well the lessons worked for you. Remember, it's okay to make mistakes. What matters most is giving it your best effort.
+        <p class="text-body-1 mb-4" style="color: #333; line-height: 1.6">
+          This quiz is an important part of your learning journey. Please answer
+          the questions honestly and on your own—this helps us truly understand
+          how well the lessons worked for you. Remember, it's okay to make
+          mistakes. What matters most is giving it your best effort.
         </p>
-        <p class="text-body-1 font-weight-bold mb-4" style="color: #333; line-height: 1.6;">
+        <p
+          class="text-body-1 font-weight-bold mb-4"
+          style="color: #333; line-height: 1.6"
+        >
           Let's keep it real. Let's keep it honest.
         </p>
-        <p class="text-body-1" style="color: #333; line-height: 1.6;">
+        <p class="text-body-1" style="color: #333; line-height: 1.6">
           When you're ready, click Start to begin.
         </p>
       </v-card-text>
@@ -53,7 +57,7 @@
           size="large"
           block
           class="text-none font-weight-bold"
-          style="text-transform: uppercase;"
+          style="text-transform: uppercase"
         >
           START QUIZ
         </v-btn>
@@ -63,7 +67,7 @@
           size="large"
           block
           class="text-none font-weight-bold"
-          style="text-transform: uppercase;"
+          style="text-transform: uppercase"
         >
           SKIP QUIZ
         </v-btn>
@@ -76,11 +80,11 @@
 const props = defineProps({
   isOpen: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
-const emit = defineEmits(['close', 'start-quiz', 'skip-quiz']);
+const emit = defineEmits(["close", "start-quiz", "skip-quiz"]);
 
 const handleDialogUpdate = (value) => {
   if (!value) {
@@ -89,17 +93,16 @@ const handleDialogUpdate = (value) => {
 };
 
 const closeModal = () => {
-  emit('close');
+  emit("close");
 };
 
 const startQuiz = () => {
-  emit('start-quiz');
+  emit("start-quiz");
   closeModal();
 };
 
 const skipQuiz = () => {
-  emit('skip-quiz');
+  emit("skip-quiz");
   closeModal();
 };
 </script>
-
