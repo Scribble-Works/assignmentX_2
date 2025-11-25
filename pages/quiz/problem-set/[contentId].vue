@@ -251,12 +251,20 @@
             <p>Questions length: {{ questions.length }}</p>
             <p>Substrand ID: {{ substrandRefId }}</p>
           </div>
-          <button
-            @click="goBackToSubstrand"
-            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Back to Topics
-          </button>
+          <div class="flex flex-col gap-3 items-center">
+            <button
+              @click="debugFetchAllProblemSetQuestions"
+              class="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              🔍 Debug: Fetch All Problem Set Questions
+            </button>
+            <button
+              @click="goBackToSubstrand"
+              class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Back to Topics
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -283,8 +291,7 @@ import { getTopicIdFromSubstrand } from '~/composables/useSubstrandTopicMapping'
 const route = useRoute();
 const router = useRouter();
 const { markQuizCompleted, unmarkQuizCompleted, isQuizCompleted, completedQuizzes } = useQuizProgress();
-// TEMPORARY: Using pre-quiz questions until problem-set-questions model is created
-const { fetchQuizQuestions } = useStrapiQuiz();
+const { fetchProblemSetQuestions } = useStrapiQuiz();
 
 // Note: contentId in route params is the substrand_ref_id
 const substrandRefId = route.params.contentId;
@@ -441,6 +448,157 @@ const goBackToSubstrand = () => {
   router.push(`/learning-modules/preassignment_workbook1/strand-${strandId}/${substrandRoute}`);
 };
 
+// Debug function to fetch all problem set questions
+const debugFetchAllProblemSetQuestions = async () => {
+  const config = useRuntimeConfig();
+  const strapiUrl = config.public.STRAPI_URL || 'http://localhost:1337';
+  
+  console.log('═══════════════════════════════════════════════════════════');
+  console.log('🔍 DEBUG: FETCHING ALL PROBLEM SET QUESTIONS');
+  console.log('═══════════════════════════════════════════════════════════');
+  console.log('');
+  console.log('📋 CONFIGURATION:');
+  console.log('  - Strapi URL:', strapiUrl);
+  console.log('  - Endpoint: /api/problem-set-questions');
+  console.log('');
+  
+  try {
+    console.log('⏳ Calling:', `${strapiUrl}/api/problem-set-questions`);
+    const startTime = Date.now();
+    
+    const response = await $fetch(`${strapiUrl}/api/problem-set-questions`, {
+      params: {
+        'populate': '*'
+      },
+      timeout: 10000
+    });
+    
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    
+    console.log('✅ FETCH COMPLETED in', duration, 'ms');
+    console.log('');
+    console.log('📊 RAW RESPONSE:');
+    console.log(JSON.stringify(response, null, 2));
+    console.log('');
+    
+    if (response?.data) {
+      console.log('📦 DATA FOUND:');
+      console.log('  - Is Array:', Array.isArray(response.data));
+      console.log('  - Length:', response.data?.length || 0);
+      
+      if (response.data.length > 0) {
+        console.log('');
+        console.log('  - First raw item:');
+        console.log(JSON.stringify(response.data[0], null, 2));
+        console.log('');
+        
+        // Transform like the composable does
+        console.log('═══════════════════════════════════════════════════════════');
+        console.log('🔄 TRANSFORMING QUESTIONS (like composable)');
+        console.log('═══════════════════════════════════════════════════════════');
+        console.log('');
+        
+        const transformedQuestions = response.data.map(item => {
+          const questionData = item;
+          
+          // Build options array
+          const options = [
+            questionData.option1,
+            questionData.option2,
+            questionData.option3,
+            questionData.option4
+          ].filter(opt => opt !== null && opt !== undefined && opt !== '');
+          
+          // Convert correctOption enum to index
+          const correctOptionMap = {
+            'one': 0,
+            'two': 1,
+            'three': 2,
+            'four': 3
+          };
+          const correctIndex = correctOptionMap[questionData.correctOption] ?? 0;
+          
+          // Get questionType
+          const questionType = questionData.questionType || 'multiple-choice';
+          
+          return {
+            question: questionData.prompt || questionData.question || '',
+            options: options,
+            correct: correctIndex,
+            questionType: questionType,
+            explanation: questionData.explanation || null
+          };
+        });
+        
+        console.log('✅ TRANSFORMED QUESTIONS:');
+        console.log('  - Count:', transformedQuestions.length);
+        console.log('');
+        console.log('  - First transformed question:');
+        console.log(JSON.stringify(transformedQuestions[0], null, 2));
+        console.log('');
+        console.log('  - ALL TRANSFORMED QUESTIONS:');
+        console.log(JSON.stringify(transformedQuestions, null, 2));
+        
+        // Also try using the composable function
+        console.log('');
+        console.log('═══════════════════════════════════════════════════════════');
+        console.log('🔍 TESTING fetchProblemSetQuestions() COMPOSABLE');
+        console.log('═══════════════════════════════════════════════════════════');
+        console.log('');
+        
+        // Get topic ID for testing
+        const topicId = getTopicIdFromSubstrand(substrandRefId);
+        console.log('  - Substrand ID:', substrandRefId);
+        console.log('  - Mapped Topic ID:', topicId);
+        console.log('');
+        
+        if (topicId) {
+          console.log('⏳ Calling fetchProblemSetQuestions() with topic ID:', topicId);
+          const composableResult = await fetchProblemSetQuestions(topicId);
+          console.log('');
+          console.log('📊 COMPOSABLE RESULT:');
+          console.log('  - Is Null:', composableResult === null);
+          console.log('  - Is Array:', Array.isArray(composableResult));
+          console.log('  - Length:', composableResult?.length || 0);
+          console.log('');
+          if (composableResult && composableResult.length > 0) {
+            console.log('  - First question:', JSON.stringify(composableResult[0], null, 2));
+          }
+        } else {
+          console.log('⚠️ No topic ID mapping found');
+        }
+      } else {
+        console.log('⚠️ Data array is empty');
+      }
+    } else {
+      console.log('⚠️ No data property in response');
+      console.log('Full response structure:', Object.keys(response || {}));
+    }
+  } catch (error) {
+    console.log('');
+    console.log('❌ FETCH FAILED');
+    console.log('');
+    console.log('📊 ERROR DETAILS:');
+    console.error('  - Error:', error);
+    console.error('  - Message:', error.message);
+    if (error.statusCode) {
+      console.error('  - Status Code:', error.statusCode);
+    }
+    if (error.data) {
+      console.error('  - Error Data:', error.data);
+    }
+    if (error.response) {
+      console.error('  - Response:', error.response);
+    }
+  }
+  
+  console.log('');
+  console.log('═══════════════════════════════════════════════════════════');
+  console.log('🏁 DEBUG FETCH - END');
+  console.log('═══════════════════════════════════════════════════════════');
+};
+
 const retakeQuiz = () => {
   currentQuestionIndex.value = 0;
   selectedAnswer.value = null;
@@ -471,9 +629,9 @@ const loadQuestions = async () => {
       return;
     }
     
-    // TEMPORARY: Fetching pre-quiz questions until problem-set-questions model is created
-    console.log(`[Problem Set] 📡 Fetching questions from Strapi for topic ID: ${topicId} (using pre-quiz questions temporarily)`);
-    const strapiQuestions = await fetchQuizQuestions(topicId);
+    // Fetch problem set questions from Strapi
+    console.log(`[Problem Set] 📡 Fetching problem set questions from Strapi for topic ID: ${topicId}`);
+    const strapiQuestions = await fetchProblemSetQuestions(topicId);
     
     console.log(`[Problem Set] 📊 Strapi fetch result:`, {
       isNull: strapiQuestions === null,
@@ -483,13 +641,8 @@ const loadQuestions = async () => {
     });
     
     if (strapiQuestions && strapiQuestions.length > 0) {
-      // TEMPORARY: All questions default to multiple-choice until problem-set model is created
-      // Add questionType to each question (defaulting to multiple-choice for now)
-      questions.value = strapiQuestions.map(q => ({
-        ...q,
-        questionType: q.questionType || 'multiple-choice' // Default to multiple-choice
-      }));
-      console.log(`[Problem Set] ✅ Successfully loaded ${strapiQuestions.length} questions from Strapi (using pre-quiz questions temporarily)`);
+      questions.value = strapiQuestions;
+      console.log(`[Problem Set] ✅ Successfully loaded ${strapiQuestions.length} problem set questions from Strapi`);
       console.log(`[Problem Set] Questions:`, questions.value);
     } else if (strapiQuestions === null) {
       // Strapi returned null (error occurred)
