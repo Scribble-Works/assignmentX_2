@@ -129,18 +129,51 @@ function swapVideo(video) {
                     <v-btn rounded color="grey-darken-3">Video transcription</v-btn>
                 </v-col> -->
       </v-row><br>
-      <v-container style="background-color: #f3f4f6">
+      <div class="mt-10">
+        <h3
+          class="text-h3 mb-5"
+          style="font-family: 'Inter', sans-serif; font-weight: bold"
+        >
+          Worked Exam<span
+            style="text-decoration: underline; text-decoration-color: #fcc30c"
+            >ples</span
+          >
+        </h3>
+        <div style="background-color: #f3f4f6">
+          <div v-if="worked_examples && worked_examples.length > 0">
+            <div v-for="example in worked_examples" :key="example.id">
+              <v-container>
+                <v-img
+                  class="mt-10 mb-10"
+                  :src="example.url"
+                  alt="Worked Example"
+                ></v-img>
+              </v-container>
+            </div>
+          </div>
+          <div v-else>
+            <v-container>
+              <v-img
+                class="mt-10 mb-10"
+                src="/img/Worked_Examples.png"
+                alt="No worked examples available"
+              ></v-img>
+            </v-container>
+          </div>
+        </div>
+      </div>
+      <v-container class="mt-10" style="background-color: #f3f4f6">
         <div class="mt-10">
           <h5
             class="text-h5 text-center"
             style="font-family: 'Inter', sans-serif; font-weight: bold"
           >
-            Flip Card Compare Game
+            Gamified Learning
           </h5>
           <br />
           <!-- <p class="text-center">Time Left: 20s</p> -->
           <br />
-          <p class="text-center"><v-icon>mdi-clock</v-icon> Score: 2/4</p>
+          <!-- <p class="text-center"><v-icon>mdi-clock</v-icon> Score: 2/4</p> -->
         </div>
 
         <iframe

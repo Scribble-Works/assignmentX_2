@@ -153,17 +153,25 @@ function swapVideo(video) {
           >
         </h3>
         <div style="background-color: #f3f4f6">
-          <div v-for="example in worked_examples" :key="example.id">
-            <div class="mt-0">
+          <div v-if="worked_examples && worked_examples.length > 0">
+            <div v-for="example in worked_examples" :key="example.id">
               <v-container>
                 <v-img
                   class="mt-10 mb-10"
                   :src="example.url"
-                  :alt="`Worked Example ${example.id}`"
-                  @error="example.url = '/default-image.png'"
+                  alt="Worked Example"
                 ></v-img>
               </v-container>
             </div>
+          </div>
+          <div v-else>
+            <v-container>
+              <v-img
+                class="mt-10 mb-10"
+                src="/img/Worked_Examples.png"
+                alt="No worked examples available"
+              ></v-img>
+            </v-container>
           </div>
         </div>
       </div>
@@ -175,7 +183,8 @@ function swapVideo(video) {
             style="text-decoration: underline; text-decoration-color: #fcc30c"
             >fun</span
           >
-        </h3><br />
+        </h3>
+        <br />
         <v-container style="background-color: #f3f4f6">
           <div class="mt-10">
             <h5
