@@ -2,14 +2,32 @@
   <div class="min-h-screen bg-gray-50 py-8">
     <div class="container mx-auto px-4 max-w-4xl">
       <!-- Quiz Header -->
-      <div v-if="!loading && questions && Array.isArray(questions) && questions.length > 0" class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <div
+        v-if="
+          !loading &&
+          questions &&
+          Array.isArray(questions) &&
+          questions.length > 0
+        "
+        class="bg-white rounded-lg shadow-md p-6 mb-6"
+      >
         <div class="flex justify-between items-center mb-4">
           <button
             @click="goBackToSubstrand"
             class="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
           >
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            <svg
+              class="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
             Back to Topics
           </button>
@@ -23,21 +41,43 @@
               class="p-2 text-gray-600 hover:text-gray-800 transition-colors rounded-full hover:bg-gray-100"
               :title="isAudioPlaying ? 'Mute audio' : 'Unmute audio'"
             >
-              <svg v-if="isAudioPlaying" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.793L4.617 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.617l3.766-3.793a1 1 0 011.617.793zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd" />
+              <svg
+                v-if="isAudioPlaying"
+                class="w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.793L4.617 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.617l3.766-3.793a1 1 0 011.617.793zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z"
+                  clip-rule="evenodd"
+                />
               </svg>
-              <svg v-else class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.793L4.617 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.617l3.766-3.793a1 1 0 011.617.793zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd" />
-                <path d="M3.28 2.22a.75.75 0 00-1.06 1.06l14.5 14.5a.75.75 0 101.06-1.06L3.28 2.22z" />
+              <svg
+                v-else
+                class="w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.793L4.617 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.617l3.766-3.793a1 1 0 011.617.793zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z"
+                  clip-rule="evenodd"
+                />
+                <path
+                  d="M3.28 2.22a.75.75 0 00-1.06 1.06l14.5 14.5a.75.75 0 101.06-1.06L3.28 2.22z"
+                />
               </svg>
             </button>
           </div>
         </div>
         <div class="mt-4">
           <div class="w-full bg-gray-200 rounded-full h-2">
-            <div 
+            <div
               class="bg-blue-600 h-2 rounded-full transition-all duration-300"
-              :style="{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }"
+              :style="{
+                width: `${((currentQuestionIndex + 1) / questions.length) * 100}%`,
+              }"
             ></div>
           </div>
         </div>
@@ -46,7 +86,9 @@
       <!-- Loading State -->
       <div v-if="loading" class="bg-white rounded-lg shadow-md p-6 text-center">
         <div class="flex flex-col items-center justify-center py-12">
-          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+          <div
+            class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"
+          ></div>
           <p class="text-gray-600">Loading problem set questions...</p>
         </div>
       </div>
@@ -56,9 +98,9 @@
         <div class="text-center">
           <!-- Result Image -->
           <div class="mb-6">
-            <img 
-              src="/img/modalImg1.png" 
-              alt="Quiz completion" 
+            <img
+              src="/img/modalImg1.png"
+              alt="Quiz completion"
               class="w-32 h-32 mx-auto"
             />
           </div>
@@ -67,13 +109,14 @@
           <h2 class="text-3xl font-bold text-gray-800 mb-4">
             Problem Set Completed!
           </h2>
-          
+
           <div class="mb-6">
             <div class="text-6xl font-bold text-blue-600 mb-2">
               {{ score }}%
             </div>
             <p class="text-gray-600">
-              You got {{ correctAnswers }} out of {{ questions.length }} questions correct
+              You got {{ correctAnswers }} out of
+              {{ questions.length }} questions correct
             </p>
           </div>
 
@@ -82,7 +125,10 @@
             <p v-if="score >= 80" class="text-green-600 font-semibold text-lg">
               Excellent! You've mastered this problem set.
             </p>
-            <p v-else-if="score >= 60" class="text-yellow-600 font-semibold text-lg">
+            <p
+              v-else-if="score >= 60"
+              class="text-yellow-600 font-semibold text-lg"
+            >
               Good work! You have a solid understanding.
             </p>
             <p v-else class="text-red-600 font-semibold text-lg">
@@ -98,7 +144,7 @@
             >
               Back to Topics
             </button>
-            
+
             <button
               @click="retakeQuiz"
               class="w-full bg-gray-200 text-gray-800 py-3 px-6 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
@@ -110,17 +156,20 @@
       </div>
 
       <!-- Quiz Content -->
-      <div v-else-if="questions.length > 0" class="bg-white rounded-lg shadow-md p-6">
+      <div
+        v-else-if="questions.length > 0"
+        class="bg-white rounded-lg shadow-md p-6"
+      >
         <!-- Question -->
         <div class="mb-8" v-if="currentQuestion">
           <h2 class="text-xl font-semibold text-gray-800 mb-4">
             {{ currentQuestion.question }}
           </h2>
-          
+
           <!-- Question Image (if exists) -->
           <div v-if="currentQuestion.image" class="mb-6">
-            <img 
-              :src="currentQuestion.image" 
+            <img
+              :src="currentQuestion.image"
               :alt="currentQuestion.question"
               class="max-w-full h-auto rounded-lg"
             />
@@ -128,28 +177,33 @@
         </div>
 
         <!-- Multiple Choice / True-False Answer Options -->
-        <div v-if="currentQuestion && isMultipleChoiceQuestion" class="space-y-3 mb-6">
+        <div
+          v-if="currentQuestion && isMultipleChoiceQuestion"
+          class="space-y-3 mb-6"
+        >
           <div
             v-for="(option, index) in currentQuestion.options"
             :key="index"
             @click="selectAnswer(index)"
             :class="[
               'p-4 border-2 rounded-lg cursor-pointer transition-all duration-200',
-              selectedAnswer === index 
-                ? 'border-blue-500 bg-blue-50' 
-                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+              selectedAnswer === index
+                ? 'border-blue-500 bg-blue-50'
+                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50',
             ]"
           >
             <div class="flex items-center">
-              <div 
+              <div
                 :class="[
                   'w-6 h-6 rounded-full border-2 mr-3 flex items-center justify-center',
-                  selectedAnswer === index 
-                    ? 'border-blue-500 bg-blue-500' 
-                    : 'border-gray-300'
+                  selectedAnswer === index
+                    ? 'border-blue-500 bg-blue-500'
+                    : 'border-gray-300',
                 ]"
               >
-                <span v-if="selectedAnswer === index" class="text-white text-sm">✓</span>
+                <span v-if="selectedAnswer === index" class="text-white text-sm"
+                  >✓</span
+                >
               </div>
               <span class="text-gray-800">{{ option }}</span>
             </div>
@@ -157,7 +211,13 @@
         </div>
 
         <!-- Fill in the Blank - Single Input -->
-        <div v-else-if="currentQuestion && currentQuestion.questionType === 'Fill in the blank'" class="mb-6">
+        <div
+          v-else-if="
+            currentQuestion &&
+            currentQuestion.questionType === 'Fill in the blank'
+          "
+          class="mb-6"
+        >
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700 mb-2">
               Enter your answer:
@@ -173,14 +233,26 @@
         </div>
 
         <!-- Multiple Blanks - Multiple Inputs -->
-        <div v-else-if="currentQuestion && currentQuestion.questionType === 'Multiple blanks'" class="mb-6">
+        <div
+          v-else-if="
+            currentQuestion &&
+            currentQuestion.questionType === 'Multiple blanks'
+          "
+          class="mb-6"
+        >
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700 mb-3">
               Fill in all the blanks:
             </label>
             <div class="space-y-3">
-              <div v-for="(blank, index) in blankCount" :key="index" class="flex items-center gap-3">
-                <span class="text-gray-600 font-medium min-w-[80px]">Blank {{ index + 1 }}:</span>
+              <div
+                v-for="(blank, index) in blankCount"
+                :key="index"
+                class="flex items-center gap-3"
+              >
+                <span class="text-gray-600 font-medium min-w-[80px]"
+                  >Blank {{ index + 1 }}:</span
+                >
                 <input
                   type="text"
                   v-model="multipleAnswers[index]"
@@ -205,14 +277,18 @@
           <div v-else></div>
 
           <button
-            v-if="questions && Array.isArray(questions) && currentQuestionIndex < questions.length - 1"
+            v-if="
+              questions &&
+              Array.isArray(questions) &&
+              currentQuestionIndex < questions.length - 1
+            "
             @click="nextQuestion"
             :disabled="!isAnswerValid"
             :class="[
               'px-6 py-2 rounded-lg transition-colors',
               !isAnswerValid
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-blue-600 text-white hover:bg-blue-700'
+                : 'bg-blue-600 text-white hover:bg-blue-700',
             ]"
           >
             Next
@@ -225,7 +301,7 @@
               'px-6 py-2 rounded-lg transition-colors',
               !isAnswerValid
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-green-600 text-white hover:bg-green-700'
+                : 'bg-green-600 text-white hover:bg-green-700',
             ]"
           >
             Complete Problem Set
@@ -236,7 +312,9 @@
       <!-- No Questions Available -->
       <div v-else class="bg-white rounded-lg shadow-md p-6">
         <div class="text-center py-12">
-          <p class="text-gray-600 mb-4">No problem set questions available for this content.</p>
+          <p class="text-gray-600 mb-4">
+            No problem set questions available for this content.
+          </p>
           <button
             @click="goBackToSubstrand"
             class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -246,26 +324,29 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Background Audio -->
     <audio
       ref="backgroundAudio"
       loop
       preload="auto"
       muted
-      style="display: none;"
+      style="display: none"
     >
-      <source src="/audio/Afro-Pop-Summer-Chill_AdobeStock_1614197958_preview.m4a" type="audio/mp4">
+      <source
+        src="/audio/Afro-Pop-Summer-Chill_AdobeStock_1614197958_preview.m4a"
+        type="audio/mp4"
+      />
       Your browser does not support the audio element.
     </audio>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
-import { useStrapiQuiz } from '~/composables/useStrapiQuiz';
-import { getTopicIdFromSubstrand } from '~/composables/useSubstrandTopicMapping';
-import { useQuizProgress } from '~/composables/useQuizProgress';
+import { ref, computed, onMounted, onUnmounted } from "vue";
+import { useStrapiQuiz } from "~/composables/useStrapiQuiz";
+import { getTopicIdFromSubstrand } from "~/composables/useSubstrandTopicMapping";
+import { useQuizProgress } from "~/composables/useQuizProgress";
 
 const route = useRoute();
 const router = useRouter();
@@ -274,17 +355,18 @@ const { saveQuizScore } = useQuizProgress();
 
 // Note: contentId in route params is the substrand_ref_id
 const substrandRefId = route.params.contentId;
-const substrandRoute = route.query.substrand || 'substrand-number-and-numeration-system';
-const strandId = route.query.strand || '1';
+const substrandRoute =
+  route.query.substrand || "substrand-number-and-numeration-system";
+const strandId = route.query.strand || "1";
 
 // Validate substrandRefId exists
 if (!substrandRefId) {
-  console.error('Substrand ID is missing from route params');
+  console.error("Substrand ID is missing from route params");
 }
 
 const currentQuestionIndex = ref(0);
 const selectedAnswer = ref(null); // For multiple choice
-const manualAnswer = ref(''); // For fill in the blank (single)
+const manualAnswer = ref(""); // For fill in the blank (single)
 const multipleAnswers = ref([]); // For multiple blanks
 const answers = ref([]); // Store all answers
 const quizCompleted = ref(false);
@@ -310,21 +392,29 @@ const currentQuestion = computed(() => {
 const isMultipleChoiceQuestion = computed(() => {
   if (!currentQuestion.value) return false;
   const type = currentQuestion.value.questionType;
-  return !type || type === 'MCQ' || type === 'True/False' || type === 'multiple-choice';
+  return (
+    !type ||
+    type === "MCQ" ||
+    type === "True/False" ||
+    type === "multiple-choice"
+  );
 });
 
 // Count number of blanks for multiple blanks questions
 const blankCount = computed(() => {
-  if (!currentQuestion.value || currentQuestion.value.questionType !== 'Multiple blanks') {
+  if (
+    !currentQuestion.value ||
+    currentQuestion.value.questionType !== "Multiple blanks"
+  ) {
     return 0;
   }
   // Count underscores in the question or use correctAnswer format (comma-separated)
-  const correctAnswer = currentQuestion.value.correctAnswer || '';
-  if (correctAnswer.includes(',')) {
-    return correctAnswer.split(',').length;
+  const correctAnswer = currentQuestion.value.correctAnswer || "";
+  if (correctAnswer.includes(",")) {
+    return correctAnswer.split(",").length;
   }
   // Count underscores in the prompt
-  const prompt = currentQuestion.value.question || '';
+  const prompt = currentQuestion.value.question || "";
   const underscoreCount = (prompt.match(/_/g) || []).length;
   return Math.max(underscoreCount, 2); // At least 2 blanks for multiple blanks
 });
@@ -332,43 +422,54 @@ const blankCount = computed(() => {
 // Check if current answer is valid
 const isAnswerValid = computed(() => {
   if (!currentQuestion.value) return false;
-  
-  const questionType = currentQuestion.value.questionType || 'MCQ';
-  
+
+  const questionType = currentQuestion.value.questionType || "MCQ";
+
   // MCQ or True/False - need selected answer
-  if (questionType === 'MCQ' || questionType === 'True/False' || questionType === 'multiple-choice') {
+  if (
+    questionType === "MCQ" ||
+    questionType === "True/False" ||
+    questionType === "multiple-choice"
+  ) {
     return selectedAnswer.value !== null;
   }
-  
+
   // Fill in the blank - need text input
-  if (questionType === 'Fill in the blank') {
-    return manualAnswer.value.trim() !== '';
+  if (questionType === "Fill in the blank") {
+    return manualAnswer.value.trim() !== "";
   }
-  
+
   // Multiple blanks - all blanks must be filled
-  if (questionType === 'Multiple blanks') {
-    return multipleAnswers.value.length >= blankCount.value && 
-           multipleAnswers.value.slice(0, blankCount.value).every(a => a && a.trim() !== '');
+  if (questionType === "Multiple blanks") {
+    return (
+      multipleAnswers.value.length >= blankCount.value &&
+      multipleAnswers.value
+        .slice(0, blankCount.value)
+        .every((a) => a && a.trim() !== "")
+    );
   }
-  
+
   return false;
 });
 
 const selectAnswer = (index) => {
   selectedAnswer.value = index;
-  answers.value[currentQuestionIndex.value] = { type: 'choice', value: index };
+  answers.value[currentQuestionIndex.value] = { type: "choice", value: index };
 };
 
 const updateManualAnswer = () => {
   // Store the manual answer for fill in the blank
-  answers.value[currentQuestionIndex.value] = { type: 'text', value: manualAnswer.value.trim() };
+  answers.value[currentQuestionIndex.value] = {
+    type: "text",
+    value: manualAnswer.value.trim(),
+  };
 };
 
 const updateMultipleAnswers = () => {
   // Store all answers for multiple blanks
-  answers.value[currentQuestionIndex.value] = { 
-    type: 'multiple', 
-    value: [...multipleAnswers.value].map(a => (a || '').trim())
+  answers.value[currentQuestionIndex.value] = {
+    type: "multiple",
+    value: [...multipleAnswers.value].map((a) => (a || "").trim()),
   };
 };
 
@@ -391,29 +492,33 @@ const previousQuestion = () => {
 const resetCurrentAnswer = () => {
   const savedAnswer = answers.value[currentQuestionIndex.value];
   const question = questions.value[currentQuestionIndex.value];
-  
+
   // Reset all input types first
   selectedAnswer.value = null;
-  manualAnswer.value = '';
+  manualAnswer.value = "";
   multipleAnswers.value = [];
-  
+
   if (question) {
-    const questionType = question.questionType || 'MCQ';
-    
-    if (questionType === 'MCQ' || questionType === 'True/False' || questionType === 'multiple-choice') {
-      if (savedAnswer && savedAnswer.type === 'choice') {
+    const questionType = question.questionType || "MCQ";
+
+    if (
+      questionType === "MCQ" ||
+      questionType === "True/False" ||
+      questionType === "multiple-choice"
+    ) {
+      if (savedAnswer && savedAnswer.type === "choice") {
         selectedAnswer.value = savedAnswer.value;
       }
-    } else if (questionType === 'Fill in the blank') {
-      if (savedAnswer && savedAnswer.type === 'text') {
-        manualAnswer.value = savedAnswer.value || '';
+    } else if (questionType === "Fill in the blank") {
+      if (savedAnswer && savedAnswer.type === "text") {
+        manualAnswer.value = savedAnswer.value || "";
       }
-    } else if (questionType === 'Multiple blanks') {
-      if (savedAnswer && savedAnswer.type === 'multiple') {
+    } else if (questionType === "Multiple blanks") {
+      if (savedAnswer && savedAnswer.type === "multiple") {
         multipleAnswers.value = savedAnswer.value || [];
       } else {
         // Initialize with empty strings for each blank
-        multipleAnswers.value = new Array(blankCount.value).fill('');
+        multipleAnswers.value = new Array(blankCount.value).fill("");
       }
     }
   }
@@ -421,65 +526,80 @@ const resetCurrentAnswer = () => {
 
 const completeQuiz = () => {
   if (!isAnswerValid.value) return;
-  
+
   // Calculate score
   let correct = 0;
   answers.value.forEach((answer, index) => {
     const question = questions.value[index];
     if (!question || !answer) return;
-    
-    const questionType = question.questionType || 'MCQ';
-    
+
+    const questionType = question.questionType || "MCQ";
+
     // MCQ or True/False - compare selected index with correct index
-    if (questionType === 'MCQ' || questionType === 'True/False' || questionType === 'multiple-choice') {
-      if (answer.type === 'choice' && answer.value === question.correct) {
+    if (
+      questionType === "MCQ" ||
+      questionType === "True/False" ||
+      questionType === "multiple-choice"
+    ) {
+      if (answer.type === "choice" && answer.value === question.correct) {
         correct++;
       }
     }
     // Fill in the blank - compare text with correctAnswer field
-    else if (questionType === 'Fill in the blank') {
-      const correctAnswer = question.correctAnswer || '';
-      if (answer.type === 'text' && answer.value) {
+    else if (questionType === "Fill in the blank") {
+      const correctAnswer = question.correctAnswer || "";
+      if (answer.type === "text" && answer.value) {
         // Case-insensitive comparison, trim whitespace
-        if (answer.value.toLowerCase().trim() === correctAnswer.toLowerCase().trim()) {
+        if (
+          answer.value.toLowerCase().trim() ===
+          correctAnswer.toLowerCase().trim()
+        ) {
           correct++;
         }
       }
     }
     // Multiple blanks - compare each blank answer
-    else if (questionType === 'Multiple blanks') {
-      const correctAnswers = (question.correctAnswer || '').split(',').map(a => a.trim().toLowerCase());
-      if (answer.type === 'multiple' && answer.value) {
-        const userAnswers = answer.value.map(a => (a || '').toLowerCase().trim());
+    else if (questionType === "Multiple blanks") {
+      const correctAnswers = (question.correctAnswer || "")
+        .split(",")
+        .map((a) => a.trim().toLowerCase());
+      if (answer.type === "multiple" && answer.value) {
+        const userAnswers = answer.value.map((a) =>
+          (a || "").toLowerCase().trim(),
+        );
         // Check if all answers match
-        const allCorrect = correctAnswers.every((ca, i) => userAnswers[i] === ca);
+        const allCorrect = correctAnswers.every(
+          (ca, i) => userAnswers[i] === ca,
+        );
         if (allCorrect) {
           correct++;
         }
       }
     }
   });
-  
+
   correctAnswers.value = correct;
   score.value = Math.round((correct / questions.value.length) * 100);
   quizCompleted.value = true;
-  
+
   // Save post-quiz score to localStorage
-  saveQuizScore(substrandRefId, 'postQuiz', {
+  saveQuizScore(substrandRefId, "postQuiz", {
     score: score.value,
     correctAnswers: correct,
-    totalQuestions: questions.value.length
+    totalQuestions: questions.value.length,
   });
 };
 
 const goBackToSubstrand = () => {
-  router.push(`/learning-modules/preassignment_workbook1/strand-${strandId}/${substrandRoute}`);
+  router.push(
+    `/learning-modules/preassignment_workbook1/strand-${strandId}/${substrandRoute}`,
+  );
 };
 
 const retakeQuiz = () => {
   currentQuestionIndex.value = 0;
   selectedAnswer.value = null;
-  manualAnswer.value = '';
+  manualAnswer.value = "";
   multipleAnswers.value = [];
   answers.value = new Array(questions.value.length).fill(null);
   quizCompleted.value = false;
@@ -491,56 +611,77 @@ const retakeQuiz = () => {
 // Fetch problem set questions from Strapi
 const loadQuestions = async () => {
   loading.value = true;
-  
+
   try {
     // DEBUG ONLY: log all questions from Strapi when Start Quiz is clicked
     await fetchAllQuestionsDebug();
-    
-    console.log(`[Problem Set] 🚀 Starting to load questions for substrand: ${substrandRefId}`);
+
+    console.log(
+      `[Problem Set] 🚀 Starting to load questions for substrand: ${substrandRefId}`,
+    );
     console.log(`[Problem Set] 📍 Current route:`, route.path);
-    
+
     // Map substrand ID to Strapi topic ID
     const topicId = getTopicIdFromSubstrand(substrandRefId);
-    
+
     if (!topicId) {
-      console.error(`[Problem Set] ❌ No topic ID mapping found for substrand ${substrandRefId}`);
-      console.error(`[Problem Set] Please add mapping in useSubstrandTopicMapping.js`);
+      console.error(
+        `[Problem Set] ❌ No topic ID mapping found for substrand ${substrandRefId}`,
+      );
+      console.error(
+        `[Problem Set] Please add mapping in useSubstrandTopicMapping.js`,
+      );
       questions.value = [];
       loading.value = false;
       return;
     }
-    
+
     // Fetch problem set questions from Strapi
-    console.log(`[Problem Set] 📡 Fetching problem set questions from Strapi for topic ID: ${topicId}`);
+    console.log(
+      `[Problem Set] 📡 Fetching problem set questions from Strapi for topic ID: ${topicId}`,
+    );
     const strapiQuestions = await fetchProblemSetQuestions(topicId);
-    
+
     console.log(`[Problem Set] 📊 Strapi fetch result:`, {
       isNull: strapiQuestions === null,
       isEmpty: Array.isArray(strapiQuestions) && strapiQuestions.length === 0,
       hasQuestions: strapiQuestions && strapiQuestions.length > 0,
-      length: strapiQuestions?.length || 0
+      length: strapiQuestions?.length || 0,
     });
-    
+
     if (strapiQuestions && strapiQuestions.length > 0) {
       questions.value = strapiQuestions;
-      console.log(`[Problem Set] ✅ Successfully loaded ${strapiQuestions.length} problem set questions from Strapi`);
+      console.log(
+        `[Problem Set] ✅ Successfully loaded ${strapiQuestions.length} problem set questions from Strapi`,
+      );
       console.log(`[Problem Set] Questions:`, questions.value);
     } else if (strapiQuestions === null) {
       // Strapi returned null (error occurred)
       console.error(`[Problem Set] ❌ ❌ ❌ STRAPI REQUEST FAILED ❌ ❌ ❌`);
-      console.error(`[Problem Set] ❌ Strapi returned null - check Strapi connection and topic ID`);
+      console.error(
+        `[Problem Set] ❌ Strapi returned null - check Strapi connection and topic ID`,
+      );
       questions.value = [];
     } else {
       // Strapi returned empty array (no questions found)
-      console.error(`[Problem Set] ❌ ❌ ❌ NO QUESTIONS FOUND IN STRAPI ❌ ❌ ❌`);
-      console.error(`[Problem Set] ❌ No questions found in Strapi for topic ID: ${topicId}`);
-      console.error(`[Problem Set] Make sure questions are added to this topic in Strapi`);
+      console.error(
+        `[Problem Set] ❌ ❌ ❌ NO QUESTIONS FOUND IN STRAPI ❌ ❌ ❌`,
+      );
+      console.error(
+        `[Problem Set] ❌ No questions found in Strapi for topic ID: ${topicId}`,
+      );
+      console.error(
+        `[Problem Set] Make sure questions are added to this topic in Strapi`,
+      );
       questions.value = [];
     }
   } catch (error) {
-    console.error('[Problem Set] ❌ ❌ ❌ UNEXPECTED ERROR ❌ ❌ ❌');
-    console.error('[Problem Set] ❌ Unexpected error loading questions:', error);
-    console.error('[Problem Set] Error stack:', error.stack);
+    console.error("[Problem Set] ❌ ❌ ❌ UNEXPECTED ERROR ❌ ❌ ❌");
+    console.error(
+      "[Problem Set] ❌ Unexpected error loading questions:",
+      error,
+    );
+    console.error("[Problem Set] Error stack:", error.stack);
     questions.value = [];
   } finally {
     loading.value = false;
@@ -553,11 +694,15 @@ const loadQuestions = async () => {
       answers.value = new Array(questions.value.length).fill(null);
       // Reset current answer after questions are loaded
       resetCurrentAnswer();
-      console.log(`[Problem Set] ✅ Initialized problem set with ${questions.value.length} questions`);
-      
+      console.log(
+        `[Problem Set] ✅ Initialized problem set with ${questions.value.length} questions`,
+      );
+
       // Audio is muted by default - user can toggle it on if they want
     } else {
-      console.warn(`[Problem Set] ⚠️ No questions available for substrand: ${substrandRefId}`);
+      console.warn(
+        `[Problem Set] ⚠️ No questions available for substrand: ${substrandRefId}`,
+      );
     }
   }
 };
@@ -569,15 +714,15 @@ const playBackgroundAudio = async () => {
       // Set volume (0.0 to 1.0, adjust as needed)
       backgroundAudio.value.volume = 0.3; // 30% volume - adjust to your preference
       backgroundAudio.value.muted = false; // Unmute before playing
-      
+
       // Play the audio
       await backgroundAudio.value.play();
       isAudioPlaying.value = true;
-      console.log('[Problem Set] 🎵 Background audio started');
+      console.log("[Problem Set] 🎵 Background audio started");
     } catch (error) {
       // Some browsers require user interaction before playing audio
-      console.warn('[Problem Set] ⚠️ Could not autoplay audio:', error);
-      console.warn('[Problem Set] Audio will play after user interaction');
+      console.warn("[Problem Set] ⚠️ Could not autoplay audio:", error);
+      console.warn("[Problem Set] Audio will play after user interaction");
       isAudioPlaying.value = false;
     }
   }
@@ -588,7 +733,7 @@ const pauseBackgroundAudio = () => {
     backgroundAudio.value.pause();
     backgroundAudio.value.muted = true; // Mute when pausing
     isAudioPlaying.value = false;
-    console.log('[Problem Set] 🎵 Background audio paused');
+    console.log("[Problem Set] 🎵 Background audio paused");
   }
 };
 
@@ -598,13 +743,13 @@ const stopBackgroundAudio = () => {
     backgroundAudio.value.currentTime = 0;
     backgroundAudio.value.muted = true; // Mute when stopping
     isAudioPlaying.value = false;
-    console.log('[Problem Set] 🎵 Background audio stopped');
+    console.log("[Problem Set] 🎵 Background audio stopped");
   }
 };
 
 const toggleAudio = async () => {
   if (!backgroundAudio.value) return;
-  
+
   if (isAudioPlaying.value) {
     // Mute and pause audio
     backgroundAudio.value.muted = true;
@@ -616,20 +761,22 @@ const toggleAudio = async () => {
       backgroundAudio.value.volume = 0.3; // Set volume to 30%
       await backgroundAudio.value.play();
       isAudioPlaying.value = true;
-      console.log('[Problem Set] 🎵 Background audio started');
+      console.log("[Problem Set] 🎵 Background audio started");
     } catch (error) {
-      console.warn('[Problem Set] ⚠️ Could not play audio:', error);
+      console.warn("[Problem Set] ⚠️ Could not play audio:", error);
     }
   }
 };
 
 // Check if problem set is already completed on mount
 onMounted(() => {
-  console.log(`[Problem Set] 🚀 Component mounted for substrand: ${substrandRefId}`);
+  console.log(
+    `[Problem Set] 🚀 Component mounted for substrand: ${substrandRefId}`,
+  );
   console.log(`[Problem Set] 📍 Route path:`, route.path);
   console.log(`[Problem Set] 📝 Route params:`, route.params);
   console.log(`[Problem Set] 🔍 Route query:`, route.query);
-  
+
   loadQuestions();
 });
 
@@ -638,4 +785,3 @@ onUnmounted(() => {
   stopBackgroundAudio();
 });
 </script>
-

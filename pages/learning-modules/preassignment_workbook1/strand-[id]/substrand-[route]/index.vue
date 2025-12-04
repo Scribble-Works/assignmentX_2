@@ -36,9 +36,6 @@ const {
   loadStateFromStorage,
 } = useQuizProgress();
 
-// Use Strapi quiz composable for testing
-const { fetchQuizQuestions } = useStrapiQuiz();
-
 const { data: substrand } = await client
   .from("preassignment_workbook1_strand_substrands_lists")
   .select()
