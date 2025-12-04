@@ -90,21 +90,6 @@
             </p>
           </div>
 
-          <!-- Mark as Completed Checkbox -->
-          <div class="mb-8 flex items-center justify-center">
-            <label class="flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                v-model="markAsCompleted"
-                @change="handleMarkAsCompleted"
-                class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-              />
-              <span class="ml-3 text-gray-700 font-medium">
-                Mark problem set as completed
-              </span>
-            </label>
-          </div>
-
           <!-- Action Buttons -->
           <div class="space-y-4">
             <button
@@ -291,13 +276,11 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-import { useQuizProgress } from '~/composables/useQuizProgress';
 import { useStrapiQuiz } from '~/composables/useStrapiQuiz';
 import { getTopicIdFromSubstrand } from '~/composables/useSubstrandTopicMapping';
 
 const route = useRoute();
 const router = useRouter();
-const { markQuizCompleted, unmarkQuizCompleted, isQuizCompleted, completedQuizzes } = useQuizProgress();
 const { fetchProblemSetQuestions } = useStrapiQuiz();
 
 // Note: contentId in route params is the substrand_ref_id
@@ -319,7 +302,6 @@ const quizCompleted = ref(false);
 const score = ref(0);
 const correctAnswers = ref(0);
 const loading = ref(true);
-const markAsCompleted = ref(false);
 
 // Initialize questions as empty array
 const questions = ref([]);
@@ -492,20 +474,6 @@ const completeQuiz = () => {
   correctAnswers.value = correct;
   score.value = Math.round((correct / questions.value.length) * 100);
   quizCompleted.value = true;
-};
-
-// Handle checkbox change to mark/unmark problem set as completed
-const handleMarkAsCompleted = () => {
-  const problemSetKey = `problem-set-${substrandRefId}`;
-  
-  if (markAsCompleted.value) {
-    markQuizCompleted(problemSetKey);
-    console.log(`Problem set marked as completed for substrand: ${substrandRefId}`);
-  } else {
-    unmarkQuizCompleted(problemSetKey);
-    console.log(`Problem set unmarked as completed for substrand: ${substrandRefId}`);
-  }
-  console.log(`Current completed quizzes:`, Array.from(completedQuizzes.value));
 };
 
 const goBackToSubstrand = () => {
@@ -808,8 +776,6 @@ onMounted(() => {
   console.log(`[Problem Set] 🔍 Route query:`, route.query);
   
   loadQuestions();
-  const problemSetKey = `problem-set-${substrandRefId}`;
-  markAsCompleted.value = isQuizCompleted(problemSetKey);
 });
 
 // Clean up audio when component unmounts
