@@ -142,8 +142,8 @@
           </div>
         </div>
 
-        <!-- Multiple Choice Answer Options -->
-        <div v-if="currentQuestion && (currentQuestion.questionType === 'multiple-choice' || !currentQuestion.questionType)" class="space-y-3 mb-6">
+        <!-- Multiple Choice / True-False Answer Options -->
+        <div v-if="currentQuestion && isMultipleChoiceQuestion" class="space-y-3 mb-6">
           <div
             v-for="(option, index) in currentQuestion.options"
             :key="index"
@@ -171,8 +171,8 @@
           </div>
         </div>
 
-        <!-- Manual Entry Answer Input -->
-        <div v-else-if="currentQuestion && currentQuestion.questionType === 'manual-entry'" class="mb-6">
+        <!-- Fill in the Blank - Single Input -->
+        <div v-else-if="currentQuestion && currentQuestion.questionType === 'Fill in the blank'" class="mb-6">
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700 mb-2">
               Enter your answer:
@@ -180,23 +180,30 @@
             <input
               type="text"
               v-model="manualAnswer"
-              @input="validateManualAnswer"
+              @input="updateManualAnswer"
               placeholder="Type your answer here..."
-              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-colors"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-colors text-lg"
             />
           </div>
-          
-          <!-- Show options as hints/reference (optional) -->
-          <div v-if="currentQuestion.options && currentQuestion.options.length > 0" class="mt-4">
-            <p class="text-sm text-gray-600 mb-2">Reference options:</p>
-            <div class="flex flex-wrap gap-2">
-              <span
-                v-for="(option, index) in currentQuestion.options"
-                :key="index"
-                class="px-3 py-1 bg-gray-100 text-gray-700 rounded-md text-sm"
-              >
-                {{ option }}
-              </span>
+        </div>
+
+        <!-- Multiple Blanks - Multiple Inputs -->
+        <div v-else-if="currentQuestion && currentQuestion.questionType === 'Multiple blanks'" class="mb-6">
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-3">
+              Fill in all the blanks:
+            </label>
+            <div class="space-y-3">
+              <div v-for="(blank, index) in blankCount" :key="index" class="flex items-center gap-3">
+                <span class="text-gray-600 font-medium min-w-[80px]">Blank {{ index + 1 }}:</span>
+                <input
+                  type="text"
+                  v-model="multipleAnswers[index]"
+                  @input="updateMultipleAnswers"
+                  :placeholder="`Answer for blank ${index + 1}`"
+                  class="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-colors"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -305,8 +312,9 @@ if (!substrandRefId) {
 
 const currentQuestionIndex = ref(0);
 const selectedAnswer = ref(null); // For multiple choice
-const manualAnswer = ref(''); // For manual entry
-const answers = ref([]); // Store all answers (index for multiple choice, string for manual entry)
+const manualAnswer = ref(''); // For fill in the blank (single)
+const multipleAnswers = ref([]); // For multiple blanks
+const answers = ref([]); // Store all answers
 const quizCompleted = ref(false);
 const score = ref(0);
 const correctAnswers = ref(0);
@@ -327,17 +335,49 @@ const currentQuestion = computed(() => {
   return questions.value[currentQuestionIndex.value] || null;
 });
 
+// Check if question is multiple choice type (MCQ or True/False)
+const isMultipleChoiceQuestion = computed(() => {
+  if (!currentQuestion.value) return false;
+  const type = currentQuestion.value.questionType;
+  return !type || type === 'MCQ' || type === 'True/False' || type === 'multiple-choice';
+});
+
+// Count number of blanks for multiple blanks questions
+const blankCount = computed(() => {
+  if (!currentQuestion.value || currentQuestion.value.questionType !== 'Multiple blanks') {
+    return 0;
+  }
+  // Count underscores in the question or use correctAnswer format (comma-separated)
+  const correctAnswer = currentQuestion.value.correctAnswer || '';
+  if (correctAnswer.includes(',')) {
+    return correctAnswer.split(',').length;
+  }
+  // Count underscores in the prompt
+  const prompt = currentQuestion.value.question || '';
+  const underscoreCount = (prompt.match(/_/g) || []).length;
+  return Math.max(underscoreCount, 2); // At least 2 blanks for multiple blanks
+});
+
 // Check if current answer is valid
 const isAnswerValid = computed(() => {
   if (!currentQuestion.value) return false;
   
-  // Default to multiple-choice if questionType is not specified (for pre-quiz questions)
-  const questionType = currentQuestion.value.questionType || 'multiple-choice';
+  const questionType = currentQuestion.value.questionType || 'MCQ';
   
-  if (questionType === 'multiple-choice') {
+  // MCQ or True/False - need selected answer
+  if (questionType === 'MCQ' || questionType === 'True/False' || questionType === 'multiple-choice') {
     return selectedAnswer.value !== null;
-  } else if (questionType === 'manual-entry') {
+  }
+  
+  // Fill in the blank - need text input
+  if (questionType === 'Fill in the blank') {
     return manualAnswer.value.trim() !== '';
+  }
+  
+  // Multiple blanks - all blanks must be filled
+  if (questionType === 'Multiple blanks') {
+    return multipleAnswers.value.length >= blankCount.value && 
+           multipleAnswers.value.slice(0, blankCount.value).every(a => a && a.trim() !== '');
   }
   
   return false;
@@ -345,24 +385,20 @@ const isAnswerValid = computed(() => {
 
 const selectAnswer = (index) => {
   selectedAnswer.value = index;
-  answers.value[currentQuestionIndex.value] = index;
+  answers.value[currentQuestionIndex.value] = { type: 'choice', value: index };
 };
 
-const validateManualAnswer = () => {
-  // Store the manual answer
-  answers.value[currentQuestionIndex.value] = manualAnswer.value.trim();
-  
-  // Check if the answer matches any of the options (case-insensitive, trimmed)
-  if (currentQuestion.value && currentQuestion.value.options) {
-    const userAnswer = manualAnswer.value.trim().toLowerCase();
-    const correctOptionIndex = currentQuestion.value.correct;
-    const correctOption = currentQuestion.value.options[correctOptionIndex];
-    
-    if (correctOption && userAnswer === correctOption.toLowerCase().trim()) {
-      // Answer matches the correct option
-      console.log('Answer matches correct option!');
-    }
-  }
+const updateManualAnswer = () => {
+  // Store the manual answer for fill in the blank
+  answers.value[currentQuestionIndex.value] = { type: 'text', value: manualAnswer.value.trim() };
+};
+
+const updateMultipleAnswers = () => {
+  // Store all answers for multiple blanks
+  answers.value[currentQuestionIndex.value] = { 
+    type: 'multiple', 
+    value: [...multipleAnswers.value].map(a => (a || '').trim())
+  };
 };
 
 const nextQuestion = () => {
@@ -385,16 +421,29 @@ const resetCurrentAnswer = () => {
   const savedAnswer = answers.value[currentQuestionIndex.value];
   const question = questions.value[currentQuestionIndex.value];
   
+  // Reset all input types first
+  selectedAnswer.value = null;
+  manualAnswer.value = '';
+  multipleAnswers.value = [];
+  
   if (question) {
-    // Default to multiple-choice if questionType is not specified (for pre-quiz questions)
-    const questionType = question.questionType || 'multiple-choice';
+    const questionType = question.questionType || 'MCQ';
     
-    if (questionType === 'multiple-choice') {
-      selectedAnswer.value = savedAnswer !== undefined ? savedAnswer : null;
-      manualAnswer.value = '';
-    } else if (questionType === 'manual-entry') {
-      manualAnswer.value = savedAnswer || '';
-      selectedAnswer.value = null;
+    if (questionType === 'MCQ' || questionType === 'True/False' || questionType === 'multiple-choice') {
+      if (savedAnswer && savedAnswer.type === 'choice') {
+        selectedAnswer.value = savedAnswer.value;
+      }
+    } else if (questionType === 'Fill in the blank') {
+      if (savedAnswer && savedAnswer.type === 'text') {
+        manualAnswer.value = savedAnswer.value || '';
+      }
+    } else if (questionType === 'Multiple blanks') {
+      if (savedAnswer && savedAnswer.type === 'multiple') {
+        multipleAnswers.value = savedAnswer.value || [];
+      } else {
+        // Initialize with empty strings for each blank
+        multipleAnswers.value = new Array(blankCount.value).fill('');
+      }
     }
   }
 };
@@ -406,21 +455,36 @@ const completeQuiz = () => {
   let correct = 0;
   answers.value.forEach((answer, index) => {
     const question = questions.value[index];
-    if (!question) return;
+    if (!question || !answer) return;
     
-    // Default to multiple-choice if questionType is not specified (for pre-quiz questions)
-    const questionType = question.questionType || 'multiple-choice';
+    const questionType = question.questionType || 'MCQ';
     
-    if (questionType === 'multiple-choice') {
-      // For multiple choice, answer is an index
-      if (answer === question.correct) {
+    // MCQ or True/False - compare selected index with correct index
+    if (questionType === 'MCQ' || questionType === 'True/False' || questionType === 'multiple-choice') {
+      if (answer.type === 'choice' && answer.value === question.correct) {
         correct++;
       }
-    } else if (questionType === 'manual-entry') {
-      // For manual entry, answer is a string - compare with correct option
-      const correctOption = question.options[question.correct];
-      if (correctOption && answer && answer.toLowerCase().trim() === correctOption.toLowerCase().trim()) {
-        correct++;
+    }
+    // Fill in the blank - compare text with correctAnswer field
+    else if (questionType === 'Fill in the blank') {
+      const correctAnswer = question.correctAnswer || '';
+      if (answer.type === 'text' && answer.value) {
+        // Case-insensitive comparison, trim whitespace
+        if (answer.value.toLowerCase().trim() === correctAnswer.toLowerCase().trim()) {
+          correct++;
+        }
+      }
+    }
+    // Multiple blanks - compare each blank answer
+    else if (questionType === 'Multiple blanks') {
+      const correctAnswers = (question.correctAnswer || '').split(',').map(a => a.trim().toLowerCase());
+      if (answer.type === 'multiple' && answer.value) {
+        const userAnswers = answer.value.map(a => (a || '').toLowerCase().trim());
+        // Check if all answers match
+        const allCorrect = correctAnswers.every((ca, i) => userAnswers[i] === ca);
+        if (allCorrect) {
+          correct++;
+        }
       }
     }
   });
@@ -603,6 +667,7 @@ const retakeQuiz = () => {
   currentQuestionIndex.value = 0;
   selectedAnswer.value = null;
   manualAnswer.value = '';
+  multipleAnswers.value = [];
   answers.value = new Array(questions.value.length).fill(null);
   quizCompleted.value = false;
   score.value = 0;

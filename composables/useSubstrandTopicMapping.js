@@ -8,16 +8,21 @@
  */
 const substrandToTopicMapping = {
   // Mappings: { substrand_ref_id: strapi_topic_id }
-  // Based on your Strapi data:
-  // - Topic ID 9: "Whole Numbers Counting and Representation" (has 4 questions)
-  // - Topic ID 10: "Number: Ratio and Proportions" (has 3 questions)
-  // - Topic ID 11: "Fractions, Representations and Relationships" (has 2 questions)
+  // Actual Strapi Topic IDs:
+  // - Topic ID 2: "Whole Numbers Counting and Representation"
+  // - Topic ID 4: "Whole Numbers Operations"
+  // - Topic ID 6: "Fractions, Representation and Relationship"
+  // - Topic ID 8: "Number: Ratios and Proportion"
+  // - Topic ID 10: "Demonstrate an understanding of percent"
   
-  2: 9,  // Substrand 2 -> Topic 9 (Whole Numbers Counting and Representation)
-  4: 10, // Substrand 4 -> Topic 10 (Number: Ratio and Proportions)
-  // Add more mappings as needed:
-  // 1: 9,  // Example: if substrand 1 also maps to topic 9
-  // 3: 11, // Example: if substrand 3 maps to topic 11
+  // Update these mappings based on your Supabase substrand IDs
+  // Format: substrand_id: strapi_topic_id
+  2: 2,  // Substrand 2 -> Topic 2 (Whole Numbers Counting and Representation)
+  3: 4,  // Substrand 3 -> Topic 4 (Whole Numbers Operations)
+  4: 8,  // Substrand 4 -> Topic 8 (Number: Ratios and Proportion) - FIXED
+  5: 6,  // Substrand 5 -> Topic 6 (Fractions, Representation and Relationship)
+  6: 10, // Substrand 6 -> Topic 10 (Percent)
+  // Add more mappings as needed based on your Supabase substrand IDs
 };
 
 /**
