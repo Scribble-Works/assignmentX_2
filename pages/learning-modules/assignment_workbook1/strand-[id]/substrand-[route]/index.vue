@@ -229,7 +229,7 @@ const substrand_ls = computed(() => {
                                 <p>
                                     Now it’s your turn to apply what you’ve learned. These problems
                                     challenge you to think, connect ideas, and solve real-world
-                                    situations using math. There might be more than one way — so be
+                                    situations using maths. There might be more than one way — so be
                                     bold, be creative, and show the wow!
                                 </p>
                                 <v-btn @click="solveProblem" class="mt-5" color="blue-grey-darken-4">Solve Problem
@@ -250,7 +250,7 @@ const substrand_ls = computed(() => {
                                 <p>
                                     Now it’s your turn to apply what you’ve learned. These problems
                                     challenge you to think, connect ideas, and solve real-world
-                                    situations using math. There might be more than one way — so be
+                                    situations using maths. There might be more than one way — so be
                                     bold, be creative, and show the wow!
                                 </p>
                                 <v-btn @click="solveProblem" class="mt-5" color="blue-grey-darken-4">Solve Problem

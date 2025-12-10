@@ -142,7 +142,7 @@ function swapVideo(video) {
                 </v-col> -->
       </v-row>
 
-      <div class="mt-10">
+      <div class="mt-15">
         <h3
           class="text-h3 mb-5"
           style="font-family: 'Inter', sans-serif; font-weight: bold"
@@ -176,9 +176,9 @@ function swapVideo(video) {
         </div>
       </div>
 
-      <div class="mt-10">
-        <h3 class="text-h3 mb-10" style="font-family: 'Inter', sans-serif">
-          Now Let's have some math
+      <div class="mt-15">
+        <h3 class="text-h3 mb-0" style="font-family: 'Inter', sans-serif; font-weight: bold">
+          Now Let's have some maths
           <span
             style="text-decoration: underline; text-decoration-color: #fcc30c"
             >fun</span

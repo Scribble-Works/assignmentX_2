@@ -273,7 +273,7 @@ const testimonials = [
             <v-col sm="9" lg="9" md="9">
               <h5 class="text-h5">Curriculum-aligned content</h5>
               <p>
-                Specifically tailored for Ghanaian JHS (B4–B9), ensuring
+                Specifically tailored for Ghanaian basic schools(B4 - B9), ensuring
                 relevance to local educational standards.
               </p>
             </v-col>
@@ -312,7 +312,7 @@ const testimonials = [
         <h3 class="text-h3">Not Just Numbers - Real Results</h3>
         <br />
         <p>
-          We could talk about impact all day—but we’d rather let our users do
+          We could talk about impact all day, but we’d rather let our users do
           the talking.
         </p>
         <br />
