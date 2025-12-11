@@ -17,6 +17,7 @@ const alert = ref(false);
 const text = ref("");
 
 const show = ref(false);
+const show2 = ref(false);
 const rules = {
   required: (value) => !!value || "Required.",
   min: (v) => v.length >= 8 || "Min 8 characters",
@@ -155,10 +156,10 @@ const closeAlert = () => {
             <v-label>Confirm Password</v-label><br /><br />
             <v-text-field
               v-model="confPassword"
-              :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
-              @click:append-inner="show = !show"
+              :append-inner-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
+              @click:append-inner="show2 = !show2"
               :rules="[rules.required, rules.min]"
-              :type="show ? 'text' : 'password'"
+              :type="show2 ? 'text' : 'password'"
               placeholder="Confirm your password"
               variant="outlined"
             ></v-text-field
