@@ -126,7 +126,7 @@ function swapVideo(video) {
           </div>
         </v-col>
       </v-row>
-      <v-row class="mt-n5 mr-10">
+      <v-row class="mt-n5 mr-0">
         <v-col cols="" lg="6" sm="12" md="3">
           <v-btn @click="openNotes" rounded color="grey-darken-3"
             >Concept Note</v-btn

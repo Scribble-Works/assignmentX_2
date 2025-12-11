@@ -4,7 +4,7 @@ const props = defineProps({
 });
 </script>
 <template>
-    <div style="position: relative; width: 100%; height: 43%; padding-top: 62.25%; padding-bottom: 0;
+    <div style="position: relative; width: 100%; height: 60%; padding-top: 52.25%; padding-bottom: 0;
                         box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; overflow: hidden;
                         border-radius: 8px; will-change: transform;">
         <iframe :src="url" frameborder="0" width="100%" height="auto"
