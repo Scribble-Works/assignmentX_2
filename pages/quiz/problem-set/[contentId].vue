@@ -266,6 +266,7 @@
       ref="backgroundAudio"
       loop
       preload="auto"
+      muted
       style="display: none;"
     >
       <source src="/audio/Afro-Pop-Summer-Chill_AdobeStock_1614197958_preview.m4a" type="audio/mp4">
@@ -278,10 +279,12 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useStrapiQuiz } from '~/composables/useStrapiQuiz';
 import { getTopicIdFromSubstrand } from '~/composables/useSubstrandTopicMapping';
+import { useQuizProgress } from '~/composables/useQuizProgress';
 
 const route = useRoute();
 const router = useRouter();
 const { fetchProblemSetQuestions } = useStrapiQuiz();
+const { saveQuizScore } = useQuizProgress();
 
 // Note: contentId in route params is the substrand_ref_id
 const substrandRefId = route.params.contentId;
@@ -474,6 +477,13 @@ const completeQuiz = () => {
   correctAnswers.value = correct;
   score.value = Math.round((correct / questions.value.length) * 100);
   quizCompleted.value = true;
+  
+  // Save post-quiz score to localStorage
+  saveQuizScore(substrandRefId, 'postQuiz', {
+    score: score.value,
+    correctAnswers: correct,
+    totalQuestions: questions.value.length
+  });
 };
 
 const goBackToSubstrand = () => {
@@ -707,20 +717,20 @@ const loadQuestions = async () => {
       resetCurrentAnswer();
       console.log(`[Problem Set] ✅ Initialized problem set with ${questions.value.length} questions`);
       
-      // Start playing background audio when questions are loaded
-      playBackgroundAudio();
+      // Audio is muted by default - user can toggle it on if they want
     } else {
       console.warn(`[Problem Set] ⚠️ No questions available for substrand: ${substrandRefId}`);
     }
   }
 };
 
-// Background audio functions
+// Background audio functions (kept for potential future use)
 const playBackgroundAudio = async () => {
   if (backgroundAudio.value && process.client) {
     try {
       // Set volume (0.0 to 1.0, adjust as needed)
       backgroundAudio.value.volume = 0.3; // 30% volume - adjust to your preference
+      backgroundAudio.value.muted = false; // Unmute before playing
       
       // Play the audio
       await backgroundAudio.value.play();
@@ -738,6 +748,7 @@ const playBackgroundAudio = async () => {
 const pauseBackgroundAudio = () => {
   if (backgroundAudio.value) {
     backgroundAudio.value.pause();
+    backgroundAudio.value.muted = true; // Mute when pausing
     isAudioPlaying.value = false;
     console.log('[Problem Set] 🎵 Background audio paused');
   }
@@ -747,6 +758,7 @@ const stopBackgroundAudio = () => {
   if (backgroundAudio.value) {
     backgroundAudio.value.pause();
     backgroundAudio.value.currentTime = 0;
+    backgroundAudio.value.muted = true; // Mute when stopping
     isAudioPlaying.value = false;
     console.log('[Problem Set] 🎵 Background audio stopped');
   }
@@ -756,12 +768,17 @@ const toggleAudio = async () => {
   if (!backgroundAudio.value) return;
   
   if (isAudioPlaying.value) {
+    // Mute and pause audio
+    backgroundAudio.value.muted = true;
     pauseBackgroundAudio();
   } else {
     try {
+      // Unmute and play audio
+      backgroundAudio.value.muted = false;
+      backgroundAudio.value.volume = 0.3; // Set volume to 30%
       await backgroundAudio.value.play();
       isAudioPlaying.value = true;
-      console.log('[Problem Set] 🎵 Background audio resumed');
+      console.log('[Problem Set] 🎵 Background audio started');
     } catch (error) {
       console.warn('[Problem Set] ⚠️ Could not play audio:', error);
     }

@@ -194,9 +194,9 @@ onActivated(() => {
                         </div>
                     </div> -->
                 </v-col>
-                <!-- <v-col cols="" lg="4" sm="12" align="right">
-                    <v-btn to="/progress" color="primary">View Progress Report</v-btn>
-                </v-col> -->
+                <v-col cols="" lg="4" sm="12" align="right">
+                    <v-btn :to="`/progress?topic=${encodeURIComponent(title)}&substrandId=${substrand_ref_id}`" color="primary">View Progress Report</v-btn>
+                </v-col>
             </v-row>
             <ConceptNotes :concept-note="conceptNote" />
             

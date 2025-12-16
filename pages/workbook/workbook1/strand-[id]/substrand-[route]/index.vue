@@ -158,7 +158,7 @@ watch(contentStatus, (newStatus) => {
           </div>
         </v-col>
         <v-col cols="4" align="right">
-          <v-btn to="/progress" color="primary">View Progress Report</v-btn>
+          <v-btn :to="`/progress?topic=${encodeURIComponent(title)}&substrandId=${substrand_ref_id}`" color="primary">View Progress Report</v-btn>
         </v-col>
       </v-row>
       <ConceptNotes :concept-note="conceptNote" />

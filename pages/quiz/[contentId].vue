@@ -228,7 +228,7 @@ import { getTopicIdFromSubstrand } from '~/composables/useSubstrandTopicMapping'
 
 const route = useRoute();
 const router = useRouter();
-const { markQuizCompleted, unmarkQuizCompleted, isQuizCompleted, completedQuizzes } = useQuizProgress();
+const { markQuizCompleted, unmarkQuizCompleted, isQuizCompleted, completedQuizzes, saveQuizScore } = useQuizProgress();
 const { fetchQuizQuestions } = useStrapiQuiz();
 
 // Note: contentId in route params is actually the substrand_ref_id (since quiz is per substrand)
@@ -295,6 +295,13 @@ const completeQuiz = () => {
     correctAnswers.value = correct;
     score.value = Math.round((correct / questions.value.length) * 100);
     quizCompleted.value = true;
+    
+    // Save pre-quiz score to localStorage
+    saveQuizScore(substrandRefId, 'preQuiz', {
+      score: score.value,
+      correctAnswers: correct,
+      totalQuestions: questions.value.length
+    });
     
     // Only mark as completed if checkbox is checked (user will check it on results page)
     // Don't auto-mark here, let user decide on results page

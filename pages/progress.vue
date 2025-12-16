@@ -1,120 +1,455 @@
 <script setup>
-const previewImages = [
-  "/img/1_Identifying even, odd, prime and composite numbers_1.png",
-  "/img/2_Finding prime factors of natural numbers_2.png",
-  "/img/3_Finding the HCF of natural numbers_3.png",
-  "/img/4_Finding the LCM of natural numbers_4.png",
-  "/img/5_Addition and subtraction of whole numbers_5.png",
-];
+import { ref, computed, onMounted } from 'vue';
+import { useQuizProgress } from '~/composables/useQuizProgress';
+
+const route = useRoute();
+
+const { 
+  getAllQuizScores,
+  getSubstrandScores,
+  getAggregatedScores, 
+  getProficiencyLevel,
+  loadStateFromStorage 
+} = useQuizProgress();
+
+// Get topic info from query params
+const topicName = computed(() => route.query.topic ? decodeURIComponent(route.query.topic) : null);
+const substrandId = computed(() => route.query.substrandId || null);
+
+// Reactive data
+const allScores = ref([]);
+const currentScores = ref(null);
+const isLoading = ref(true);
+
+// Computed values for display - use specific substrand scores if available, otherwise aggregated
+const preQuizScore = computed(() => {
+  if (currentScores.value?.preQuiz) {
+    return currentScores.value.preQuiz.score;
+  }
+  return 0;
+});
+
+const postQuizScore = computed(() => {
+  if (currentScores.value?.postQuiz) {
+    return currentScores.value.postQuiz.score;
+  }
+  return 0;
+});
+
+const hasPreQuiz = computed(() => currentScores.value?.preQuiz !== undefined);
+const hasPostQuiz = computed(() => currentScores.value?.postQuiz !== undefined);
+
+const preQuizProficiency = computed(() => getProficiencyLevel(hasPreQuiz.value ? preQuizScore.value : null));
+const postQuizProficiency = computed(() => getProficiencyLevel(hasPostQuiz.value ? postQuizScore.value : null));
+
+// Final proficiency is based on post-quiz score, or pre-quiz if no post-quiz
+const finalProficiency = computed(() => {
+  if (hasPostQuiz.value) {
+    return getProficiencyLevel(postQuizScore.value);
+  }
+  if (hasPreQuiz.value) {
+    return getProficiencyLevel(preQuizScore.value);
+  }
+  return getProficiencyLevel(null);
+});
+
+// Check if there's any data
+const hasData = computed(() => {
+  return hasPreQuiz.value || hasPostQuiz.value;
+});
+
+// Display title - use topic name from query or stored topic name
+const displayTitle = computed(() => {
+  if (topicName.value) {
+    return topicName.value;
+  }
+  if (currentScores.value?.topicName) {
+    return currentScores.value.topicName;
+  }
+  return 'Your Learning Progress';
+});
+
+// Download report as PDF
+const downloadReport = async () => {
+  // Create a printable version of the report
+  const reportContent = generateReportHTML();
+  
+  // Create a new window for printing
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(reportContent);
+  printWindow.document.close();
+  
+  // Wait for content to load then trigger print
+  printWindow.onload = () => {
+    printWindow.print();
+  };
+};
+
+// Generate HTML content for the report
+const generateReportHTML = () => {
+  const currentDate = new Date().toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+  
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Progress Report - ${displayTitle.value}</title>
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+          padding: 40px; 
+          color: #1e293b;
+          line-height: 1.6;
+        }
+        .header { 
+          text-align: center; 
+          margin-bottom: 40px; 
+          border-bottom: 3px solid #2563eb;
+          padding-bottom: 20px;
+        }
+        .header h1 { 
+          font-size: 28px; 
+          color: #1e293b; 
+          margin-bottom: 8px;
+        }
+        .header h2 { 
+          font-size: 18px; 
+          color: #475569; 
+          font-weight: 500;
+          text-transform: uppercase;
+        }
+        .header .date { 
+          font-size: 14px; 
+          color: #64748b; 
+          margin-top: 10px;
+        }
+        .section { 
+          margin-bottom: 30px; 
+          padding: 20px; 
+          background: #f8fafc; 
+          border-radius: 8px;
+        }
+        .section-title { 
+          font-size: 18px; 
+          font-weight: 600; 
+          margin-bottom: 15px; 
+          color: #334155;
+        }
+        .score-row { 
+          display: flex; 
+          justify-content: space-between; 
+          align-items: center;
+          padding: 12px 0;
+          border-bottom: 1px solid #e2e8f0;
+        }
+        .score-row:last-child { border-bottom: none; }
+        .score-label { font-weight: 500; color: #475569; }
+        .score-value { 
+          font-weight: 700; 
+          font-size: 18px;
+          color: #1e293b;
+        }
+        .score-value.pre { color: #dc2626; }
+        .score-value.post { color: #16a34a; }
+        .proficiency-box {
+          background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+          color: white;
+          padding: 25px;
+          border-radius: 12px;
+          text-align: center;
+          margin-top: 30px;
+        }
+        .proficiency-box h3 { 
+          font-size: 16px; 
+          opacity: 0.9; 
+          margin-bottom: 8px;
+        }
+        .proficiency-box .level { 
+          font-size: 24px; 
+          font-weight: 700;
+          margin-bottom: 10px;
+        }
+        .proficiency-box p { 
+          font-size: 14px; 
+          opacity: 0.9;
+          max-width: 500px;
+          margin: 0 auto;
+        }
+        .progress-bar-container {
+          margin: 15px 0;
+        }
+        .progress-bar {
+          height: 20px;
+          background: #e2e8f0;
+          border-radius: 10px;
+          overflow: hidden;
+          margin-top: 8px;
+        }
+        .progress-fill {
+          height: 100%;
+          border-radius: 10px;
+          transition: width 0.3s;
+        }
+        .progress-fill.pre { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+        .progress-fill.post { background: linear-gradient(90deg, #22c55e, #16a34a); }
+        .improvement {
+          text-align: center;
+          padding: 20px;
+          background: #ecfdf5;
+          border-radius: 8px;
+          margin-top: 20px;
+        }
+        .improvement .value {
+          font-size: 32px;
+          font-weight: 700;
+          color: #16a34a;
+        }
+        .improvement .label {
+          color: #166534;
+          font-size: 14px;
+        }
+        .footer {
+          margin-top: 40px;
+          text-align: center;
+          font-size: 12px;
+          color: #94a3b8;
+        }
+        @media print {
+          body { padding: 20px; }
+          .section { break-inside: avoid; }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h1>📊 Progress Report</h1>
+        <h2>${displayTitle.value}</h2>
+        <div class="date">Generated on ${currentDate}</div>
+      </div>
+      
+      <div class="section">
+        <div class="section-title">📝 Pre-Lesson Assessment</div>
+        <div class="score-row">
+          <span class="score-label">Score</span>
+          <span class="score-value pre">${hasPreQuiz.value ? preQuizScore.value + '%' : 'Not taken'}</span>
+        </div>
+        <div class="score-row">
+          <span class="score-label">Proficiency Level</span>
+          <span class="score-value">${preQuizProficiency.value.level} (${preQuizProficiency.value.code})</span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar">
+            <div class="progress-fill pre" style="width: ${hasPreQuiz.value ? preQuizScore.value : 0}%"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="section">
+        <div class="section-title">✅ Post-Lesson Assessment</div>
+        <div class="score-row">
+          <span class="score-label">Score</span>
+          <span class="score-value post">${hasPostQuiz.value ? postQuizScore.value + '%' : 'Not taken'}</span>
+        </div>
+        <div class="score-row">
+          <span class="score-label">Proficiency Level</span>
+          <span class="score-value">${postQuizProficiency.value.level} (${postQuizProficiency.value.code})</span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar">
+            <div class="progress-fill post" style="width: ${hasPostQuiz.value ? postQuizScore.value : 0}%"></div>
+          </div>
+        </div>
+      </div>
+      
+      ${hasPreQuiz.value && hasPostQuiz.value ? `
+      <div class="improvement">
+        <div class="value">+${Math.max(0, postQuizScore.value - preQuizScore.value)}%</div>
+        <div class="label">Improvement from Pre to Post Assessment</div>
+      </div>
+      ` : ''}
+      
+      <div class="proficiency-box">
+        <h3>Overall Proficiency Level</h3>
+        <div class="level">${finalProficiency.value.level} (${finalProficiency.value.code})</div>
+        <p>${finalProficiency.value.description}</p>
+      </div>
+      
+      <div class="footer">
+        <p>This report was generated by Assignment X Learning Platform</p>
+      </div>
+    </body>
+    </html>
+  `;
+};
+
+// Load data on mount
+onMounted(() => {
+  loadStateFromStorage();
+  
+  // Small delay to ensure localStorage is loaded
+  setTimeout(() => {
+    allScores.value = getAllQuizScores();
+    
+    // If we have a specific substrandId, get scores for that substrand
+    if (substrandId.value) {
+      currentScores.value = getSubstrandScores(substrandId.value);
+    } else {
+      // Otherwise, try to get the first available scores
+      if (allScores.value.length > 0) {
+        currentScores.value = allScores.value[0];
+      }
+    }
+    
+    isLoading.value = false;
+  }, 100);
+});
 </script>
 
 <template>
-  <div class="min-h-screen bg-grey-100">
-    <div class="max-w-7xl mx-auto px-4 py-8">
+  <div class="min-h-screen bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 py-8">
       <!-- Header -->
-      <div className="text-left mb-16">
-        <h1 className="text-4xl md:text-5xl font-bold text-slate-800 mb-6">
-          Progress Report - Numbers
+      <div class="text-left mb-12">
+        <h1 class="text-3xl md:text-4xl font-bold text-slate-800 mb-2">
+          Progress Report - {{ displayTitle }}
         </h1>
-        <h2 className="text-xl md:text-2xl font-semibold text-slate-700 mb-6">
-          NUMBER AND NUMERATION SYSTEMS
+        <h2 class="text-lg md:text-xl font-semibold text-slate-700 mb-4 uppercase">
+          {{ displayTitle }}
         </h2>
-        <p className="text-sm text-slate-600 max-w-4xl ">
-          Look how far you’ve come!This page shows how much you’ve improved by
-          comparing what you knew before the lesson and what you know now. It’s
-          proof that learning is happening, one topic at a time.
+        <p class="text-sm text-slate-600 max-w-3xl">
+          Look how far you've come!
+          This page shows how much you've improved by comparing what you knew before the lesson and what you know now. It's proof that learning is happening — one topic at a time.
         </p>
       </div>
 
-      <!-- Progress Bar -->
+      <!-- Loading State -->
+      <div v-if="isLoading" class="flex justify-center items-center py-20">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+
+      <!-- No Data State -->
+      <div v-else-if="!hasData" class="bg-white rounded-xl shadow-lg p-8 text-center mb-8">
+        <div class="text-6xl mb-4">📝</div>
+        <h3 class="text-xl font-semibold text-slate-800 mb-2">No Quiz Data Yet</h3>
+        <p class="text-slate-600 mb-2">
+          <span v-if="topicName">You haven't completed any quizzes for <strong>{{ topicName }}</strong> yet.</span>
+          <span v-else>Complete a pre-quiz or post-quiz to see your progress report here.</span>
+        </p>
+        <p class="text-slate-500 text-sm mb-6">
+          Take a pre-quiz before your lesson and a post-quiz (problem set) after to track your improvement!
+        </p>
+        <v-btn
+          to="/learning-modules/preassignment_workbook1/"
+          color="primary"
+          size="large"
+        >
+          Start Learning
+        </v-btn>
+      </div>
+
+      <!-- Progress Data -->
+      <div v-else>
+        <!-- Pre-Lesson Score Card -->
       <v-sheet
-        class="d-flex flex-column align-center px-4 py-8 mx-auto bg-white mb-16 shadow-lg"
-        color="#181a1b"
-        max-width="503m"
-        rounded="lg"
+          class="d-flex flex-column px-6 py-6 mx-auto bg-white mb-8 shadow-lg"
+          rounded="xl"
       >
-        <div class="flex w-full justify-between items-center mb-4">
-          <div class="ms-4 text-h6">Pre-Lesson</div>
-          <div>
-            <div class="ms-4 text-h6">40%</div>
-            <div class="ms-4 text-h6">Developing(D)</div>
+          <div class="flex justify-between items-center mb-4">
+            <div class="text-xl font-semibold text-slate-800">Pre-Lesson</div>
+            <div class="text-right">
+              <div v-if="hasPreQuiz" class="text-2xl font-bold text-slate-800">
+                {{ preQuizScore }}%
+              </div>
+              <div v-else class="text-xl font-bold text-slate-400">
+                N/A
+              </div>
+              <div v-if="hasPreQuiz" class="text-sm font-medium text-slate-600">
+                {{ preQuizProficiency.level }}({{ preQuizProficiency.code }})
+              </div>
+            </div>
           </div>
-        </div>
+          
+          <!-- Progress Bar -->
         <v-progress-linear
-          :location="null"
-          bg-color="#92aed9"
-          buffer-color="#fcc30c"
-          buffer-opacity="1"
-          buffer-value="3"
-          color="#12512a"
+            :model-value="hasPreQuiz ? preQuizScore : 0"
           height="40"
-          max="9"
-          min="0"
-          model-value="4"
           rounded
+            bg-color="#e5e7eb"
+            color="#eab308"
         ></v-progress-linear>
       </v-sheet>
 
+        <!-- Post-Lesson Score Card -->
       <v-sheet
-        class="d-flex flex-column align-center px-4 py-8 mx-auto bg-white mb-16 shadow-lg"
-        color="#181a1b"
-        max-width="503m"
-        rounded="lg"
+          class="d-flex flex-column px-6 py-6 mx-auto bg-white mb-8 shadow-lg"
+          rounded="xl"
       >
-        <div class="flex w-full justify-between items-center mb-4">
-          <div class="ms-4 text-h6">Post Lesson</div>
-          <div>
-            <div class="ms-4 text-h6">80%</div>
-            <div class="ms-4 text-h6">Highly Proficient(P)</div>
+          <div class="flex justify-between items-center mb-4">
+            <div class="text-xl font-semibold text-slate-800">Post-Lesson</div>
+            <div class="text-right">
+              <div v-if="hasPostQuiz" class="text-2xl font-bold text-slate-800">
+                {{ postQuizScore }}%
+              </div>
+              <div v-else class="text-xl font-bold text-slate-400">
+                N/A
+              </div>
+              <div v-if="hasPostQuiz" class="text-sm font-medium text-slate-600">
+                {{ postQuizProficiency.level }}({{ postQuizProficiency.code }})
+              </div>
+            </div>
           </div>
-        </div>
+          
+          <!-- Progress Bar -->
         <v-progress-linear
-          :location="null"
-          bg-color="#92aed9"
-          buffer-color="#6a3e0b"
-          buffer-opacity="1"
-          buffer-value="3"
-          color="#12512a"
+            :model-value="hasPostQuiz ? postQuizScore : 0"
           height="40"
-          max="9"
-          min="0"
-          model-value="8"
           rounded
+            bg-color="#e5e7eb"
+            color="#16a34a"
         ></v-progress-linear>
       </v-sheet>
 
-      <div class="bg-white py-8 px-6 rounded-lg shadow-sm">
-        <h4>Your proficiency level is: Highly Proficient(HP)</h4>
-        <p class="text-sm text-slate-600 max-w-4xl">
-          Interpretation: Learner shows a high level of proficiency in
-          knowledge, skills and values and can transfer them automatically and
-          flexibly through authentic performance tasks.
+        <!-- Final Proficiency Level -->
+        <div class="bg-white py-8 px-6 rounded-xl shadow-lg mb-8">
+          <h4 class="text-lg font-semibold text-slate-800 mb-3">
+            Your proficiency level is: {{ finalProficiency.level }}({{ finalProficiency.code }})
+          </h4>
+          <p class="text-sm text-slate-600 mb-6">
+            <span class="font-semibold">Interpretation:</span> {{ finalProficiency.description }}
         </p>
 
         <v-btn
-          to="/workbook/"
+            @click="downloadReport"
           size="large"
-          class="text-white rounded-sm text-subtitle-1 mt-6"
+            class="text-white rounded-sm text-subtitle-1"
           style="background-color: #2563eb"
         >
           Download Report
         </v-btn>
       </div>
 
-      <div class="flex flex-col md:flex-row gap-8 items-center mt-16">
+      </div>
+
+      <!-- Call to Action -->
+      <div class="flex flex-col md:flex-row gap-8 items-center mt-8">
         <div class="">
           <img
             src="/img/cuate.png"
             alt="Banner"
-            class="w-full object-cover h-64 md:h-[600px]"
+            class="w-full object-cover h-64 md:h-[400px]"
           />
         </div>
         <div class="">
-          <p>Need a push?</p>
+          <p class="text-slate-600 mb-2">Need a push?</p>
           <v-btn
             to="/livesession/"
             size="large"
-            class="text-white rounded-sm text-subtitle-1 mt-6"
+            class="text-white rounded-lg text-subtitle-1"
             style="background-color: #4c9f38"
           >
             Join a live session
@@ -125,7 +460,7 @@ const previewImages = [
   </div>
 </template>
 
-<style>
+<style scoped>
 .product {
   max-width: 1200px;
   margin: 0 auto;
