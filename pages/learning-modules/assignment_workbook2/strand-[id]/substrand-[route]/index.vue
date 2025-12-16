@@ -33,7 +33,12 @@ const { data: strands } = await client
   .from("book1_strands")
   .select()
   .eq("substrand_ref", substrand_ref_id);
-const { data: unsortedSubstrand_ls } = await client .from("book2_substrand_indicators") .select() .eq("substrand_ref", substrand_ref_id); const title = substrand[0].title; const conceptNote = strands[0].concept_notes;
+const { data: unsortedSubstrand_ls } = await client
+  .from("book2_substrand_indicators")
+  .select()
+  .eq("substrand_ref", substrand_ref_id);
+const title = substrand[0].title;
+const conceptNote = strands[0].concept_notes;
 const bece = strands[0].BECE_Qquestions;
 
 // Check if all quizzes are completed
