@@ -46,7 +46,7 @@ const testimonials = [
         <iframe
           width="100%"
           height="100%"
-          src="https://www.youtube.com/embed/sbkkIkeLBJ4"
+          src="https://www.youtube.com/embed/J7GwxhKuy7s"
           title="AssignmentX Discovery V4 2"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
