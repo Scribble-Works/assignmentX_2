@@ -9,7 +9,7 @@ const client = useSupabaseClient();
     <section class="flex items-center justify-center min-h-screen bg-cover bg-center relative"
       >
         <video autoplay loop muted playsinline preload="auto" class="absolute inset-0 w-full h-full object-cover" poster="/img/img1.jpg">
-          <source src="https://yvzftzhtqcddqadufjue.supabase.co/storage/v1/object/public/media/SWPH Website BG Video.mp4" type="video/mp4">
+          <source src="https://yvzftzhtqcddqadufjue.supabase.co/storage/v1/object/public/media/1080p%20-%20SWPH%20Website%20BG%20Video%20v3%20.mp4" type="video/mp4">
           <img src="/img/img1.jpg" alt="Background" class="absolute inset-0 w-full h-full object-cover">
         </video>
       <div class="absolute inset-0 bg-black opacity-50"></div>
