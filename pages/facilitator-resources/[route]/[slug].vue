@@ -20,12 +20,12 @@ console.log(file);
       :alt="decodedId"
       class="max-w-2xl w-full mb-6 rounded shadow"
     />
-    <a
+    <!-- <a
       :href="file.link"
       download
       class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
     >
       Download
-    </a>
+    </a> -->
   </div>
 </template>
