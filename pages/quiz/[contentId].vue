@@ -52,13 +52,30 @@
             Quiz Completed!
           </h2>
           
-          <div class="mb-6">
-            <div class="text-6xl font-bold text-blue-600 mb-2">
-              {{ score }}%
+          <div class="mb-6 flex items-center justify-center gap-6">
+            <div>
+              <div class="text-6xl font-bold text-blue-600 mb-2">
+                {{ score }}%
+              </div>
+              <p class="text-gray-600">
+                You got {{ correctAnswers }} out of {{ questions.length }} questions correct
+              </p>
             </div>
-            <p class="text-gray-600">
-              You got {{ correctAnswers }} out of {{ questions.length }} questions correct
-            </p>
+            
+            <!-- Mark as Completed Checkbox - Moved to side -->
+            <div class="flex items-center">
+              <label class="flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  v-model="markAsCompleted"
+                  @change="handleMarkAsCompleted"
+                  class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                />
+                <span class="ml-3 text-gray-700 font-medium text-sm">
+                  Mark as completed
+                </span>
+              </label>
+            </div>
           </div>
 
           <!-- Performance Message -->
@@ -74,21 +91,6 @@
             </p>
           </div>
 
-          <!-- Mark as Completed Checkbox -->
-          <div class="mb-8 flex items-center justify-center">
-            <label class="flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                v-model="markAsCompleted"
-                @change="handleMarkAsCompleted"
-                class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-              />
-              <span class="ml-3 text-gray-700 font-medium">
-                Mark quiz as completed (won't need to retake)
-              </span>
-            </label>
-          </div>
-
           <!-- Action Buttons -->
           <div class="space-y-4">
             <button
@@ -98,21 +100,12 @@
               Continue to Course Content
             </button>
             
-            <div class="flex gap-4">
-              <button
-                @click="goBackToSubstrand"
-                class="flex-1 bg-gray-200 text-gray-800 py-3 px-6 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
-              >
-                Back to Topics
-              </button>
-              
-              <button
-                @click="retakeQuiz"
-                class="flex-1 bg-gray-200 text-gray-800 py-3 px-6 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
-              >
-                Retake Quiz
-              </button>
-            </div>
+            <button
+              @click="goBackToSubstrand"
+              class="w-full bg-gray-200 text-gray-800 py-3 px-6 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+            >
+              Back to Topics
+            </button>
           </div>
         </div>
       </div>
@@ -325,6 +318,15 @@ const handleMarkAsCompleted = () => {
 };
 
 const goToContent = () => {
+  // Automatically mark quiz as completed when user clicks "Continue to Course Content"
+  // This prevents them from coming back to retake since they've already seen the answers
+  const substrandQuizKey = `substrand-${substrandRefId}`;
+  if (!isQuizCompleted(substrandQuizKey)) {
+    markQuizCompleted(substrandQuizKey);
+    markAsCompleted.value = true;
+    console.log(`Pre-quiz automatically marked as completed for substrand: ${substrandRefId}`);
+  }
+  
   // Navigate to the actual course content page with worked examples and videos
   // Use lessonContentId if available, otherwise use substrandRefId as fallback
   const targetContentId = lessonContentId || substrandRefId;

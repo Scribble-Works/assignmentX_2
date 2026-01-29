@@ -42,14 +42,56 @@ const hasPostQuiz = computed(() => currentScores.value?.postQuiz !== undefined);
 const preQuizProficiency = computed(() => getProficiencyLevel(hasPreQuiz.value ? preQuizScore.value : null));
 const postQuizProficiency = computed(() => getProficiencyLevel(hasPostQuiz.value ? postQuizScore.value : null));
 
-// Final proficiency is based on post-quiz score, or pre-quiz if no post-quiz
+// Get color based on proficiency level (spectrum from red to green)
+const getProficiencyColor = (proficiencyCode) => {
+  switch (proficiencyCode) {
+    case 'HP': // Highly Proficient - Green
+      return '#16a34a'; // green-600
+    case 'P': // Proficient - Yellow-Green
+      return '#84cc16'; // lime-500
+    case 'AP': // Approaching Proficiency - Yellow
+      return '#eab308'; // yellow-500
+    case 'D': // Developing - Orange
+      return '#f97316'; // orange-500
+    case 'E': // Emerging - Red
+      return '#dc2626'; // red-600
+    default:
+      return '#6b7280'; // gray-500
+  }
+};
+
+// Get text color based on proficiency level
+const getProficiencyTextColor = (proficiencyCode) => {
+  switch (proficiencyCode) {
+    case 'HP': // Highly Proficient - Green
+      return 'text-green-600';
+    case 'P': // Proficient - Yellow-Green
+      return 'text-lime-600';
+    case 'AP': // Approaching Proficiency - Yellow
+      return 'text-yellow-600';
+    case 'D': // Developing - Orange
+      return 'text-orange-600';
+    case 'E': // Emerging - Red
+      return 'text-red-600';
+    default:
+      return 'text-slate-600';
+  }
+};
+
+// Final proficiency interpretation:
+// - If post-quiz exists: use post-quiz score and interpretation
+// - If only pre-quiz exists (no post-quiz): use pre-quiz score and interpretation
+// - If neither exists: show N/A
 const finalProficiency = computed(() => {
-  if (hasPostQuiz.value) {
-    return getProficiencyLevel(postQuizScore.value);
+  // Priority 1: Use post-quiz if available
+  if (hasPostQuiz.value && currentScores.value?.postQuiz) {
+    return getProficiencyLevel(currentScores.value.postQuiz.score);
   }
-  if (hasPreQuiz.value) {
-    return getProficiencyLevel(preQuizScore.value);
+  // Priority 2: Use pre-quiz if available (when post-quiz hasn't been taken yet)
+  if (hasPreQuiz.value && currentScores.value?.preQuiz) {
+    return getProficiencyLevel(currentScores.value.preQuiz.score);
   }
+  // Priority 3: No data available
   return getProficiencyLevel(null);
 });
 
@@ -154,8 +196,7 @@ const generateReportHTML = () => {
           font-size: 18px;
           color: #1e293b;
         }
-        .score-value.pre { color: #dc2626; }
-        .score-value.post { color: #16a34a; }
+        .score-value { color: #1e293b; }
         .proficiency-box {
           background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
           color: white;
@@ -195,8 +236,6 @@ const generateReportHTML = () => {
           border-radius: 10px;
           transition: width 0.3s;
         }
-        .progress-fill.pre { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
-        .progress-fill.post { background: linear-gradient(90deg, #22c55e, #16a34a); }
         .improvement {
           text-align: center;
           padding: 20px;
@@ -236,15 +275,15 @@ const generateReportHTML = () => {
         <div class="section-title">📝 Pre-Lesson Assessment</div>
         <div class="score-row">
           <span class="score-label">Score</span>
-          <span class="score-value pre">${hasPreQuiz.value ? preQuizScore.value + '%' : 'Not taken'}</span>
+          <span class="score-value" style="color: ${hasPreQuiz.value ? getProficiencyColor(preQuizProficiency.value.code) : '#6b7280'}">${hasPreQuiz.value ? preQuizScore.value + '%' : 'Not taken'}</span>
         </div>
         <div class="score-row">
           <span class="score-label">Proficiency Level</span>
-          <span class="score-value">${preQuizProficiency.value.level} (${preQuizProficiency.value.code})</span>
+          <span class="score-value" style="color: ${hasPreQuiz.value ? getProficiencyColor(preQuizProficiency.value.code) : '#6b7280'}">${preQuizProficiency.value.level} (${preQuizProficiency.value.code})</span>
         </div>
         <div class="progress-bar-container">
           <div class="progress-bar">
-            <div class="progress-fill pre" style="width: ${hasPreQuiz.value ? preQuizScore.value : 0}%"></div>
+            <div class="progress-fill pre" style="width: ${hasPreQuiz.value ? preQuizScore.value : 0}%; background: ${hasPreQuiz.value ? getProficiencyColor(preQuizProficiency.value.code) : '#9ca3af'}"></div>
           </div>
         </div>
       </div>
@@ -253,15 +292,15 @@ const generateReportHTML = () => {
         <div class="section-title">✅ Post-Lesson Assessment</div>
         <div class="score-row">
           <span class="score-label">Score</span>
-          <span class="score-value post">${hasPostQuiz.value ? postQuizScore.value + '%' : 'Not taken'}</span>
+          <span class="score-value" style="color: ${hasPostQuiz.value ? getProficiencyColor(postQuizProficiency.value.code) : '#6b7280'}">${hasPostQuiz.value ? postQuizScore.value + '%' : 'Not taken'}</span>
         </div>
         <div class="score-row">
           <span class="score-label">Proficiency Level</span>
-          <span class="score-value">${postQuizProficiency.value.level} (${postQuizProficiency.value.code})</span>
+          <span class="score-value" style="color: ${hasPostQuiz.value ? getProficiencyColor(postQuizProficiency.value.code) : '#6b7280'}">${postQuizProficiency.value.level} (${postQuizProficiency.value.code})</span>
         </div>
         <div class="progress-bar-container">
           <div class="progress-bar">
-            <div class="progress-fill post" style="width: ${hasPostQuiz.value ? postQuizScore.value : 0}%"></div>
+            <div class="progress-fill post" style="width: ${hasPostQuiz.value ? postQuizScore.value : 0}%; background: ${hasPostQuiz.value ? getProficiencyColor(postQuizProficiency.value.code) : '#9ca3af'}"></div>
           </div>
         </div>
       </div>
@@ -273,7 +312,7 @@ const generateReportHTML = () => {
       </div>
       ` : ''}
       
-      <div class="proficiency-box">
+      <div class="proficiency-box" style="background: linear-gradient(135deg, ${getProficiencyColor(finalProficiency.value.code)} 0%, ${getProficiencyColor(finalProficiency.value.code)}dd 100%);">
         <h3>Overall Proficiency Level</h3>
         <div class="level">${finalProficiency.value.level} (${finalProficiency.value.code})</div>
         <p>${finalProficiency.value.description}</p>
@@ -362,13 +401,13 @@ onMounted(() => {
           <div class="flex justify-between items-center mb-4">
             <div class="text-xl font-semibold text-slate-800">Pre-Lesson</div>
             <div class="text-right">
-              <div v-if="hasPreQuiz" class="text-2xl font-bold text-slate-800">
+              <div v-if="hasPreQuiz" class="text-2xl font-bold" :class="getProficiencyTextColor(preQuizProficiency.code)">
                 {{ preQuizScore }}%
               </div>
               <div v-else class="text-xl font-bold text-slate-400">
                 N/A
               </div>
-              <div v-if="hasPreQuiz" class="text-sm font-medium text-slate-600">
+              <div v-if="hasPreQuiz" class="text-sm font-medium" :class="getProficiencyTextColor(preQuizProficiency.code)">
                 {{ preQuizProficiency.level }}({{ preQuizProficiency.code }})
               </div>
             </div>
@@ -380,7 +419,7 @@ onMounted(() => {
           height="40"
           rounded
             bg-color="#e5e7eb"
-            color="#eab308"
+            :color="hasPreQuiz ? getProficiencyColor(preQuizProficiency.code) : '#9ca3af'"
         ></v-progress-linear>
       </v-sheet>
 
@@ -392,13 +431,13 @@ onMounted(() => {
           <div class="flex justify-between items-center mb-4">
             <div class="text-xl font-semibold text-slate-800">Post-Lesson</div>
             <div class="text-right">
-              <div v-if="hasPostQuiz" class="text-2xl font-bold text-slate-800">
+              <div v-if="hasPostQuiz" class="text-2xl font-bold" :class="getProficiencyTextColor(postQuizProficiency.code)">
                 {{ postQuizScore }}%
               </div>
               <div v-else class="text-xl font-bold text-slate-400">
                 N/A
               </div>
-              <div v-if="hasPostQuiz" class="text-sm font-medium text-slate-600">
+              <div v-if="hasPostQuiz" class="text-sm font-medium" :class="getProficiencyTextColor(postQuizProficiency.code)">
                 {{ postQuizProficiency.level }}({{ postQuizProficiency.code }})
               </div>
             </div>
@@ -410,14 +449,14 @@ onMounted(() => {
           height="40"
           rounded
             bg-color="#e5e7eb"
-            color="#16a34a"
+            :color="hasPostQuiz ? getProficiencyColor(postQuizProficiency.code) : '#9ca3af'"
         ></v-progress-linear>
       </v-sheet>
 
         <!-- Final Proficiency Level -->
         <div class="bg-white py-8 px-6 rounded-xl shadow-lg mb-8">
           <h4 class="text-lg font-semibold text-slate-800 mb-3">
-            Your proficiency level is: {{ finalProficiency.level }}({{ finalProficiency.code }})
+            Your proficiency level is: <span :class="getProficiencyTextColor(finalProficiency.code)">{{ finalProficiency.level }}({{ finalProficiency.code }})</span>
           </h4>
           <p class="text-sm text-slate-600 mb-6">
             <span class="font-semibold">Interpretation:</span> {{ finalProficiency.description }}
