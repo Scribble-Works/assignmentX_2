@@ -269,7 +269,7 @@ import { useQuizProgress } from '~/composables/useQuizProgress';
 
 const route = useRoute();
 const router = useRouter();
-const { fetchProblemSetQuestions } = useStrapiQuiz();
+const { fetchProblemSetQuestions, fetchAllQuestionsDebug } = useStrapiQuiz();
 const { saveQuizScore } = useQuizProgress();
 
 // Note: contentId in route params is the substrand_ref_id
@@ -493,6 +493,9 @@ const loadQuestions = async () => {
   loading.value = true;
   
   try {
+    // DEBUG ONLY: log all questions from Strapi when Start Quiz is clicked
+    await fetchAllQuestionsDebug();
+    
     console.log(`[Problem Set] 🚀 Starting to load questions for substrand: ${substrandRefId}`);
     console.log(`[Problem Set] 📍 Current route:`, route.path);
     

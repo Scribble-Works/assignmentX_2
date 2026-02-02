@@ -9,6 +9,7 @@
 const substrandToTopicMapping = {
   // Mappings: { substrand_ref_id: strapi_topic_id }
   // Actual Strapi Topic IDs:
+  // - Topic ID 1: (e.g. Number and Numeration Systems – adjust if different in Strapi)
   // - Topic ID 2: "Whole Numbers Counting and Representation"
   // - Topic ID 4: "Whole Numbers Operations"
   // - Topic ID 6: "Fractions, Representation and Relationship"
@@ -17,6 +18,7 @@ const substrandToTopicMapping = {
   
   // Update these mappings based on your Supabase substrand IDs
   // Format: substrand_id: strapi_topic_id
+  1: 1,  // Substrand 1 -> Topic 1 (e.g. Number and Numeration Systems)
   2: 2,  // Substrand 2 -> Topic 2 (Whole Numbers Counting and Representation)
   3: 4,  // Substrand 3 -> Topic 4 (Whole Numbers Operations)
   4: 8,  // Substrand 4 -> Topic 8 (Number: Ratios and Proportion) - FIXED

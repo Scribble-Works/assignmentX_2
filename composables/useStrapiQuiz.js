@@ -3,213 +3,203 @@ export const useStrapiQuiz = () => {
   const strapiUrl = config.public.STRAPI_URL || 'http://localhost:1337';
 
   /**
-   * Fetch quiz questions from Strapi by topic ID
-   * @param {string|number} topicId - The topic ID to fetch questions for (filters by topics relation)
-   * @returns {Promise<Array>} Array of quiz questions
+   * Transform a raw Question model item from Strapi into the format expected by the quiz UI.
+   * Used for both pre-quiz and post-quiz (post-quiz may include questionType, correctAnswer).
    */
-  const fetchQuizQuestions = async (topicId) => {
+  const transformQuestionFromModel = (questionData) => {
+    const options = [
+      questionData.option1,
+      questionData.option2,
+      questionData.option3,
+      questionData.option4
+    ].filter(opt => opt !== null && opt !== undefined && opt !== '');
+
+    const correctOptionMap = {
+      'one': 0,
+      'two': 1,
+      'three': 2,
+      'four': 3
+    };
+    const correctIndex = correctOptionMap[questionData.correctOption] ?? 0;
+    const questionType = questionData.questionType || 'MCQ';
+
+    return {
+      question: questionData.prompt || questionData.question || '',
+      options,
+      correct: correctIndex,
+      questionType,
+      correctAnswer: questionData.correctAnswer ?? null,
+      explanation: questionData.explanation ?? null
+    };
+  };
+
+  /**
+   * Fetch questions from the Question model by topic and quiz type.
+   * Both pre-quiz and post-quiz use the same Strapi Question content type;
+   * filter by topic and quizType (e.g. 'pre-quiz' or 'post-quiz').
+   * @param {string|number} topicId - Topic ID (topics relation)
+   * @param {string} quizType - 'pre-quiz' or 'post-quiz'
+   * @returns {Promise<Array>} Array of questions
+   */
+  const fetchQuestionsFromModel = async (topicId, quizType) => {
     if (!topicId) {
       console.warn('useStrapiQuiz: topicId is required');
       return null;
     }
-
-    try {
-      console.log(`[Strapi] ⚡ Fetching quiz questions for topic ID: ${topicId}`);
-      console.log(`[Strapi] 🔗 Strapi URL: ${strapiUrl}`);
-      
-      let questionsData = [];
-      
-      // Filter questions by topics relation
-      try {
-        console.log(`[Strapi] 📡 Filtering questions by topics relation ID = ${topicId}`);
-        const questionsResponse = await $fetch(`${strapiUrl}/api/questions`, {
-          params: {
-            'filters[topics][id][$eq]': topicId,
-            'populate': '*'
-          },
-          timeout: 10000
-        });
-        
-        console.log(`[Strapi] 📦 Questions API response:`, questionsResponse);
-        
-        if (questionsResponse?.data && Array.isArray(questionsResponse.data) && questionsResponse.data.length > 0) {
-          questionsData = questionsResponse.data;
-          console.log(`[Strapi] ✅ Found ${questionsData.length} questions for topic ID ${topicId}`);
-        } else {
-          console.log(`[Strapi] ⚠️ No questions found for topic ID ${topicId}`);
-          // Return empty array - don't fallback to all questions
-          questionsData = [];
-        }
-      } catch (fetchError) {
-        console.error(`[Strapi] ❌ Failed to fetch questions:`, fetchError?.message || fetchError);
-        questionsData = [];
-      }
-
-      if (!questionsData || questionsData.length === 0) {
-        console.warn(`[Strapi] ❌ No questions found for topic ID: ${topicId}`);
-        return [];
-      }
-
-      console.log(`[Strapi] ✅ Processing ${questionsData.length} questions from Strapi`);
-
-      // Transform Strapi questions to match expected format
-      const questions = questionsData.map(item => {
-        // Strapi v5 uses flat structure, no .attributes
-        const questionData = item;
-        
-        // Build options array from option1, option2, option3, option4
-        const options = [
-          questionData.option1,
-          questionData.option2,
-          questionData.option3,
-          questionData.option4
-        ].filter(opt => opt !== null && opt !== undefined && opt !== ''); // Remove any empty options
-        
-        // Convert correctOption enum ('one', 'two', 'three', 'four') to index (0, 1, 2, 3)
-        const correctOptionMap = {
-          'one': 0,
-          'two': 1,
-          'three': 2,
-          'four': 3
-        };
-        const correctIndex = correctOptionMap[questionData.correctOption] ?? 0;
-        
-        const transformed = {
-          question: questionData.prompt || questionData.question || '',
-          options: options,
-          correct: correctIndex,
-          explanation: questionData.explanation || null
-        };
-
-        console.log(`[Strapi] Transformed question:`, transformed);
-        return transformed;
-      });
-
-      console.log(`[Strapi] ✅ Successfully loaded ${questions.length} questions from Strapi`);
-      return questions;
-    } catch (error) {
-      console.error(`[Strapi] ❌ Error fetching quiz questions for topic ID ${topicId}:`, error);
-      console.error(`[Strapi] Error details:`, {
-        message: error.message,
-        status: error.statusCode || error.status,
-        data: error.data
-      });
-      
-      if (error.statusCode === 404 || error.status === 404) {
-        console.warn(`[Strapi] Questions endpoint not found. Make sure the Content Type 'Question' or 'PreQuiz' exists in Strapi.`);
-      } else if (error.statusCode === 403 || error.status === 403) {
-        console.warn(`[Strapi] Access forbidden. Check API permissions in Strapi Settings > Users & Permissions Plugin > Roles > Public > Enable 'find' and 'findOne' for Question and PreQuiz`);
-      }
-      return null; // Return null to indicate error, so we can fallback
-    }
-  };
-
-  /**
-   * Fetch problem set questions from Strapi by topic ID
-   * Uses a different content type (e.g., 'problem-set-questions' or 'post-quiz-questions')
-   * @param {string|number} topicId - The topic ID to fetch questions for (filters by topics relation)
-   * @returns {Promise<Array>} Array of problem set questions
-   */
-  const fetchProblemSetQuestions = async (topicId) => {
-    if (!topicId) {
-      console.warn('useStrapiQuiz: topicId is required for problem set questions');
+    if (!quizType || !['pre-quiz', 'post-quiz'].includes(quizType)) {
+      console.warn('useStrapiQuiz: quizType must be "pre-quiz" or "post-quiz"');
       return null;
     }
 
     try {
-      console.log(`[Strapi] ⚡ Fetching problem set questions for topic ID: ${topicId}`);
+      console.log(`[Strapi] ⚡ Fetching questions (${quizType}) for topic ID: ${topicId}`);
       console.log(`[Strapi] 🔗 Strapi URL: ${strapiUrl}`);
-      
+
+      const addPopulate = (p) => ({ ...p, populate: '*' });
+      const parseList = (response) => {
+        const data = response?.data ?? response;
+        return Array.isArray(data) ? data : [];
+      };
+
       let questionsData = [];
-      
-      // Filter problem set questions by topics relation
+
+      // 1) Try topic ONLY first (no quizType) – relation "topics"
       try {
-        console.log(`[Strapi] 📡 Filtering problem set questions by topics relation ID = ${topicId}`);
-        const questionsResponse = await $fetch(`${strapiUrl}/api/problem-set-questions`, {
-          params: {
-            'filters[topics][id][$eq]': topicId,
-            'populate': '*'
-          },
+        const response = await $fetch(`${strapiUrl}/api/questions`, {
+          params: addPopulate({ 'filters[topics][id][$eq]': topicId }),
           timeout: 10000
         });
-        
-        console.log(`[Strapi] 📦 Problem Set Questions API response:`, questionsResponse);
-        
-        if (questionsResponse?.data && Array.isArray(questionsResponse.data) && questionsResponse.data.length > 0) {
-          questionsData = questionsResponse.data;
-          console.log(`[Strapi] ✅ Found ${questionsData.length} problem set questions for topic ID ${topicId}`);
-        } else {
-          console.log(`[Strapi] ⚠️ No problem set questions found for topic ID ${topicId}`);
-          // Return empty array - don't fallback to all questions
-          questionsData = [];
+        const list = parseList(response);
+        if (list.length > 0) {
+          questionsData = list;
+          console.log(`[Strapi] ✅ Found ${list.length} questions (topic ${topicId} only)`);
         }
-      } catch (fetchError) {
-        console.error(`[Strapi] ❌ Failed to fetch problem set questions:`, fetchError?.message || fetchError);
-        questionsData = [];
+      } catch (e) {
+        console.warn(`[Strapi] topic (topics):`, e?.message || e);
       }
 
-      if (!questionsData || questionsData.length === 0) {
-        console.warn(`[Strapi] ❌ No problem set questions found for topic ID: ${topicId}`);
+      // 2) Try topic ONLY – relation "topic" (singular)
+      if (questionsData.length === 0) {
+        try {
+          const response = await $fetch(`${strapiUrl}/api/questions`, {
+            params: addPopulate({ 'filters[topic][id][$eq]': topicId }),
+            timeout: 10000
+          });
+          const list = parseList(response);
+          if (list.length > 0) {
+            questionsData = list;
+            console.log(`[Strapi] ✅ Found ${list.length} questions (topic ${topicId}, relation topic)`);
+          }
+        } catch (e) {
+          console.warn(`[Strapi] topic (topic):`, e?.message || e);
+        }
+      }
+
+      // 3) Try topic + quizType with exact value we use
+      if (questionsData.length === 0) {
+        try {
+          const response = await $fetch(`${strapiUrl}/api/questions`, {
+            params: addPopulate({
+              'filters[topics][id][$eq]': topicId,
+              'filters[quizType][$eq]': quizType
+            }),
+            timeout: 10000
+          });
+          const list = parseList(response);
+          if (list.length > 0) {
+            questionsData = list;
+            console.log(`[Strapi] ✅ Found ${list.length} questions (topic + quizType=${quizType})`);
+          }
+        } catch (e) {
+          console.warn(`[Strapi] topic+quizType:`, e?.message || e);
+        }
+      }
+
+      // 4) Try alternate quizType values Strapi might use (e.g. "Pre-quiz", "pre_quiz")
+      const quizTypeVariants = {
+        'pre-quiz': ['pre-quiz', 'Pre-quiz', 'PreQuiz', 'pre_quiz', 'Pre-quiz '],
+        'post-quiz': ['post-quiz', 'Post-quiz', 'PostQuiz', 'post_quiz', 'Post-quiz ']
+      };
+      const variants = quizTypeVariants[quizType] || [quizType];
+      if (questionsData.length === 0) {
+        for (const variant of variants) {
+          if (variant === quizType) continue; // already tried
+          try {
+            const response = await $fetch(`${strapiUrl}/api/questions`, {
+              params: addPopulate({
+                'filters[topics][id][$eq]': topicId,
+                'filters[quizType][$eq]': variant
+              }),
+              timeout: 10000
+            });
+            const list = parseList(response);
+            if (list.length > 0) {
+              questionsData = list;
+              console.log(`[Strapi] ✅ Found ${list.length} questions (topic + quizType="${variant}")`);
+              break;
+            }
+          } catch (e) {
+            // skip
+          }
+        }
+      }
+
+      // 5) Last resort: fetch ALL questions (no filters)
+      if (questionsData.length === 0) {
+        try {
+          const response = await $fetch(`${strapiUrl}/api/questions`, {
+            params: addPopulate({}),
+            timeout: 10000
+          });
+          const list = parseList(response);
+          if (list.length > 0) {
+            questionsData = list;
+            console.warn(`[Strapi] Using ALL ${list.length} questions – no topic/quizType filter matched. Link questions to topic ${topicId} in Strapi.`);
+          }
+        } catch (e) {
+          console.warn(`[Strapi] fetch all:`, e?.message || e);
+        }
+      }
+
+      if (questionsData.length === 0) {
+        console.warn(`[Strapi] No questions for topic ${topicId}. Check: Question content type, topic relation name (topic/topics), and Strapi topic ID.`);
         return [];
       }
 
-      console.log(`[Strapi] ✅ Processing ${questionsData.length} problem set questions from Strapi`);
-
-      // Transform Strapi problem set questions to match expected format
+      // Strapi v4: item.attributes; v5: flat item
       const questions = questionsData.map(item => {
-        // Strapi v5 uses flat structure, no .attributes
-        const questionData = item;
-        
-        // Build options array from option1, option2, option3, option4
-        const options = [
-          questionData.option1,
-          questionData.option2,
-          questionData.option3,
-          questionData.option4
-        ].filter(opt => opt !== null && opt !== undefined && opt !== ''); // Remove any empty options
-        
-        // Convert correctOption enum ('one', 'two', 'three', 'four') to index (0, 1, 2, 3)
-        const correctOptionMap = {
-          'one': 0,
-          'two': 1,
-          'three': 2,
-          'four': 3
-        };
-        const correctIndex = correctOptionMap[questionData.correctOption] ?? 0;
-        
-        // Get questionType from Strapi (MCQ, True/False, Fill in the blank, Multiple blanks)
-        const questionType = questionData.questionType || 'MCQ';
-        
-        const transformed = {
-          question: questionData.prompt || questionData.question || '',
-          options: options,
-          correct: correctIndex,
-          questionType: questionType,
-          correctAnswer: questionData.correctAnswer || null, // For fill-in-the-blank and multiple blanks
-          explanation: questionData.explanation || null
-        };
-
-        console.log(`[Strapi] Transformed problem set question:`, transformed);
-        return transformed;
+        const raw = item?.attributes ?? item;
+        return transformQuestionFromModel(raw);
       });
-
-      console.log(`[Strapi] ✅ Successfully loaded ${questions.length} problem set questions from Strapi`);
+      console.log(`[Strapi] ✅ Loaded ${questions.length} questions`);
       return questions;
     } catch (error) {
-      console.error(`[Strapi] ❌ Error fetching problem set questions for topic ID ${topicId}:`, error);
-      console.error(`[Strapi] Error details:`, {
-        message: error.message,
-        status: error.statusCode || error.status,
-        data: error.data
-      });
-      
+      console.error(`[Strapi] ❌ Error fetching questions for topic ${topicId} (${quizType}):`, error);
       if (error.statusCode === 404 || error.status === 404) {
-        console.warn(`[Strapi] Problem set questions endpoint not found. Make sure the Content Type 'ProblemSetQuestion' or 'PostQuizQuestion' exists in Strapi.`);
+        console.warn(`[Strapi] Questions API not found. Ensure Content Type "Question" exists and has a "quizType" field (e.g. "pre-quiz", "post-quiz").`);
       } else if (error.statusCode === 403 || error.status === 403) {
-        console.warn(`[Strapi] Access forbidden. Check API permissions in Strapi Settings > Users & Permissions Plugin > Roles > Public > Enable 'find' and 'findOne' for ProblemSetQuestion`);
+        console.warn(`[Strapi] Access forbidden. Enable 'find' for Question in Strapi permissions.`);
       }
-      return null; // Return null to indicate error, so we can fallback
+      return null;
     }
+  };
+
+  /**
+   * Fetch pre-quiz questions from the Question model (quizType = 'pre-quiz').
+   * @param {string|number} topicId - The topic ID to fetch questions for
+   * @returns {Promise<Array>} Array of quiz questions
+   */
+  const fetchQuizQuestions = async (topicId) => {
+    return fetchQuestionsFromModel(topicId, 'pre-quiz');
+  };
+
+  /**
+   * Fetch post-quiz (problem set) questions from the Question model (quizType = 'post-quiz').
+   * @param {string|number} topicId - The topic ID to fetch questions for
+   * @returns {Promise<Array>} Array of problem set questions
+   */
+  const fetchProblemSetQuestions = async (topicId) => {
+    return fetchQuestionsFromModel(topicId, 'post-quiz');
   };
 
   /**
@@ -245,10 +235,36 @@ export const useStrapiQuiz = () => {
     }
   };
 
+  /**
+   * DEBUG ONLY: Fetch ALL questions from Strapi (no filters). Logs full response to console.
+   * Remove when done debugging.
+   */
+  const fetchAllQuestionsDebug = async () => {
+    const url = `${strapiUrl}/api/questions`;
+    console.log('[Strapi DEBUG] Fetching ALL questions (no filters):', url);
+    try {
+      const response = await $fetch(url, {
+        params: { populate: '*' },
+        timeout: 10000
+      });
+      const data = response?.data ?? response;
+      const list = Array.isArray(data) ? data : [];
+      console.log('[Strapi DEBUG] Raw response:', response);
+      console.log('[Strapi DEBUG] All questions count:', list.length);
+      console.log('[Strapi DEBUG] All questions (full array):', list);
+      return list;
+    } catch (e) {
+      console.error('[Strapi DEBUG] Failed to fetch all questions:', e?.message || e, e);
+      return [];
+    }
+  };
+
   return {
     fetchQuizQuestions,
     fetchProblemSetQuestions,
-    fetchQuizQuestionById
+    fetchQuestionsFromModel,
+    fetchQuizQuestionById,
+    fetchAllQuestionsDebug
   };
 };
 

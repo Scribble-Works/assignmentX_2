@@ -222,7 +222,7 @@ import { getTopicIdFromSubstrand } from '~/composables/useSubstrandTopicMapping'
 const route = useRoute();
 const router = useRouter();
 const { markQuizCompleted, unmarkQuizCompleted, isQuizCompleted, completedQuizzes, saveQuizScore } = useQuizProgress();
-const { fetchQuizQuestions } = useStrapiQuiz();
+const { fetchQuizQuestions, fetchAllQuestionsDebug } = useStrapiQuiz();
 
 // Note: contentId in route params is actually the substrand_ref_id (since quiz is per substrand)
 const substrandRefId = route.params.contentId;
@@ -354,6 +354,9 @@ const loadQuestions = async () => {
   loading.value = true;
   
   try {
+    // DEBUG ONLY: log all questions from Strapi when Start Quiz is clicked
+    await fetchAllQuestionsDebug();
+    
     console.log(`[Quiz] 🚀 Starting to load questions for substrand: ${substrandRefId}`);
     console.log(`[Quiz] 📍 Current route:`, route.path);
     console.log(`[Quiz] 📝 Route params:`, route.params);
