@@ -112,43 +112,43 @@ function swapVideo(video) {
   <div>
     <div class="body">
       <v-container>
-      <h2
-        class="text-left text-uppercase text-bold mb-0 mt-0"
-        style="font-weight: bold; font-size: 1.2rem"
-      >
-        {{ heading }}
-      </h2>
-      <v-row>
-        <v-col cols="" lg="9" md="6" sm="12">
-          <vids :url="vid1" />
-        </v-col>
-        <v-col cols="" lg="3" md="6" sm="12">
-          <div v-for="(video, index) in relatedVids" :key="index">
-            <vids
-              class="mb-4 cursor-pointer"
-              :url="video"
-              @click="swapVideo(video)"
-            />
-          </div>
-        </v-col>
-      </v-row>
-      <v-row class="mt-n5 mr-10">
-        <v-col cols="" lg="6" sm="12" md="3">
-          <v-btn @click="openNotes" rounded color="grey-darken-3"
-            >Concept Note</v-btn
-          >
-        </v-col>
-        <v-col cols="" lg="6" sm="12" md="5">
-          <v-btn @click="openBece" rounded color="grey-darken-3"
-            >Sample Questions</v-btn
-          >
-        </v-col>
-        <!-- <v-col cols="" lg="3" sm="12" md="4">
+        <h2
+          class="text-left text-uppercase text-bold mb-0 mt-0"
+          style="font-weight: bold; font-size: 1.2rem"
+        >
+          {{ heading }}
+        </h2>
+        <v-row>
+          <v-col cols="" lg="9" md="6" sm="12">
+            <vids :url="vid1" />
+          </v-col>
+          <v-col cols="" lg="3" md="6" sm="12">
+            <div v-for="(video, index) in relatedVids" :key="index">
+              <vids
+                class="mb-4 cursor-pointer"
+                :url="video"
+                @click="swapVideo(video)"
+              />
+            </div>
+          </v-col>
+        </v-row>
+        <v-row class="mt-n5 mr-10">
+          <v-col cols="" lg="6" sm="12" md="3">
+            <v-btn @click="openNotes" rounded color="grey-darken-3"
+              >Concept Note</v-btn
+            >
+          </v-col>
+          <v-col cols="" lg="6" sm="12" md="5">
+            <v-btn @click="openBece" rounded color="grey-darken-3"
+              >Sample Questions</v-btn
+            >
+          </v-col>
+          <!-- <v-col cols="" lg="3" sm="12" md="4">
                     <v-btn rounded color="grey-darken-3">Video transcription</v-btn>
                 </v-col> -->
-      </v-row>
+        </v-row>
 
-      <!-- <div class="mt-15">
+        <!-- <div class="mt-15">
                 <h3 class="text-h3 mb-5" style="font-family: 'Inter', sans-serif; font-weight: bold;">Worked Exam<span
                         style="text-decoration: underline; text-decoration-color: #FCC30C;">ples</span></h3>
                 <v-container style="background-color: #F3F4F6;">
@@ -169,65 +169,67 @@ function swapVideo(video) {
 
 
                     <div class="mt-5 mb-10"> -->
-      <!-- <compare /> -->
-      <!-- </div> -->
-    </v-container>
-  </div>
+        <!-- <compare /> -->
+        <!-- </div> -->
+      </v-container>
+    </div>
 
-  <!-- Course Completion Section -->
-  <div class="mt-15">
-    <div class="bg-white rounded-lg shadow-md p-8 text-center">
-      <div
-        v-if="!courseCompleted && !isQuizCompleted(courseContentId)"
-        class="mb-6"
-      >
-        <h3 class="text-2xl font-bold text-gray-800 mb-4">
-          🎯 Ready to Complete This Course?
-        </h3>
-        <p class="text-gray-600 mb-6">
-          You've reviewed all the materials. Click the button below to mark this
-          course as completed.
-        </p>
-        <button
-          @click="markCourseAsCompleted"
-          class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 flex items-center justify-center mx-auto"
+    <!-- Course Completion Section -->
+    <div class="mt-15">
+      <div class="bg-white rounded-lg shadow-md p-8 text-center">
+        <div
+          v-if="!courseCompleted && !isQuizCompleted(courseContentId)"
+          class="mb-6"
         >
-          <span class="mr-2">✓</span>
-          Mark Course as Completed
-        </button>
-      </div>
+          <h3 class="text-2xl font-bold text-gray-800 mb-4">
+            🎯 Ready to Complete This Course?
+          </h3>
+          <p class="text-gray-600 mb-6">
+            You've reviewed all the materials. Click the button below to mark
+            this course as completed.
+          </p>
+          <button
+            @click="markCourseAsCompleted"
+            class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 flex items-center justify-center mx-auto"
+          >
+            <span class="mr-2">✓</span>
+            Mark Course as Completed
+          </button>
+        </div>
 
-      <div
-        v-else-if="courseCompleted || isQuizCompleted(courseContentId)"
-        class="mb-6"
-      >
-        <div class="text-green-600 text-6xl mb-4">🎉</div>
-        <h3 class="text-2xl font-bold text-gray-800 mb-4">Course Completed!</h3>
-        <p class="text-gray-600 mb-6">
-          Congratulations! You've successfully completed this course. You can
-          now return to the course list or continue with other topics.
-        </p>
-        <div class="flex justify-center space-x-4">
-          <button
-            @click="
-              navigateTo(
-                '/workbook/workbook1/strand-1/substrand-number-and-numeration-system',
-              )
-            "
-            class="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200"
-          >
-            Back to Course List
-          </button>
-          <button
-            @click="navigateTo('/progress')"
-            class="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-colors duration-200"
-          >
-            View Progress
-          </button>
+        <div
+          v-else-if="courseCompleted || isQuizCompleted(courseContentId)"
+          class="mb-6"
+        >
+          <div class="text-green-600 text-6xl mb-4">🎉</div>
+          <h3 class="text-2xl font-bold text-gray-800 mb-4">
+            Course Completed!
+          </h3>
+          <p class="text-gray-600 mb-6">
+            Congratulations! You've successfully completed this course. You can
+            now return to the course list or continue with other topics.
+          </p>
+          <div class="flex justify-center space-x-4">
+            <button
+              @click="
+                navigateTo(
+                  '/workbook/workbook1/strand-1/substrand-number-and-numeration-system',
+                )
+              "
+              class="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200"
+            >
+              Back to Course List
+            </button>
+            <button
+              @click="navigateTo('/progress')"
+              class="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-colors duration-200"
+            >
+              View Progress
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   </div>
 </template>
 <style>

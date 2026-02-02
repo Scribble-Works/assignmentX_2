@@ -213,7 +213,7 @@ function swapVideo(video) {
             <button
               @click="
                 navigateTo(
-                  '/learning-modules/preassignment_workbook2/strand-1/substrand-number-and-numeration-system',
+                  '/learning-modules/preassignment_workbook3/strand-1/substrand-number-and-numeration-system',
                 )
               "
               class="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200"
