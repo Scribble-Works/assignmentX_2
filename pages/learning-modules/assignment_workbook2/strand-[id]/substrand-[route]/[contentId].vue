@@ -1,7 +1,7 @@
 <script setup>
-import compare from '~/components/flipcards/compare.vue';
-import { useQuizProgress } from '~/composables/useQuizProgress';
-import { ref, onMounted } from 'vue';
+import compare from "~/components/flipcards/compare.vue";
+import { useQuizProgress } from "~/composables/useQuizProgress";
+import { ref, onMounted } from "vue";
 
 // import strand1 from '~/strand1.json';
 // definePageMeta({
@@ -16,7 +16,8 @@ const substrand = route.params.substrand;
 const courseContentId = Array.isArray(contentIdParam) ? contentIdParam[0] : contentIdParam;
 
 // Quiz progress management
-const { markQuizCompleted, isQuizCompleted, loadStateFromStorage } = useQuizProgress();
+const { markQuizCompleted, isQuizCompleted, loadStateFromStorage } =
+  useQuizProgress();
 const courseCompleted = ref(false);
 
 // Check if course is already completed on mount
@@ -27,7 +28,10 @@ onMounted(() => {
   }
 });
 
-const { data: substrands } = await client.from('book1_strand_substrands_lists').select().eq('route', strand_ref);
+const { data: substrands } = await client
+  .from("book1_strand_substrands_lists")
+  .select()
+  .eq("route", strand_ref);
 
 const strand_ref_id = substrands[0].strand_ref;
 const substrand_ref_id = substrands[0].id;
@@ -39,6 +43,7 @@ const heading = indicators_content[0].indicators;
 const vid1 = indicators_content[0].vid1;
 const vid2 = indicators_content[0].vid2;
 const vid3 = indicators_content[0].vid3;
+const game = indicators_content[0].games;
 
 const conceptNote = files[0].concept_notes;
 const bece = files[0].BECE_Qquestions;
@@ -47,29 +52,36 @@ console.log(files);
 // console.log(substrand_ref_id);
 const relatedVids = ref([vid2, vid3]);
 
-
+const worked_examples = ref(
+  Object.entries(indicators_content[0])
+    .filter(([key, value]) => key.startsWith("worked_examples") && value)
+    .map(([key, url], idx) => ({
+      id: idx + 1,
+      url,
+    }))
+);
 
 function openNotes() {
-    navigateTo(conceptNote, {
-        open: {
-            windowFeatures: {
-                width: 500,
-                height: 500,
-            }
-        }
-    })
-};
+  navigateTo(conceptNote, {
+    open: {
+      windowFeatures: {
+        width: 500,
+        height: 500,
+      },
+    },
+  });
+}
 
 function openBece() {
-    navigateTo(bece, {
-        open: {
-            windowFeatures: {
-                width: 500,
-                height: 500,
-            }
-        }
-    });
-};
+  navigateTo(bece, {
+    open: {
+      windowFeatures: {
+        width: 500,
+        height: 500,
+      },
+    },
+  });
+}
 
 // Course completion function
 const markCourseAsCompleted = () => {
@@ -89,15 +101,12 @@ const markCourseAsCompleted = () => {
 };
 
 function swapVideo(video) {
-  const oldMain = mainVideo.value
-  mainVideo.value = video
-  relatedVideos.value = relatedVideos.value.map(v =>
+  const oldMain = mainVideo.value;
+  mainVideo.value = video;
+  relatedVideos.value = relatedVideos.value.map((v) =>
     v === video ? oldMain : v
-  )
-};
-
-
-
+  );
+}
 </script>
 <template>
     <div class="body">
@@ -123,6 +132,58 @@ function swapVideo(video) {
                     <v-btn @click="openBece" rounded color="grey-darken-3">Sample Questions</v-btn>
                 </v-col>
             </v-row>
+
+            <div class="mt-10">
+                <h3
+                  class="text-h3 mb-5"
+                  style="font-family: 'Inter', sans-serif; font-weight: bold"
+                >
+                  Worked Exam<span
+                    style="text-decoration: underline; text-decoration-color: #fcc30c"
+                    >ples</span
+                  >
+                </h3>
+                <div style="background-color: #f3f4f6">
+                  <div v-if="worked_examples && worked_examples.length > 0">
+                    <div v-for="example in worked_examples" :key="example.id">
+                      <v-container>
+                        <v-img
+                          class="mt-10 mb-10"
+                          :src="example.url"
+                          alt="Worked Example"
+                        ></v-img>
+                      </v-container>
+                    </div>
+                  </div>
+                  <div v-else>
+                    <v-container>
+                      <v-img
+                        class="mt-10 mb-10"
+                        src="/img/Worked_Examples.png"
+                        alt="No worked examples available"
+                      ></v-img>
+                    </v-container>
+                  </div>
+                </div>
+            </div>
+
+            <v-container class="mt-10" style="background-color: #f3f4f6">
+                <div class="mt-10">
+                  <h5
+                    class="text-h5 text-center"
+                    style="font-family: 'Inter', sans-serif; font-weight: bold"
+                  >
+                    Gamified Learning
+                  </h5>
+                  <br />
+                </div>
+
+                <iframe
+                  :src="game"
+                  style="width: 100%; height: 40em"
+                  frameborder="0"
+                ></iframe>
+            </v-container>
 
             <!-- Course Completion Section -->
             <div class="mt-15">
@@ -173,6 +234,6 @@ function swapVideo(video) {
 </template>
 <style>
 .body {
-    background: white;
+  background: white;
 }
 </style>

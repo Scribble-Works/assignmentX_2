@@ -14,7 +14,8 @@ const conceptNote = workbook[0].concept_notes;
 const strandNumber = substrands[0].strand_ref;
 const { data: strandtitle } = await client.from('Workbook1').select().eq('id', strandNumber);
 const title = strandtitle[0].strand_name;
-console.log(strand1);
+const vid = strandtitle[0].vid;
+console.log(vid);
 console.log(substrands);
 console.log(workbook)
 console.log(strandtitle);
@@ -29,21 +30,23 @@ console.log(strandtitle);
                 {{ strandNumber }} - {{ title }}
             </h1>
             <ConceptNotes :concept-note="conceptNote" />
-            <v-row class="" v-for="substrand in substrands" :key="substrand.id">
-                <v-col>
-                    <NuxtLink
-                        :to="'/learning-modules/assignment_workbook1/strand-' + substrand.strand_ref + '/substrand-' + substrand.route + '/'">
-                        <v-card>
-                            <v-card-title class="font-weight-light text-left mb-2">{{ substrand.title }}</v-card-title>
-                        </v-card>
-                    </NuxtLink>
-                    <v-spacer></v-spacer>
-                    <br>
-                </v-col>
-            </v-row>
+            <introvid :intro="vid" />
+            <div class="mt-10">
+                <v-row class="mt-n5" v-for="substrand in substrands" :key="substrand.id">
+                    <v-col>
+                        <NuxtLink
+                            :to="'/learning-modules/assignment_workbook1/strand-' + substrand.strand_ref + '/substrand-' + substrand.route + '/'">
+                            <v-card>
+                                <v-card-title class="font-weight-light text-left">{{ substrand.title }}</v-card-title>
+                            </v-card>
+                        </NuxtLink>
+                        <v-spacer></v-spacer>
+                        <br>
+                    </v-col>
+                </v-row>
+            </div>
             </v-container>
         </div>
-
     </div>
 </template>
 <style>

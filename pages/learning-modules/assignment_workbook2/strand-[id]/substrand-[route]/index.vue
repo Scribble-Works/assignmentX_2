@@ -33,7 +33,7 @@ const { data: strands } = await client
   .select()
   .eq("substrand_ref", substrand_ref_id);
 
-const { data: substrand_ls } = await client
+const { data: unsortedSubstrand_ls } = await client
   .from("book2_substrand_indicators")
   .select()
   .eq("substrand_ref", substrand_ref_id);
@@ -42,12 +42,19 @@ const title = substrand[0].title;
 const conceptNote = strands[0].concept_notes;
 const bece = strands[0].BECE_Qquestions;
 
-console.log(substrand_ls);
+// console.log(substrand_ls);
 console.log(strand_ref_id);
 // Check if all quizzes are completed
 // const allQuizzesCompleted = computed(() => {
 //     return substrand_ls && completedQuizzes.value.size === substrand_ls.length;
 // });
+
+const substrand_ls = computed(() => {
+  if (unsortedSubstrand_ls) {
+    return [...unsortedSubstrand_ls].sort((a, b) => a.id - b.id);
+  }
+  return [];
+});
 
 function openNotes() {
   navigateTo(conceptNote, {

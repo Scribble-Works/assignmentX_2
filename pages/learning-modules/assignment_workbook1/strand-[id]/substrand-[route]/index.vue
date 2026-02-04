@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue';
 import { useQuizProgress } from '~/composables/useQuizProgress';
 
 const client = useSupabaseClient();
@@ -34,7 +34,7 @@ const { data: strands } = await client
   .select()
   .eq("substrand_ref", substrand_ref_id);
 
-const { data: substrand_ls } = await client
+const { data: unsortedSubstrand_ls } = await client
   .from("book1_substrand_indicators")
   .select()
   .eq("substrand_ref", substrand_ref_id);
@@ -131,9 +131,22 @@ watch(completedQuizzes, (newCompleted) => {
 watch(contentStatus, (newStatus) => {
   console.log('Content status updated:', Array.from(newStatus.entries()));
 }, { deep: true });
+
+const substrand_ls = computed(() => {
+  if (unsortedSubstrand_ls) {
+    return [...unsortedSubstrand_ls].sort((a, b) => a.id - b.id);
+  }
+  return [];
+});
+
+// Cleanup modals before unmount to prevent ref access errors
+onBeforeUnmount(() => {
+  showQuizModal.value = false;
+  selectedContentId.value = null;
+});
+
 </script>
 <template>
-
   <div class="mt-15" style="height: auto; background-color: #f6f6f6">
     <!-- Main content with consistent alignment -->
     <div class="container mx-auto p-4">

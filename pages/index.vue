@@ -7,7 +7,11 @@ const client = useSupabaseClient();
   <div class="body">
     <!-- Hero Section -->
     <section class="flex items-center justify-center min-h-screen bg-cover bg-center relative"
-      style="background-image: url('/img/img1.jpg')">
+      >
+        <video autoplay loop muted playsinline preload="auto" class="absolute inset-0 w-full h-full object-cover" poster="/img/img1.jpg">
+          <source src="https://yvzftzhtqcddqadufjue.supabase.co/storage/v1/object/public/media/1080p%20-%20SWPH%20Website%20BG%20Video%20v3%20.mp4" type="video/mp4">
+          <img src="/img/img1.jpg" alt="Background" class="absolute inset-0 w-full h-full object-cover">
+        </video>
       <div class="absolute inset-0 bg-black opacity-50"></div>
       <div class="text-center text-white relative z-10 p-4 max-w-lg mx-auto">
         <h1 class="text-4xl md:text-6xl font-bold">
@@ -53,7 +57,7 @@ const client = useSupabaseClient();
           <br />
 
           <div>
-            <v-btn to="/resources/" class="text-white" color="yellow-darken-2" rounded="lg">Learn More</v-btn>
+            <v-btn to="/facilitator-resources/" class="text-white" color="yellow-darken-2" rounded="lg">Learn More</v-btn>
           </div>
 
 
@@ -268,7 +272,7 @@ const client = useSupabaseClient();
             </h3>
             <br />
             <p style="font-family: 'Inter', sans-serif">
-              Get your Assignment Workbook today and unlock a <br> complete blended learning experience.
+              Get your Assignment Workbook today and unlock a complete blended learning experience.
             </p>
             <br />
             <v-btn href="/store" size="large" width="150" color="blue">Buy the Book</v-btn>

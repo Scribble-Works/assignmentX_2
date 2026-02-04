@@ -6,6 +6,7 @@ defineProps({
   price: String,
   image: String,
   reverse: Boolean,
+  link: String,
 });
 </script>
 
@@ -31,7 +32,7 @@ defineProps({
           Buy Now
         </v-btn>
 
-        <v-btn to="/preview/" size="large" class="text-white rounded-lg text-subtitle-1"
+        <v-btn :to="link" size="large" class="text-white rounded-lg text-subtitle-1"
           style="background-color: #fcc30c">
           Preview
         </v-btn>

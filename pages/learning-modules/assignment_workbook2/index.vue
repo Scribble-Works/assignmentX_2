@@ -1,7 +1,7 @@
 <script setup>
 const client = useSupabaseClient()
 
-const { data: unsortedStrands } = await client.from('Workbook1').select();
+const { data: unsortedStrands } = await client.from('assignment_workbook_2').select();
 
 // Sort the strands array based on the id property
 const strands = computed(() => {

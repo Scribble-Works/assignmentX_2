@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, onActivated } from 'vue';
+import { ref, computed, onMounted, onActivated, watch, onBeforeUnmount } from 'vue';
 import { useQuizProgress } from '~/composables/useQuizProgress';
 import ConceptNotes from '~/components/conceptNotes.vue';
 import QuizModal from '~/components/QuizModal.vue';
@@ -23,7 +23,7 @@ const {
     contentStatus,
     markQuizInProgress,
     markQuizCompleted,
-    isQuizCompleted,
+    isQuizCompleted,                                                                                                    
     getContentStatus,
     getStatusInfo,
     loadStateFromStorage
@@ -41,7 +41,7 @@ const { data: strands } = await client
     .select()
     .eq("substrand_ref", substrand_ref_id);
 
-const { data: substrand_ls } = await client
+const { data: unsortedSubstrand_ls } = await client
     .from("preassignment_workbook1_substrand_indicators")
     .select()
     .eq("substrand_ref", substrand_ref_id);
@@ -50,12 +50,22 @@ const title = substrand[0].title;
 const conceptNote = strands[0].concept_notes;
 const bece = strands[0].BECE_Qquestions;
 
+// Sort substrand list by ID
+const substrand_ls = computed(() => {
+  if (unsortedSubstrand_ls) {
+    return [...unsortedSubstrand_ls].sort((a, b) => a.id - b.id);
+  }
+  return [];
+});
+
 // Check if all lessons are completed (for showing Problem Set section)
 const allQuizzesCompleted = computed(() => {
-    return substrand_ls ? substrand_ls.every(content => {
+    const list = substrand_ls.value;
+    if (!list || list.length === 0) return false;
+    return list.every(content => {
         const contentIdStr = String(content.id);
         return isQuizCompleted(contentIdStr) || isQuizCompleted(content.id);
-    }) : false;
+    });
 });
 
 function openNotes() {
@@ -90,6 +100,10 @@ const closeQuizModal = () => {
 };
 
 const startQuiz = (contentId) => {
+    // Close modal first before navigating
+    showQuizModal.value = false;
+    selectedContentId.value = null;
+    
     // Navigate to the quiz page with substrand and strand query params
     // Use substrand_ref_id as the quiz identifier since quiz is per substrand
     const substrandRoute = `substrand-${substrand_ref}`;
@@ -116,6 +130,10 @@ const handleContentClick = (contentId) => {
 };
 
 const handleSkipQuiz = (contentId) => {
+    // Close modal first
+    showQuizModal.value = false;
+    selectedContentId.value = null;
+    
     // DON'T mark as completed - user skipped, so modal will show again for other lessons
     // Just navigate to the lesson content page
     const substrandRoute = `substrand-${substrand_ref}`;
@@ -133,7 +151,7 @@ const isSubstrandQuizCompleted = computed(() => {
 });
 
 const totalCount = computed(() => {
-    return substrand_ls ? substrand_ls.length : 0;
+    return substrand_ls.value ? substrand_ls.value.length : 0;
 });
 
 const solveProblem = () => {
@@ -165,11 +183,31 @@ const skipProblemSetQuiz = () => {
 // Load state when page mounts
 onMounted(() => {
     loadStateFromStorage();
+    console.log('Loaded quiz progress state:', {
+        completedQuizzes: Array.from(completedQuizzes.value),
+        contentStatus: Array.from(contentStatus.value.entries())
+    });
 });
+
+// Watch for changes in completion status
+watch(completedQuizzes, (newCompleted) => {
+    console.log('Completed quizzes updated:', Array.from(newCompleted));
+}, { deep: true });
+
+watch(contentStatus, (newStatus) => {
+    console.log('Content status updated:', Array.from(newStatus.entries()));
+}, { deep: true });
 
 // Reload state when page is activated (e.g., when navigating back from course detail)
 onActivated(() => {
     loadStateFromStorage();
+});
+
+// Cleanup modals before unmount to prevent ref access errors
+onBeforeUnmount(() => {
+    showQuizModal.value = false;
+    showProblemSetModal.value = false;
+    selectedContentId.value = null;
 });
 </script>
 <template>

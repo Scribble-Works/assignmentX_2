@@ -53,7 +53,7 @@ const editProfile = () => {
               <v-icon>mdi-menu-down</v-icon></span>
           </div> -->
           <div v-else>
-            <span class="ml-2">{{ profile.data.firstName }} {{ profile.data.lastName }}
+            <span class="ml-2">{{ profile.data.firstName }}
               <v-icon>mdi-menu-down</v-icon></span>
           </div>
         </v-btn>

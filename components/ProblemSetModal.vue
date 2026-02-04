@@ -3,9 +3,9 @@
     :model-value="isOpen"
     @update:model-value="handleDialogUpdate"
     max-width="600"
-    persistent
+    :scrim="true"
   >
-    <v-card>
+    <v-card v-if="isOpen">
       <!-- Header -->
       <v-card-title class="d-flex justify-space-between align-center pa-6 pb-4">
         <h2 class="text-h5 font-weight-bold text-center flex-grow-1" style="color: #333;">

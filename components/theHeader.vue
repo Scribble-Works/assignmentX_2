@@ -51,7 +51,7 @@ router.beforeEach((to, from, next) => {
                         <avartar />
                     </div><br>
                 </div> -->
-                <div class="hidden md:flex space-x-4">
+                <div class="hidden md:flex space-x-3">
                     <NuxtLink class="hover:text-blue-500 py-2" to="/">Home</NuxtLink>
                     <NuxtLink class="hover:text-blue-500 py-2" to="/about">About</NuxtLink>
                     <NuxtLink class="hover:text-blue-500 py-2" to="/learning-modules/">Learning Modules</NuxtLink>
@@ -59,7 +59,7 @@ router.beforeEach((to, from, next) => {
                     </NuxtLink>
 
                     <div v-if="!user">
-                        <v-btn color="blue" class=" text-white py-2 px-4 rounded" to="/login">Login</v-btn>
+                        <v-btn color="blue" class=" text-white py-2 px-0 rounded" to="/login">Login</v-btn>
                     </div>
                     <div v-else>
                         <avartar />

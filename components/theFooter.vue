@@ -2,11 +2,11 @@
 const yr = new Date().getFullYear();
 
 const icons = [
-  { icon: "mdi-facebook", src: "" },
-  { icon: "mdi-github", src: "" },
-  { icon: "mdi-twitter", src: "" },
-  { icon: "mdi-instagram", src: "" },
-  { icon: "mdi-linkedin", src: "" },
+  { icon: "mdi-facebook", src: "https://web.facebook.com/swphofficial?rdid=bhotJshXOa9DCrHI#" },
+  // { icon: "mdi:tiktok", src: "" },
+  { icon: "mdi-twitter", src: "https://x.com/swphofficial?t=gfZyVNORKVdhpCzMkF8M6g&s=08" },
+  { icon: "mdi-instagram", src: "https://www.instagram.com/swphofficial?utm_source=qr&igsh=MWQwdzVsd3drZm5wZQ==" },
+  { icon: "mdi-linkedin", src: "https://www.linkedin.com/company/93656967" },
 ];
 const links = [
   { name: "Privacy Policy", href: "/privacy" },
@@ -27,7 +27,7 @@ const links = [
 
         <div class="flex gap-2 sm:gap-4 rounded">
           <div v-for="icon in icons" :key="icon.icon">
-            <NuxtLink :to="icon.src" target="_blank">
+            <NuxtLink :href="icon.src" target="_blank">
               <v-icon class="text-lg sm:text-xl">{{ icon.icon }}</v-icon>
             </NuxtLink>
           </div>

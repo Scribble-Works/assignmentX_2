@@ -1,13 +1,4 @@
-<template>
-    <div class="error-page">
-        <h1>Error</h1>
-        <p><strong></strong><br> Sorry, something went wrong.</p>
-        <button @click="goHome">Go to Home</button>
-    </div>
-</template>
-
 <script setup>
-
 const props = defineProps({
     error: {
         type: Object,
@@ -21,6 +12,14 @@ const goHome = () => {
 const handleError = () => clearError({ redirect: '/' });
 // handleError();
 </script>
+<template>
+    <div class="error-page">
+        <img src="/img/logo.png" alt="">
+        <h1>Error</h1>
+        <p><strong></strong><br> Sorry, something went wrong.</p>
+        <button @click="goHome">Go to Home</button>
+    </div>
+</template>
 
 <style scoped>
 .error-page {

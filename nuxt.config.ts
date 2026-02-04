@@ -17,8 +17,8 @@ export default defineNuxtConfig({
       STRAPI_URL: process.env.STRAPI_URL || 'http://localhost:1337',
     },
   },
+
   modules: [
-    // '@nuxtjs/tailwindcss',
     [
       "@nuxtjs/supabase",
       {
@@ -28,11 +28,27 @@ export default defineNuxtConfig({
       },
     ],
     "@nuxt/fonts",
+    'nuxt-mail'
   ],
+
+  // nuxt-mail SMTP configuration (to/cc/bcc required by module)
+  mail: {
+    message: {
+      to: process.env.EMAIL || 'dev@localhost',
+    },
+    smtp: {
+      // host: "smtp.gmail.com",
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.GOOGLE_PASSWORD,
+      },
+    }
+  },
+
   css: [
     "vuetify/lib/styles/main.sass",
     "@mdi/font/css/materialdesignicons.min.css",
-    // 'assets/style/bece1.css',
     "assets/style/main.css",
   ],
   fonts: {

@@ -82,19 +82,20 @@ const events = [
 <template>
   <div class="bg-grey-100">
     <h2 class="text-2xl font-bold text-capitalize my-8">Join a live session</h2>
+
+    <div class="product">
+      <EventCard
+        v-for="event in events"
+        :key="event.id"
+        :dayName="event.dayName"
+        :dateNumber="event.dateNumber"
+        :month="event.month"
+        :title="event.title"
+        :time="event.time"
+        :host="event.host"
+      />
+    </div>
   </div>
-
-
-  <EventCard
-    v-for="(event, index) in events"
-    :key="index"
-    :dayName="event.dayName"
-    :dateNumber="event.dateNumber"
-    :month="event.month"
-    :title="event.title"
-    :time="event.time"
-    :host="event.host"
-  />
 </template>
 
 <style>

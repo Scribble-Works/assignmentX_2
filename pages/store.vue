@@ -9,8 +9,9 @@ const products = [
     description:
       "The First Assignment JHS 1 Maths Workbook is a trusted tool for mastering mathematics at the junior high level. Developed in alignment with the NaCCA Common Core Programme, this workbook offers structured exercises, dedicated correction spaces, and a built-in graph sheet. It focuses on effective learning through well-defined learning standards and formative assessments, making complex topics simple and accessible.",
     price: "80",
-    image: "/img/jhs1BookSpine.png",
+    image: "/img/AssignmentX Book 1 Book Sale AD Final.png",
     reverse: false,
+    link: "/first-assignment-preview",
   },
   {
     title: "The Second Assignment",
@@ -18,8 +19,9 @@ const products = [
     description:
       "The Second Assignment JHS 2 Maths Workbook continues to build on the foundation from JHS 1, with a focus on preparing students for higher-level concepts. This book provides a wealth of practice exercises and a clear, step-by-step approach to help learners deepen their understanding of key mathematical principles.",
     price: "80",
-    image: "/img/jhs2BookSpine.png",
+    image: "/img/AssignmentX Book 2 Book Sale AD Final.png",
     reverse: true,
+    link: "/second-assignment-preview",
   },
   {
     title: "The Last Assignment",
@@ -27,8 +29,9 @@ const products = [
     description:
       "The Last Assignment JHS 3 Maths Workbook is the final step in the series, designed to prepare students for the BECE exams. It offers a comprehensive review of all topics, challenging practice tests, and detailed solutions to strengthen problem-solving skills and ensure students are fully prepared for success.",
     price: "80",
-    image: "/img/jhs3BookSpine.png",
+    image: "/img/AssignmentX Book 3 Book Sale AD Final.png",
     reverse: false,
+    link: "/last-assignment-preview",
   },
 ];
 const checkout = ref(null);
@@ -78,7 +81,7 @@ const scrollToCheckout = () => {
     <!-- Product Cards -->
     <section class="container mx-auto space-y-32 p-4">
       <ProductCard v-for="(product, index) in products" :key="index" :title="product.title" :level="product.level"
-        :price="product.price" :image="product.image" :reverse="product.reverse" :description="product.description" />
+        :price="product.price" :image="product.image" :reverse="product.reverse" :description="product.description" :link="product.link" />
     </section>
   </div>
 </template>
