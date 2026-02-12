@@ -211,131 +211,134 @@ onBeforeUnmount(() => {
 });
 </script>
 <template>
-    <div class="mt-5" style="height: auto; background-color: #f6f6f6">
-        <div class="container mx-auto p-4">
-            <v-row>
-                <v-col cols="" lg="8" sm="12">
-                    <h1 class="text-left font-weight-bold text-uppercase text-bold" style="font-size: 1.4em">
-                        {{ title }}
-                    </h1>
-                    <!-- Progress Indicator -->
-                    <!-- <div class="mt-2 flex items-center">
-                        <div class="flex items-center text-sm text-gray-600">
-                            <span class="mr-2">Progress:</span>
-                            <span class="font-semibold text-green-600">{{ completedCount }}/{{ totalCount }}</span>
-                            <span class="ml-2">courses completed</span>
-                        </div>
-                        <div class="ml-4 w-32 bg-gray-200 rounded-full h-2">
-                            <div class="bg-green-600 h-2 rounded-full transition-all duration-300"
-                                :style="{ width: `${totalCount > 0 ? (completedCount / totalCount) * 100 : 0}%` }">
-                            </div>
-                        </div>
-                    </div> -->
-                </v-col>
-                <v-col cols="" lg="4" sm="12" align="right">
-                    <v-btn :to="`/progress?topic=${encodeURIComponent(title)}&substrandId=${substrand_ref_id}`" color="primary">View Progress Report</v-btn>
-                </v-col>
-            </v-row>
-            <ConceptNotes :concept-note="conceptNote" />
-            
-            
-            <div class="mt-10" style="height: auto; background-color: #f6f6f6">
-                <div class="container mx-auto p-4">
-                    <v-row v-for="content in substrand_ls" :key="content.id">
-                        <v-col>
-                            <v-card class="mb-4">
-                                <v-card-text>
-                                    <!-- Topic Title -->
-                                    <div @click.stop="handleContentClick(content.id)"
-                                        class="cursor-pointer mb-4">
-                                        <h3 class="text-h6 font-weight-bold">{{ content.indicators }}</h3>
-                                    </div>
-                                    
-                                    <!-- Action Elements -->
-                                    <div class="d-flex align-center justify-space-between">
-                                        <!-- Left Side: Concept Note and BECE Questions -->
-                                        <div class="d-flex align-center gap-3" @click.stop>
-                                            <v-btn @click.stop="openNotes" 
-                                                variant="text"
-                                                color="blue-darken-2"
-                                                class="text-none font-weight-medium">
-                                                CONCEPT NOTE
-                                            </v-btn>
-                                            
-                                            <v-btn @click.stop="openBece" 
-                                                variant="text"
-                                                color="green-darken-2"
-                                                class="text-none font-weight-medium">
-                                                BECE QUESTIONS
-                                            </v-btn>
-                                        </div>
-                                        
-                                        <!-- Right Side: Course Completion Status (per lesson) -->
-                                        <div v-if="isQuizCompleted(String(content.id)) || isQuizCompleted(content.id)" 
-                                            class="d-flex align-center text-green-darken-2 font-weight-medium">
-                                            <v-icon size="small" class="mr-1">mdi-check</v-icon>
-                                            COURSE COMPLETED
-                                        </div>
-                                        <div v-else 
-                                            class="d-flex align-center text-grey-darken-1 font-weight-medium">
-                                            <v-icon size="small" class="mr-1">mdi-circle-outline</v-icon>
-                                            NOT STARTED
-                                        </div>
-                                    </div>
-                                </v-card-text>
-                            </v-card>
-                        </v-col>
-                    </v-row>
-                    <v-spacer></v-spacer>
-                    <br />
-
-
-                    <!-- Problem Set Section - Only shown when all quizzes are completed -->
-                    <div v-if="allQuizzesCompleted" class="mt-10">
-                        <div class="text-h3 font-weight-bold mb-2">Problem Set</div>
-                        <p class="text-h6 mb-6">Time to apply and show the Wow!</p>
-                        
-                        <v-row>
-                            <v-col cols="12" md="6">
-                                <v-img src="/img/problem.png" class="rounded-lg"></v-img>
-                            </v-col>
-                            <v-col cols="12" md="6" class="d-flex flex-column justify-center">
-                                <p class="text-body-1 mb-6">
-                                    Now it's your turn to apply what you've learned. These problems
-                                    challenge you to think, connect ideas, and solve real-world
-                                    situations using math. There might be more than one way — so be
-                                    bold, be creative, and show the wow!
-                                </p>
-                                <v-btn 
-                                    @click="solveProblem" 
-                                    color="grey-darken-3"
-                                    size="large"
-                                    class="mt-5"
-                                >
-                                    Solve Problem Set
-                                </v-btn>
-                            </v-col>
-                        </v-row>
-                    </div>
-                </div>
+    <div class="mt-15" style="height: auto; background-color: #f6f6f6">
+    <!-- Main content with consistent alignment -->
+    <div class="container mx-auto p-4">
+      <v-row>
+        <v-col cols="8">
+          <h1 class="text-left text-uppercase text-bold" style="font-size: 2em">
+            {{ title }}
+          </h1>
+          <!-- Progress Indicator -->
+          <div class="mt-2 flex items-center">
+            <div class="flex items-center text-sm text-gray-600">
+              <span class="mr-2">Progress:</span>
+              <span class="font-semibold text-green-600"
+                >{{ completedCount }}/{{ totalCount }}</span
+              >
+              <span class="ml-2">courses completed</span>
             </div>
-        </div>
-        
-        <!-- Quiz Modal - Moved outside container for proper z-index -->
-        <QuizModal 
-            :is-open="showQuizModal" 
-            :content-id="selectedContentId ? String(selectedContentId) : null"
-            :substrand-route="'substrand-' + substrand_ref" 
-            :strand-id="String(strand_ref_id)"
-            @close="closeQuizModal" 
-            @start-quiz="startQuiz" 
-            @skip-quiz="handleSkipQuiz" />
-        
-        <!-- Problem Set Modal -->
-        <ProblemSetModal 
-            :is-open="showProblemSetModal"
-            @close="closeProblemSetModal"
-            @start-quiz="startProblemSetQuiz"
-            @skip-quiz="skipProblemSetQuiz" />
+            <div class="ml-4 w-32 bg-gray-200 rounded-full h-2">
+              <div
+                class="bg-green-600 h-2 rounded-full transition-all duration-300"
+                :style="{
+                  width: `${totalCount > 0 ? (completedCount / totalCount) * 100 : 0}%`,
+                }"
+              ></div>
+            </div>
+          </div>
+        </v-col>
+        <v-col cols="4" align="right">
+          <v-btn
+            :to="`/progress?topic=${encodeURIComponent(title)}&substrandId=${substrand_ref_id}`"
+            color="primary"
+            >View Progress Report</v-btn
+          >
+        </v-col>
+      </v-row>
+      <ConceptNotes :concept-note="conceptNote" />
+
+      <v-row v-for="content in substrand_ls" :key="content.id">
+        <v-col>
+          <v-card class="mb-4">
+            <v-card-text class="pa-6">
+              <!-- Topic Title -->
+              <div
+                @click="handleContentClick(content.id)"
+                class="cursor-pointer hover:text-gray-600 transition-colors mb-4"
+              >
+                <!-- <div class="text-sm text-gray-500 mb-1">{{ content.id }}</div> -->
+                <div class="text-lg font-medium">{{ content.indicators }}</div>
+              </div>
+
+              <!-- Three Action Elements -->
+              <div class="flex items-center justify-between">
+                <!-- Concept Note (Blue) -->
+                <button
+                  @click="openNotes"
+                  class="text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors"
+                >
+                  CONCEPT NOTE
+                </button>
+
+                <!-- BECE Questions (Green) -->
+                <button
+                  @click="openBece"
+                  class="text-green-600 hover:text-green-800 font-medium text-sm transition-colors"
+                >
+                  BECE QUESTIONS
+                </button>
+
+                <!-- Completed Status (Green) -->
+                <div class="flex items-center">
+                  <span
+                    :class="[
+                      'px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-1',
+                      isQuizCompleted(content.id)
+                        ? 'bg-green-100 text-green-600'
+                        : 'bg-gray-100 text-gray-500',
+                    ]"
+                    style="border-radius: 10px"
+                  >
+                    <span v-if="isQuizCompleted(content.id)">✓</span>
+                    <span v-else>○</span>
+                    {{
+                      isQuizCompleted(content.id) ? "COMPLETED" : "NOT STARTED"
+                    }}
+                  </span>
+                </div>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <!-- Problem Set Section - Only shown when all quizzes are completed -->
+      <div v-if="allQuizzesCompleted" class="mt-10">
+        <div class="text-h3 font-bold mb-2">Problem Set</div>
+        <p class="text-lg mb-6">Time to apply and show the Wow!</p>
+
+        <v-row>
+          <v-col cols="12" md="6">
+            <v-img src="/img/problem.png" class="rounded-lg"></v-img>
+          </v-col>
+          <v-col cols="12" md="6" class="d-flex flex-column justify-center">
+            <p class="text-gray-700 mb-6">
+              Now it's your turn to apply what you've learned. These problems
+              challenge you to think, connect ideas, and solve real-world
+              situations using math. There might be more than one way — so be
+              bold, be creative, and show the wow!
+            </p>
+            <v-btn
+              @click="solveProblem"
+              class="mt-5 bg-gray-800 text-white hover:bg-gray-700 transition-colors"
+              size="large"
+            >
+              Solve Problem Set
+            </v-btn>
+          </v-col>
+        </v-row>
+      </div>
+
+      <!-- Quiz Modal -->
+      <QuizModal
+        :is-open="showQuizModal"
+        :content-id="selectedContentId"
+        :substrand-route="`substrand-${substrand_ref}`"
+        :strand-id="strand_ref_id"
+        @close="closeQuizModal"
+        @start-quiz="startQuiz"
+      />
     </div>
+  </div>
 </template>

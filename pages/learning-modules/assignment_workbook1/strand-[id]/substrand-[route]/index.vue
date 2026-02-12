@@ -1,6 +1,6 @@
 <script setup>
-import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue';
-import { useQuizProgress } from '~/composables/useQuizProgress';
+import { ref, computed, onMounted, watch, onBeforeUnmount } from "vue";
+import { useQuizProgress } from "~/composables/useQuizProgress";
 
 const client = useSupabaseClient();
 const route = useRoute();
@@ -12,14 +12,14 @@ const showQuizModal = ref(false);
 const selectedContentId = ref(null);
 
 // Use the quiz progress composable
-const { 
-  completedQuizzes, 
-  contentStatus, 
-  markQuizInProgress, 
-  isQuizCompleted, 
-  getContentStatus, 
+const {
+  completedQuizzes,
+  contentStatus,
+  markQuizInProgress,
+  isQuizCompleted,
+  getContentStatus,
   getStatusInfo,
-  loadStateFromStorage
+  loadStateFromStorage,
 } = useQuizProgress();
 
 const { data: substrand } = await client
@@ -45,7 +45,10 @@ const bece = strands[0].BECE_Qquestions;
 
 // Check if all quizzes are completed
 const allQuizzesCompleted = computed(() => {
-  return substrand_ls && completedQuizzes.value.size === substrand_ls.length;
+  return (
+    substrand_ls.value &&
+    completedQuizzes.value.size === substrand_ls.value.length
+  );
 });
 
 function openNotes() {
@@ -93,23 +96,27 @@ const handleContentClick = (contentId) => {
     openQuizModal(contentId);
   } else {
     // Navigate to content if quiz is completed
-    navigateTo(`/learning-modules/assignment_workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/${contentId}`);
+    navigateTo(
+      `/learning-modules/assignment_workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/${contentId}`,
+    );
   }
 };
 
 // Add a completion indicator to the title
 const completedCount = computed(() => {
-  return substrand_ls ? substrand_ls.filter(content => isQuizCompleted(content.id)).length : 0;
+  return substrand_ls.value
+    ? substrand_ls.value.filter((content) => isQuizCompleted(content.id)).length
+    : 0;
 });
 
 const totalCount = computed(() => {
-  return substrand_ls ? substrand_ls.length : 0;
+  return substrand_ls.value ? substrand_ls.value.length : 0;
 });
 
 const solveProblem = () => {
   // Only allow access if all quizzes are completed
   if (allQuizzesCompleted.value) {
-    console.log('Opening problem set...');
+    console.log("Opening problem set...");
     // Add your problem set logic here
   }
 };
@@ -117,20 +124,28 @@ const solveProblem = () => {
 // Load state when page mounts
 onMounted(() => {
   loadStateFromStorage();
-  console.log('Loaded quiz progress state:', {
+  console.log("Loaded quiz progress state:", {
     completedQuizzes: Array.from(completedQuizzes.value),
-    contentStatus: Array.from(contentStatus.value.entries())
+    contentStatus: Array.from(contentStatus.value.entries()),
   });
 });
 
 // Watch for changes in completion status
-watch(completedQuizzes, (newCompleted) => {
-  console.log('Completed quizzes updated:', Array.from(newCompleted));
-}, { deep: true });
+watch(
+  completedQuizzes,
+  (newCompleted) => {
+    console.log("Completed quizzes updated:", Array.from(newCompleted));
+  },
+  { deep: true },
+);
 
-watch(contentStatus, (newStatus) => {
-  console.log('Content status updated:', Array.from(newStatus.entries()));
-}, { deep: true });
+watch(
+  contentStatus,
+  (newStatus) => {
+    console.log("Content status updated:", Array.from(newStatus.entries()));
+  },
+  { deep: true },
+);
 
 const substrand_ls = computed(() => {
   if (unsortedSubstrand_ls) {
@@ -144,7 +159,6 @@ onBeforeUnmount(() => {
   showQuizModal.value = false;
   selectedContentId.value = null;
 });
-
 </script>
 <template>
   <div class="mt-15" style="height: auto; background-color: #f6f6f6">
@@ -159,19 +173,27 @@ onBeforeUnmount(() => {
           <div class="mt-2 flex items-center">
             <div class="flex items-center text-sm text-gray-600">
               <span class="mr-2">Progress:</span>
-              <span class="font-semibold text-green-600">{{ completedCount }}/{{ totalCount }}</span>
+              <span class="font-semibold text-green-600"
+                >{{ completedCount }}/{{ totalCount }}</span
+              >
               <span class="ml-2">courses completed</span>
             </div>
             <div class="ml-4 w-32 bg-gray-200 rounded-full h-2">
-              <div 
+              <div
                 class="bg-green-600 h-2 rounded-full transition-all duration-300"
-                :style="{ width: `${totalCount > 0 ? (completedCount / totalCount) * 100 : 0}%` }"
+                :style="{
+                  width: `${totalCount > 0 ? (completedCount / totalCount) * 100 : 0}%`,
+                }"
               ></div>
             </div>
           </div>
         </v-col>
         <v-col cols="4" align="right">
-          <v-btn :to="`/progress?topic=${encodeURIComponent(title)}&substrandId=${substrand_ref_id}`" color="primary">View Progress Report</v-btn>
+          <v-btn
+            :to="`/progress?topic=${encodeURIComponent(title)}&substrandId=${substrand_ref_id}`"
+            color="primary"
+            >View Progress Report</v-btn
+          >
         </v-col>
       </v-row>
       <ConceptNotes :concept-note="conceptNote" />
@@ -181,44 +203,48 @@ onBeforeUnmount(() => {
           <v-card class="mb-4">
             <v-card-text class="pa-6">
               <!-- Topic Title -->
-              <div 
+              <div
                 @click="handleContentClick(content.id)"
                 class="cursor-pointer hover:text-gray-600 transition-colors mb-4"
               >
-                <div class="text-sm text-gray-500 mb-1">{{ content.id }}</div>
+                <!-- <div class="text-sm text-gray-500 mb-1">{{ content.id }}</div> -->
                 <div class="text-lg font-medium">{{ content.indicators }}</div>
               </div>
-              
+
               <!-- Three Action Elements -->
               <div class="flex items-center justify-between">
                 <!-- Concept Note (Blue) -->
-                <button 
-                  @click="openNotes" 
+                <button
+                  @click="openNotes"
                   class="text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors"
                 >
                   CONCEPT NOTE
                 </button>
-                
+
                 <!-- BECE Questions (Green) -->
-                <button 
-                  @click="openBece" 
+                <button
+                  @click="openBece"
                   class="text-green-600 hover:text-green-800 font-medium text-sm transition-colors"
                 >
                   BECE QUESTIONS
                 </button>
-                
+
                 <!-- Completed Status (Green) -->
                 <div class="flex items-center">
-                  <span 
+                  <span
                     :class="[
                       'px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-1',
-                      isQuizCompleted(content.id) ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-500'
+                      isQuizCompleted(content.id)
+                        ? 'bg-green-100 text-green-600'
+                        : 'bg-gray-100 text-gray-500',
                     ]"
-                    style="border-radius: 10px;"
+                    style="border-radius: 10px"
                   >
                     <span v-if="isQuizCompleted(content.id)">✓</span>
                     <span v-else>○</span>
-                    {{ isQuizCompleted(content.id) ? 'COMPLETED' : 'NOT STARTED' }}
+                    {{
+                      isQuizCompleted(content.id) ? "COMPLETED" : "NOT STARTED"
+                    }}
                   </span>
                 </div>
               </div>
@@ -231,7 +257,7 @@ onBeforeUnmount(() => {
       <div v-if="allQuizzesCompleted" class="mt-10">
         <div class="text-h3 font-bold mb-2">Problem Set</div>
         <p class="text-lg mb-6">Time to apply and show the Wow!</p>
-        
+
         <v-row>
           <v-col cols="12" md="6">
             <v-img src="/img/problem.png" class="rounded-lg"></v-img>
@@ -243,8 +269,8 @@ onBeforeUnmount(() => {
               situations using math. There might be more than one way — so be
               bold, be creative, and show the wow!
             </p>
-            <v-btn 
-              @click="solveProblem" 
+            <v-btn
+              @click="solveProblem"
               class="mt-5 bg-gray-800 text-white hover:bg-gray-700 transition-colors"
               size="large"
             >

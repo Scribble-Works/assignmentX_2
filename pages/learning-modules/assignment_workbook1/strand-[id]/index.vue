@@ -29,7 +29,7 @@ console.log(strandtitle);
             <h1 class="text-center text-uppercase text-bold" style="font-size: 3em; color: #3E4F5C;">STRAND
                 {{ strandNumber }} - {{ title }}
             </h1>
-            <ConceptNotes :concept-note="conceptNote" />
+            <!-- <ConceptNotes :concept-note="conceptNote" /> -->
             <introvid :intro="vid" />
             <div class="mt-10">
                 <v-row class="mt-n5" v-for="substrand in substrands" :key="substrand.id">
