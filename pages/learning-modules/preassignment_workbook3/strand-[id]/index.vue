@@ -6,7 +6,7 @@ const route = useRoute();
 const client = useSupabaseClient();
 const id = route.params.id;
 
-const { data: workbook } = await client.from('pre-assignment_Workbook1').select().eq('id', id);
+const { data: workbook } = await client.from('pre-assignment_Workbook3').select().eq('id', id);
 const { data: strand1 } = await client.from('preassignment_workbook3_substrands_contents').select().eq('id', id);
 const substrand_ref = strand1[0].substrand_ref;
 const { data: substrands } = await client.from('preassignment_workbook3_strand_substrands_lists').select().eq('strand_ref', id)
