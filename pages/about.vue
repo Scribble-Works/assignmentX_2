@@ -7,19 +7,19 @@ const message = ref("");
 const dialog = ref(false);
 
 const sendMessage = async () => {
-    try {
-        mail.send({
-            from: 'AssignmentX',
-            subject:'ASSIGNMENTX USER MESSAGE',
-            text:`\n Name: ${name.value} \n \n Email: ${email.value} \n \n Message: ${message.value}`,
-        })
-        dialog.value = true;
-        name.value = "";
-        email.value = "";
-        message.value = "";
-    } catch (error) {
-        console.log(error);
-    }
+  try {
+    mail.send({
+      from: "AssignmentX",
+      subject: "ASSIGNMENTX USER MESSAGE",
+      text: `\n Name: ${name.value} \n \n Email: ${email.value} \n \n Message: ${message.value}`,
+    });
+    dialog.value = true;
+    name.value = "";
+    email.value = "";
+    message.value = "";
+  } catch (error) {
+    console.log(error);
+  }
 };
 const testimonials = [
   {
@@ -38,11 +38,21 @@ const testimonials = [
 </script>
 <template>
   <div class="body">
-    <v-parallax src="/img/abouthero.jpg" height="100dvh">
+    <v-parallax height="100dvh">
       <div
         class="d-flex align-center justify-center"
         style="height: 100%; width: 100%; background-color: rgba(0, 0, 0, 0.5)"
       >
+        <iframe
+          width="100%"
+          height="100%"
+          src="https://www.youtube.com/embed/J7GwxhKuy7s"
+          title="AssignmentX Discovery V4 2"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>
       </div>
     </v-parallax>
     <!-- Main content with consistent alignment -->
@@ -61,10 +71,10 @@ const testimonials = [
             </h4>
             <br />
             <p>
-              We use storytelling, real-life examples, games, and guided practice
-              to make math engaging, practical, and fun. Whether you're learning
-              at home or in school, AssignmentX helps you build confidence, solve
-              problems, and connect math to everyday life.
+              We use storytelling, real-life examples, games, and guided
+              practice to make math engaging, practical, and fun. Whether you're
+              learning at home or in school, AssignmentX helps you build
+              confidence, solve problems, and connect math to everyday life.
             </p>
           </v-col>
         </v-row>
@@ -79,10 +89,11 @@ const testimonials = [
             </h4>
             <br />
             <p>
-              Our mission is to make mathematics engaging and simple, transforming
-              the way students learn by moving beyond rote memorization. We aim to
-              cultivate a love for math by connecting concepts to their real-world
-              applications and historical context. By guiding learners from
+              Our mission is to make mathematics engaging and simple,
+              transforming the way students learn by moving beyond rote
+              memorization. We aim to cultivate a love for math by connecting
+              concepts to their real-world applications and historical context.
+              By guiding learners from
             </p>
             <br />
             <ul class="missionList">
@@ -107,8 +118,8 @@ const testimonials = [
             </h4>
             <br />
             <p>
-              AssignmentX is built on a simple yet powerful 3-step learning model,
-              designed to foster deep understanding and application:
+              AssignmentX is built on a simple yet powerful 3-step learning
+              model, designed to foster deep understanding and application:
             </p>
             <br />
             <v-row>
@@ -178,8 +189,8 @@ const testimonials = [
               <v-col lg="9" md="9" sm="8" class="mt-5">
                 <h4 class="text-h5">Create – Show the Wow</h4>
                 <p>
-                  Show the wow by solving challenges, projects, and creative tasks
-                  that connect math to innovation.
+                  Show the wow by solving challenges, projects, and creative
+                  tasks that connect math to innovation.
                 </p>
               </v-col>
             </v-row>
@@ -189,189 +200,244 @@ const testimonials = [
           </v-col>
         </v-row>
 
-      <v-row class="mt-15">
-        <v-col cols="" lg="6" md="12" sm="12">
-          <h3 class="text-h3">Why It Matters</h3>
-          <br />
-          <p>
-            Many learners struggle with math not because they aren't smart, but
-            because math was never shown to them in a way that made sense. We're
-            changing that.
-          </p>
-          <br />
-          <p>
-            AssignmentX is designed to work online or offline, in low-resource
-            schools, and with localized content to meet learners where they are,
-            ensuring access and relevance for all.
-          </p>
-        </v-col>
-        <v-col cols="" lg="6" md="12" sm="12">
-          <h3 class="text-h3">Who It's For</h3>
-          <br />
-          <p>
-            AssignmentX is designed to support a wide range of learners and
-            educators:
-          </p>
-          <br />
-          <ul class="forList">
-            <li>
-              Students who want to improve, catch up, or explore math in a new
-              way
-            </li>
-            <li>
-              Teachers looking for curriculum-aligned tools to support their
-              lessons
-            </li>
-            <li>
-              Parents who want to help their children learn independently and
-              confidently
-            </li>
-          </ul>
-        </v-col>
-      </v-row>
+        <v-row class="mt-15">
+          <v-col cols="" lg="6" md="12" sm="12">
+            <h3 class="text-h3">Why It Matters</h3>
+            <br />
+            <p>
+              Many learners struggle with math not because they aren't smart,
+              but because math was never shown to them in a way that made sense.
+              We're changing that.
+            </p>
+            <br />
+            <p>
+              AssignmentX is designed to work online or offline, in low-resource
+              schools, and with localized content to meet learners where they
+              are, ensuring access and relevance for all.
+            </p>
+          </v-col>
+          <v-col cols="" lg="6" md="12" sm="12">
+            <h3 class="text-h3">Who It's For</h3>
+            <br />
+            <p>
+              AssignmentX is designed to support a wide range of learners and
+              educators:
+            </p>
+            <br />
+            <ul class="forList">
+              <li>
+                Students who want to improve, catch up, or explore math in a new
+                way
+              </li>
+              <li>
+                Teachers looking for curriculum-aligned tools to support their
+                lessons
+              </li>
+              <li>
+                Parents who want to help their children learn independently and
+                confidently
+              </li>
+            </ul>
+          </v-col>
+        </v-row>
 
-      <br />
-      <v-row class="mt-15 mb-15">
-        <v-col cols="" lg="6" md="12" sm="12">
-          <img src="/img/diff.png" alt="" />
-        </v-col>
-        <v-col cols="" lg="6" md="12" sm="12">
-          <h4 class="text-h4">
-            What Makes Us <span style="color: #e5253a">Different</span>?
-          </h4>
-          <p>What sets AssignmentX apart and ensures real learning outcomes?</p>
-          <br />
+        <br />
+        <v-row class="mt-15 mb-15">
+          <v-col cols="" lg="6" md="12" sm="12">
+            <img src="/img/diff.png" alt="" />
+          </v-col>
+          <v-col cols="" lg="6" md="12" sm="12">
+            <h4 class="text-h4">
+              What Makes Us <span style="color: #e5253a">Different</span>?
+            </h4>
+            <p>
+              What sets AssignmentX apart and ensures real learning outcomes?
+            </p>
+            <br />
 
-          <v-row>
-            <v-col sm="3" lg="3" md="3">
-              <v-icon style="font-size: 6.5em; color: #fcc30c"
-                >mdi-book-open-blank-variant</v-icon
-              >
-            </v-col>
-            <v-col sm="9" lg="9" md="9">
-              <h5 class="text-h5">Context-based learning</h5>
-              <p>
-                Utilizing engaging stories, local culture, and real-life
-                scenarios to teach math.
-              </p>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col sm="3" lg="3" md="3">
-              <v-icon style="font-size: 6.5em; color: #4c9f38"
-                >mdi-book-open-blank-variant</v-icon
-              >
-            </v-col>
-            <v-col sm="9" lg="9" md="9">
-              <h5 class="text-h5">Curriculum-aligned content</h5>
-              <p>
-                Specifically tailored for Ghanaian basic schools(B4 - B9), ensuring
-                relevance to local educational standards.
-              </p>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col sm="3" lg="3" md="3">
-              <v-icon style="font-size: 6.5em; color: #2096f3"
-                >mdi-book-open-blank-variant</v-icon
-              >
-            </v-col>
-            <v-col sm="9" lg="9" md="9">
-              <h5 class="text-h5">Interactive tools</h5>
-              <p>
-                Engaging features like quizzes, flip cards, worksheets, and live
-                sessions to make learning dynamic.
-              </p>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col sm="3" lg="3" md="3">
-              <v-icon style="font-size: 6.5em; color: #e5253a"
-                >mdi-book-open-blank-variant</v-icon
-              >
-            </v-col>
-            <v-col sm="9" lg="9" md="9">
-              <h5 class="text-h5">Progress tracking</h5>
-              <p>
-                Robust features to measure learning growth and provide insights
-                into student mastery.
-              </p>
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
-      <div class="mt-10 text-center">
-                <h3 class="text-h3">Not Just Numbers - Real Results</h3><br>
-                <p>We could talk about impact all day—but we’d rather let our users do the talking.</p>
-                <br>
-                <v-carousel hide-delimiter-background height="500">
-                    <v-carousel-item v-for="(testimonial, i) in testimonials" :key="i">
-                        <v-sheet elevation="2" class="mx-auto" max-width="800" height="400">
-                            <v-container>
-                                <v-card-text style="width: 100%;">
-                                    <div class="text-left mb-2 mt-10">{{ testimonial.quote }}</div>
-                                    <div class="text-subtitle-1 text-left mt-10 font-italic">{{ testimonial.author }}
-                                    </div>
-                                    <div class="text-caption text-left mt-1" style="color: #888;">{{ testimonial.school
-                                    }}</div>
-                                </v-card-text>
-                            </v-container>
-                        </v-sheet>
-                    </v-carousel-item>
-                </v-carousel>
-            </div>
-            <v-row class="mt-10">
-                <v-col cols="" sm="12" md="12" lg="6" class="mt-16 pt-10">
-                    <h4 style="color: #3E4F5C; font-family: 'Inter', sans-serif;" class="text-h4">Don't Have The <span
-                            style="text-decoration: underline; text-decoration-color: #FCC30C;">Book</span><br> Yet?
-                    </h4>
-                    <p class="mt-5 mb-5">Get your Assignment Maths Workbook now and unlock a <br> world of learning with a digital companion!</p>
-                    <v-btn color="blue-darken-1" to="/store" size="large">Buy the Book</v-btn>
-                </v-col>
-                <v-col cols="" sm="12" md="12" lg="6">
-                    <img src="/img/buyabout.png" alt="">
-                </v-col>
+            <v-row>
+              <v-col sm="3" lg="3" md="3">
+                <v-icon style="font-size: 6.5em; color: #fcc30c"
+                  >mdi-book-open-blank-variant</v-icon
+                >
+              </v-col>
+              <v-col sm="9" lg="9" md="9">
+                <h5 class="text-h5">Context-based learning</h5>
+                <p>
+                  Utilizing engaging stories, local culture, and real-life
+                  scenarios to teach math.
+                </p>
+              </v-col>
             </v-row>
-            <v-row class="mt-16 mb-10">
-                <v-col cols="" lg="6" md="12" sm="12" class="mt-10">
-                    <h5 class="text-h5">Want to Get Involved?</h5>
-                    <br>
-                    <p>Whether you're a school, parent, teacher, or education partner,<br>we'd love to connect and
-                        explore how we can work <br> together to empower learners.</p><br>
-                    <p>
-                        <v-icon>mdi-phone</v-icon> +233 20 100 1041 <br><br>
-                        <v-icon>mdi-email</v-icon> scribbleworksonline@gmail.com
-                    </p>
-                </v-col>
-                <v-col cols="" lg="6" md="12" sm="12">
-                    <v-form @submit.prevent="sendMessage">
-                        <label>Name</label>
-                        <v-text-field v-model="name" type="text" placeholder="Enter your name" variant="underlined"></v-text-field>
-                        <label>Email</label>
-                        <v-text-field v-model="email" type="email" placeholder="Enter your email"
-                            variant="underlined"></v-text-field>
-                        <label>Message</label>
-                        <v-textarea v-model="message" type="text" placeholder="Enter your message"
-                            variant="underlined"></v-textarea>
-                        <v-btn color="blue-darken-1" size="large" type="submit">Send <v-icon>mdi-send</v-icon>
-                        </v-btn>
-                    </v-form>
-
-                    <v-dialog v-model="dialog" max-width="600">
-                        <v-card>
-                            <v-card-title class="headline">Message Sent</v-card-title>
-                            <v-card-text>
-                                Thank you for your message! We will get back to you shortly.
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-btn color="blue-darken-1" text @click="dialog = false">Close</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                </v-col>
+            <v-row>
+              <v-col sm="3" lg="3" md="3">
+                <v-icon style="font-size: 6.5em; color: #4c9f38"
+                  >mdi-book-open-blank-variant</v-icon
+                >
+              </v-col>
+              <v-col sm="9" lg="9" md="9">
+                <h5 class="text-h5">Curriculum-aligned content</h5>
+                <p>
+                  Specifically tailored for Ghanaian basic schools(B4 - B9),
+                  ensuring relevance to local educational standards.
+                </p>
+              </v-col>
             </v-row>
-        </v-container>
+            <v-row>
+              <v-col sm="3" lg="3" md="3">
+                <v-icon style="font-size: 6.5em; color: #2096f3"
+                  >mdi-book-open-blank-variant</v-icon
+                >
+              </v-col>
+              <v-col sm="9" lg="9" md="9">
+                <h5 class="text-h5">Interactive tools</h5>
+                <p>
+                  Engaging features like quizzes, flip cards, worksheets, and
+                  live sessions to make learning dynamic.
+                </p>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col sm="3" lg="3" md="3">
+                <v-icon style="font-size: 6.5em; color: #e5253a"
+                  >mdi-book-open-blank-variant</v-icon
+                >
+              </v-col>
+              <v-col sm="9" lg="9" md="9">
+                <h5 class="text-h5">Progress tracking</h5>
+                <p>
+                  Robust features to measure learning growth and provide
+                  insights into student mastery.
+                </p>
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
+        <div class="mt-10 text-center">
+          <h3 class="text-h3">Not Just Numbers - Real Results</h3>
+          <br />
+          <p>
+            We could talk about impact all day—but we’d rather let our users do
+            the talking.
+          </p>
+          <br />
+          <v-carousel hide-delimiter-background height="500">
+            <v-carousel-item v-for="(testimonial, i) in testimonials" :key="i">
+              <v-sheet
+                elevation="2"
+                class="mx-auto"
+                max-width="800"
+                height="400"
+              >
+                <v-container>
+                  <v-card-text style="width: 100%">
+                    <div class="text-left mb-2 mt-10">
+                      {{ testimonial.quote }}
+                    </div>
+                    <div class="text-subtitle-1 text-left mt-10 font-italic">
+                      {{ testimonial.author }}
+                    </div>
+                    <div
+                      class="text-caption text-left mt-1"
+                      style="color: #888"
+                    >
+                      {{ testimonial.school }}
+                    </div>
+                  </v-card-text>
+                </v-container>
+              </v-sheet>
+            </v-carousel-item>
+          </v-carousel>
+        </div>
+        <v-row class="mt-10">
+          <v-col cols="" sm="12" md="12" lg="6" class="mt-16 pt-10">
+            <h4
+              style="color: #3e4f5c; font-family: &quot;Inter&quot;, sans-serif"
+              class="text-h4"
+            >
+              Don't Have The
+              <span
+                style="
+                  text-decoration: underline;
+                  text-decoration-color: #fcc30c;
+                "
+                >Book</span
+              ><br />
+              Yet?
+            </h4>
+            <p class="mt-5 mb-5">
+              Get your Assignment Maths Workbook now and unlock a <br />
+              world of learning with a digital companion!
+            </p>
+            <v-btn color="blue-darken-1" to="/store" size="large"
+              >Buy the Book</v-btn
+            >
+          </v-col>
+          <v-col cols="" sm="12" md="12" lg="6">
+            <img src="/img/buyabout.png" alt="" />
+          </v-col>
+        </v-row>
+        <v-row class="mt-16 mb-10">
+          <v-col cols="" lg="6" md="12" sm="12" class="mt-10">
+            <h5 class="text-h5">Want to Get Involved?</h5>
+            <br />
+            <p>
+              Whether you're a school, parent, teacher, or education partner,<br />we'd
+              love to connect and explore how we can work <br />
+              together to empower learners.
+            </p>
+            <br />
+            <p>
+              <v-icon>mdi-phone</v-icon> +233 20 100 1041 <br /><br />
+              <v-icon>mdi-email</v-icon> scribbleworksonline@gmail.com
+            </p>
+          </v-col>
+          <v-col cols="" lg="6" md="12" sm="12">
+            <v-form @submit.prevent="sendMessage">
+              <label>Name</label>
+              <v-text-field
+                v-model="name"
+                type="text"
+                placeholder="Enter your name"
+                variant="underlined"
+              ></v-text-field>
+              <label>Email</label>
+              <v-text-field
+                v-model="email"
+                type="email"
+                placeholder="Enter your email"
+                variant="underlined"
+              ></v-text-field>
+              <label>Message</label>
+              <v-textarea
+                v-model="message"
+                type="text"
+                placeholder="Enter your message"
+                variant="underlined"
+              ></v-textarea>
+              <v-btn color="blue-darken-1" size="large" type="submit"
+                >Send <v-icon>mdi-send</v-icon>
+              </v-btn>
+            </v-form>
+
+            <v-dialog v-model="dialog" max-width="600">
+              <v-card>
+                <v-card-title class="headline">Message Sent</v-card-title>
+                <v-card-text>
+                  Thank you for your message! We will get back to you shortly.
+                </v-card-text>
+                <v-card-actions>
+                  <v-btn color="blue-darken-1" text @click="dialog = false"
+                    >Close</v-btn
+                  >
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-col>
+        </v-row>
+      </v-container>
     </div>
+  </div>
 </template>
 <style>
 .body {

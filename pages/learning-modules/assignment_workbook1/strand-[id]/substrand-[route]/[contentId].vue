@@ -110,17 +110,6 @@ const markCourseAsCompleted = () => {
   }
 };
 
-function openBece() {
-  navigateTo(bece, {
-    open: {
-      windowFeatures: {
-        width: 500,
-        height: 500,
-      },
-    },
-  });
-}
-
 function openTranscript() {
   // For now, we'll show an alert. In a real implementation, this would open a transcript modal or page
   alert("Video transcript feature coming soon!");

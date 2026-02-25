@@ -95,7 +95,7 @@ const handleContentClick = (contentId) => {
   } else {
     // Navigate to content if quiz is completed
     navigateTo(
-      `/learning-modules/assignment_workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/${contentId}`,
+      `/learning-modules/assignment_workbook2/strand-${strand_ref_id}/substrand-${substrand_ref}/${contentId}`,
     );
   }
 };
