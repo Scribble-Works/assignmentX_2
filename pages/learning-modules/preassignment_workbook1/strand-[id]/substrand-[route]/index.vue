@@ -111,11 +111,10 @@ const startQuiz = (contentId) => {
   showQuizModal.value = false;
   selectedContentId.value = null;
 
-  // Navigate to the quiz page with substrand and strand query params
+  // Navigate to the quiz within this module
   // Use substrand_ref_id as the quiz identifier since quiz is per substrand
-  const substrandRoute = `substrand-${substrand_ref}`;
   navigateTo(
-    `/quiz/${substrand_ref_id}?substrand=${substrandRoute}&strand=${strand_ref_id}&contentId=${contentId}`,
+    `/learning-modules/preassignment_workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/quiz/${substrand_ref_id}?contentId=${contentId}`,
   );
 };
 

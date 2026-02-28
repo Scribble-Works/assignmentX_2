@@ -81,9 +81,10 @@ const closeQuizModal = () => {
 };
 
 const startQuiz = (contentId) => {
-  // Quiz is now handled by the separate quiz page
-  // This function is no longer needed as the modal navigates directly
-  console.log(`Quiz started for content: ${contentId}`);
+  // Navigate to the quiz within this module
+  navigateTo(
+    `/learning-modules/assignment_workbook3/strand-${strand_ref_id}/substrand-${substrand_ref}/quiz/${contentId}`,
+  );
 };
 
 const handleContentClick = (contentId) => {
