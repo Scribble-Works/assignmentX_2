@@ -14,10 +14,10 @@ export const useStrapiQuiz = () => {
     ].filter(opt => opt !== null && opt !== undefined && opt !== '');
 
     const correctOptionMap = {
-      'one': 0,
-      'two': 1,
-      'three': 2,
-      'four': 3
+      'option_1': 0,
+      'option_2': 1,
+      'option_3': 2,
+      'option_4': 3
     };
     const correctIndex = correctOptionMap[questionData.correctOption] ?? 0;
     const questionType = questionData.questionType || 'MCQ';
