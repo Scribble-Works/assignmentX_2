@@ -1,212 +1,423 @@
 <template>
-  <div class="min-h-screen bg-white p-8">
-    <div class="max-w-4xl mx-auto">
-      <!-- Title -->
-      <h1 class="text-3xl font-bold text-black mb-8">Edit Profile</h1>
+  <div>
+    <div class="min-h-screen bg-white p-8">
+      <div class="max-w-4xl mx-auto">
+        <!-- Title -->
+        <h1 class="text-3xl font-bold text-black mb-8">Edit Profile</h1>
 
-      <!-- Form -->
-      <form @submit.prevent="updateProfile" class="space-y-6 mb-15">
-        <!-- Two Column Layout -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <!-- Left Column -->
-          <div class="space-y-6">
-            <!-- First Name -->
-            <div>
-              <label for="firstName" class="block text-sm font-medium text-black mb-2">
-                First Name
-              </label>
-              <input id="firstName" v-model="form.firstName" type="text"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent" />
+        <!-- Help Section -->
+        <div class="mb-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <svg
+                class="w-6 h-6 text-blue-600 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <div>
+                <h3 class="font-semibold text-black">
+                  Need help navigating AssignmentX?
+                </h3>
+                <p class="text-sm text-gray-600">
+                  Take a quick tour to learn about all the features
+                </p>
+              </div>
             </div>
+            <button
+              @click="showGuide = true"
+              type="button"
+              class="bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200 flex items-center whitespace-nowrap ml-4"
+            >
+              <svg
+                class="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              Start Tour
+            </button>
+          </div>
+        </div>
 
-            <!-- Email -->
-            <div>
-              <label for="email" class="block text-sm font-medium text-black mb-2">
-                Email
-              </label>
-              <input id="email" v-model="form.email" type="email" disabled
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent" />
-            </div>
-
-            <!-- Password -->
-
-
-            <!-- Date of Birth -->
-            <div>
-              <label for="dateOfBirth" class="block text-sm font-medium text-black mb-2">
-                Date of Birth
-              </label>
-              <div class="relative">
-                <input id="dateOfBirth" v-model="form.dateOfBirth" type="text" readonly @click="showDatePicker = true"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent pr-10 cursor-pointer"
-                  placeholder="Select date" />
-                <button type="button" @click="showDatePicker = true"
-                  class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 hover:text-gray-600 cursor-pointer">
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </button>
+        <!-- Form -->
+        <form @submit.prevent="updateProfile" class="space-y-6 mb-15">
+          <!-- Two Column Layout -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Left Column -->
+            <div class="space-y-6">
+              <!-- First Name -->
+              <div>
+                <label
+                  for="firstName"
+                  class="block text-sm font-medium text-black mb-2"
+                >
+                  First Name
+                </label>
+                <input
+                  id="firstName"
+                  v-model="form.firstName"
+                  type="text"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent"
+                />
               </div>
 
-              <!-- Date Picker Modal -->
-              <div v-if="showDatePicker"
-                class="fixed inset-0 bg-black bg-opacity-10 flex items-center justify-center z-50">
-                <div class="bg-white rounded-lg p-6 w-80 shadow-xl max-h-[90vh] overflow-y-auto">
-                  <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-semibold">Select Date</h3>
-                    <button @click="showDatePicker = false" class="text-gray-500 hover:text-gray-700">
-                      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
+              <!-- Email -->
+              <div>
+                <label
+                  for="email"
+                  class="block text-sm font-medium text-black mb-2"
+                >
+                  Email
+                </label>
+                <input
+                  id="email"
+                  v-model="form.email"
+                  type="email"
+                  disabled
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent"
+                />
+              </div>
 
-                  <!-- Calendar -->
-                  <div class="mb-4">
-                    <div class="flex justify-between items-center mb-2">
-                      <button @click="previousMonth" class="p-1 hover:bg-gray-100 rounded">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                        </svg>
-                      </button>
-                      <span class="font-semibold">{{ currentMonthYear }}</span>
-                      <button @click="nextMonth" class="p-1 hover:bg-gray-100 rounded">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              <!-- Password -->
+
+              <!-- Date of Birth -->
+              <div>
+                <label
+                  for="dateOfBirth"
+                  class="block text-sm font-medium text-black mb-2"
+                >
+                  Date of Birth
+                </label>
+                <div class="relative">
+                  <input
+                    id="dateOfBirth"
+                    v-model="form.dateOfBirth"
+                    type="text"
+                    readonly
+                    @click="showDatePicker = true"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent pr-10 cursor-pointer"
+                    placeholder="Select date"
+                  />
+                  <button
+                    type="button"
+                    @click="showDatePicker = true"
+                    class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 hover:text-gray-600 cursor-pointer"
+                  >
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Date Picker Modal -->
+                <div
+                  v-if="showDatePicker"
+                  class="fixed inset-0 bg-black bg-opacity-10 flex items-center justify-center z-50"
+                >
+                  <div
+                    class="bg-white rounded-lg p-6 w-80 shadow-xl max-h-[90vh] overflow-y-auto"
+                  >
+                    <div class="flex justify-between items-center mb-4">
+                      <h3 class="text-lg font-semibold">Select Date</h3>
+                      <button
+                        @click="showDatePicker = false"
+                        class="text-gray-500 hover:text-gray-700"
+                      >
+                        <svg
+                          class="w-6 h-6"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"
+                          />
                         </svg>
                       </button>
                     </div>
 
-                    <!-- Days of week -->
-                    <div class="grid grid-cols-7 gap-1 mb-2">
-                      <div v-for="day in ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']" :key="day"
-                        class="text-center text-sm font-medium text-gray-500 py-1">
-                        {{ day }}
+                    <!-- Calendar -->
+                    <div class="mb-4">
+                      <div class="flex justify-between items-center mb-2">
+                        <button
+                          @click="previousMonth"
+                          class="p-1 hover:bg-gray-100 rounded"
+                        >
+                          <svg
+                            class="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M15 19l-7-7 7-7"
+                            />
+                          </svg>
+                        </button>
+                        <span class="font-semibold">{{
+                          currentMonthYear
+                        }}</span>
+                        <button
+                          @click="nextMonth"
+                          class="p-1 hover:bg-gray-100 rounded"
+                        >
+                          <svg
+                            class="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+
+                      <!-- Days of week -->
+                      <div class="grid grid-cols-7 gap-1 mb-2">
+                        <div
+                          v-for="day in [
+                            'Sun',
+                            'Mon',
+                            'Tue',
+                            'Wed',
+                            'Thu',
+                            'Fri',
+                            'Sat',
+                          ]"
+                          :key="day"
+                          class="text-center text-sm font-medium text-gray-500 py-1"
+                        >
+                          {{ day }}
+                        </div>
+                      </div>
+
+                      <!-- Calendar grid -->
+                      <div class="grid grid-cols-7 gap-1">
+                        <div
+                          v-for="date in calendarDates"
+                          :key="date.key"
+                          @click="selectDate(date)"
+                          :class="[
+                            'text-center py-2 cursor-pointer rounded hover:bg-gray-100',
+                            date.isCurrentMonth
+                              ? 'text-gray-900'
+                              : 'text-gray-400',
+                            date.isSelected
+                              ? 'bg-blue-500 text-white hover:bg-blue-600'
+                              : '',
+                            date.isToday ? 'font-bold' : '',
+                          ]"
+                        >
+                          {{ date.day }}
+                        </div>
                       </div>
                     </div>
 
-                    <!-- Calendar grid -->
-                    <div class="grid grid-cols-7 gap-1">
-                      <div v-for="date in calendarDates" :key="date.key" @click="selectDate(date)" :class="[
-                        'text-center py-2 cursor-pointer rounded hover:bg-gray-100',
-                        date.isCurrentMonth
-                          ? 'text-gray-900'
-                          : 'text-gray-400',
-                        date.isSelected
-                          ? 'bg-blue-500 text-white hover:bg-blue-600'
-                          : '',
-                        date.isToday ? 'font-bold' : '',
-                      ]">
-                        {{ date.day }}
-                      </div>
+                    <!-- Action buttons -->
+                    <div class="flex justify-end space-x-2">
+                      <button
+                        @click="showDatePicker = false"
+                        class="px-4 py-2 text-gray-600 hover:text-gray-800"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        @click="confirmDate"
+                        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                      >
+                        OK
+                      </button>
                     </div>
-                  </div>
-
-                  <!-- Action buttons -->
-                  <div class="flex justify-end space-x-2">
-                    <button @click="showDatePicker = false" class="px-4 py-2 text-gray-600 hover:text-gray-800">
-                      Cancel
-                    </button>
-                    <button @click="confirmDate" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                      OK
-                    </button>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Right Column -->
-          <div class="space-y-6">
-            <!-- Last Name -->
-            <div>
-              <label for="lastName" class="block text-sm font-medium text-black mb-2">
-                Last Name
-              </label>
-              <input id="lastName" v-model="form.lastName" type="text"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent" />
+            <!-- Right Column -->
+            <div class="space-y-6">
+              <!-- Last Name -->
+              <div>
+                <label
+                  for="lastName"
+                  class="block text-sm font-medium text-black mb-2"
+                >
+                  Last Name
+                </label>
+                <input
+                  id="lastName"
+                  v-model="form.lastName"
+                  type="text"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent"
+                />
+              </div>
+
+              <!-- Gender -->
+              <div>
+                <label
+                  for="gender"
+                  class="block text-sm font-medium text-black mb-2"
+                >
+                  Gender
+                </label>
+                <input
+                  id="gender"
+                  v-model="form.gender"
+                  type="text"
+                  disabled
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent"
+                />
+              </div>
+
+              <!-- Phone Number -->
+              <div>
+                <label
+                  for="phoneNumber"
+                  class="block text-sm font-medium text-black mb-2"
+                >
+                  Phone Number
+                </label>
+                <input
+                  id="phoneNumber"
+                  v-model="form.phoneNumber"
+                  type="tel"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent"
+                />
+              </div>
             </div>
-
-            <!-- Gender -->
-            <div>
-              <label for="gender" class="block text-sm font-medium text-black mb-2">
-                Gender
-              </label>
-              <input id="gender" v-model="form.gender" type="text" disabled
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent" />
-            </div>
-
-
-
-            <!-- Phone Number -->
-            <div>
-              <label for="phoneNumber" class="block text-sm font-medium text-black mb-2">
-                Phone Number
-              </label>
-              <input id="phoneNumber" v-model="form.phoneNumber" type="tel"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent" />
-            </div>
           </div>
-        </div>
 
-        <!-- Save Changes Button -->
-        <div class="pt-6">
-          <button type="submit"
-            class="w-full bg-gray-800 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-700 transition-colors duration-200">
-            Save Changes
-          </button>
-        </div>
-      </form>
-
-      <div class="mt-10 mb-15">
-        <!-- password changes -->
-        <h1 class="text-3xl font-bold text-black mb-8">Change Password</h1>
-        <form @submit.prevent="changePassword">
-          <div class=" grid grid-cols-1 md:grid-cols-2 gap-8"></div>
-          <div class="space-y-6">
-            <div>
-            <label for="password" class="block text-sm font-medium text-black mb-2">
-              Password
-            </label>
-            <input id="password" v-model="form.password" type="password" placeholder="Enter your password"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent" />
+          <!-- Save Changes Button -->
+          <div class="pt-6">
+            <button
+              type="submit"
+              class="w-full bg-gray-800 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-700 transition-colors duration-200"
+            >
+              Save Changes
+            </button>
           </div>
-          <div class="space-y-6">
-            <!-- Confirm Password -->
-          <div>
-            <label for="confirmPassword" class="block text-sm font-medium text-black mb-2">
-              Confirm Password
-            </label>
-            <input id="confirmPassword" v-model="form.confirmPassword" type="password"
-              placeholder="Confirm your password"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent" />
-          </div>
-          </div>
-          <button type="submit"
-            class="mt-4 w-full bg-gray-800 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-700 transition-colors duration-200">
-            Change Password</button>
-          </div>
-          
         </form>
+
+        <div class="mt-10 mb-15">
+          <!-- password changes -->
+          <h1 class="text-3xl font-bold text-black mb-8">Change Password</h1>
+          <form @submit.prevent="changePassword">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+            <div class="space-y-6">
+              <div>
+                <label
+                  for="password"
+                  class="block text-sm font-medium text-black mb-2"
+                >
+                  Password
+                </label>
+                <input
+                  id="password"
+                  v-model="form.password"
+                  type="password"
+                  placeholder="Enter your password"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent"
+                />
+              </div>
+              <div class="space-y-6">
+                <!-- Confirm Password -->
+                <div>
+                  <label
+                    for="confirmPassword"
+                    class="block text-sm font-medium text-black mb-2"
+                  >
+                    Confirm Password
+                  </label>
+                  <input
+                    id="confirmPassword"
+                    v-model="form.confirmPassword"
+                    type="password"
+                    placeholder="Confirm your password"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent"
+                  />
+                </div>
+              </div>
+              <button
+                type="submit"
+                class="mt-4 w-full bg-gray-800 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-700 transition-colors duration-200"
+              >
+                Change Password
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
+
+    <!-- Onboarding Guide -->
+    <OnboardingGuide
+      :show="showGuide"
+      @close="handleGuideClose"
+      @complete="handleGuideComplete"
+    />
   </div>
 </template>
 
 <script setup>
+import { ref } from "vue";
 // import { ref, computed } from "vue"
 
 // Get current user
 const user = useSupabaseUser();
 const client = useSupabaseClient();
 
+// Onboarding guide state
+const showGuide = ref(false);
+
+const handleGuideClose = () => {
+  showGuide.value = false;
+};
+
+const handleGuideComplete = () => {
+  showGuide.value = false;
+};
 
 const profile = await client
   .from("profiles")
   .select()
-  .eq("id", user.value.id).single();
+  .eq("id", user.value.id)
+  .single();
 // Log current user information
 console.log("Current user:", user.value);
 console.log("User ID:", user.value && user.value.id);
@@ -274,7 +485,7 @@ const previousMonth = () => {
   currentDate.value = new Date(
     currentDate.value.getFullYear(),
     currentDate.value.getMonth() - 1,
-    1
+    1,
   );
 };
 
@@ -282,7 +493,7 @@ const nextMonth = () => {
   currentDate.value = new Date(
     currentDate.value.getFullYear(),
     currentDate.value.getMonth() + 1,
-    1
+    1,
   );
 };
 
@@ -328,12 +539,15 @@ const changePassword = async () => {
 
 const updateProfile = async () => {
   try {
-    const {data, error} = await client.from("profiles").update({
-      firstName: form.value.firstName,
-      lastName: form.value.lastName,
-      DOB: form.value.dateOfBirth,
-      phone: form.value.phoneNumber
-    }).eq("id", user.value.id);
+    const { data, error } = await client
+      .from("profiles")
+      .update({
+        firstName: form.value.firstName,
+        lastName: form.value.lastName,
+        DOB: form.value.dateOfBirth,
+        phone: form.value.phoneNumber,
+      })
+      .eq("id", user.value.id);
   } catch (error) {
     console.error("Error updating profile:", error);
   }

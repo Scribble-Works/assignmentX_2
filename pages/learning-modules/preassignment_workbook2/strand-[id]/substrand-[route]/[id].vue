@@ -87,7 +87,7 @@ function swapVideo(video) {
   const oldMain = mainVideo.value;
   mainVideo.value = video;
   relatedVideos.value = relatedVideos.value.map((v) =>
-    v === video ? oldMain : v
+    v === video ? oldMain : v,
   );
 }
 </script>
@@ -102,13 +102,14 @@ function swapVideo(video) {
       </h2>
       <v-row>
         <v-col cols="" lg="9" md="6" sm="12">
-          <vids :url="vid1" />
+          <vids :url="vid1" :showRating="true" />
         </v-col>
         <v-col cols="" lg="3" md="6" sm="12">
           <div v-for="(video, index) in relatedVids" :key="index">
             <vids
               class="mb-4 cursor-pointer"
               :url="video"
+              :showRating="false"
               @click="swapVideo(video)"
             />
           </div>
@@ -127,12 +128,12 @@ function swapVideo(video) {
         </v-col>
         <!-- <v-col cols="" lg="3" sm="12" md="4">
                     <v-btn rounded color="grey-darken-3">Video transcription</v-btn>
-                </v-col> -->
-      </v-row><br>
+                </v-col> --> </v-row
+      ><br />
       <div class="mt-10">
         <h3
           class="text-h3 mb-5"
-          style="font-family: 'Inter', sans-serif; font-weight: bold"
+          style="font-family: &quot;Inter&quot;, sans-serif; font-weight: bold"
         >
           Worked Exam<span
             style="text-decoration: underline; text-decoration-color: #fcc30c"
@@ -166,7 +167,10 @@ function swapVideo(video) {
         <div class="mt-10">
           <h5
             class="text-h5 text-center"
-            style="font-family: 'Inter', sans-serif; font-weight: bold"
+            style="
+              font-family: &quot;Inter&quot;, sans-serif;
+              font-weight: bold;
+            "
           >
             Gamified Learning
           </h5>
