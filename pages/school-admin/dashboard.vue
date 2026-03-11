@@ -1,4 +1,8 @@
 <script setup>
+definePageMeta({
+  layout: false,
+});
+
 // Check if user is authenticated and is a school admin
 const { auth } = useSupabaseClient();
 const client = useSupabaseClient();

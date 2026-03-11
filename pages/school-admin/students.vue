@@ -1,4 +1,9 @@
-d<script setup>
+d
+<script setup>
+definePageMeta({
+  layout: false,
+});
+
 const { auth } = useSupabaseClient();
 const client = useSupabaseClient();
 const user = useSupabaseUser();
