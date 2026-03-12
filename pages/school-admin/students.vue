@@ -233,10 +233,46 @@ const save = async () => {
         .eq("id", user.value.id)
         .single();
 
+      // Create user account with default password
+      const { data: authData, error: authError } = await auth.signUp({
+        email: editedItem.value.email,
+        password: "helloworld",
+        options: {
+          data: {
+            firstName: editedItem.value.firstName,
+            lastName: editedItem.value.lastName,
+            role: "student",
+          },
+        },
+      });
+
+      if (authError) {
+        console.error("Error creating user account:", authError);
+        throw new Error(
+          "Failed to create student account: " + authError.message,
+        );
+      }
+
+      // Create profile for the student
+      const { error: profileError } = await client.from("profiles").insert({
+        id: authData.user.id,
+        email: editedItem.value.email,
+        firstName: editedItem.value.firstName,
+        lastName: editedItem.value.lastName,
+        role: "student",
+        school_id: profile.school_id,
+      });
+
+      if (profileError) {
+        console.error("Error creating student profile:", profileError);
+      }
+
+      // Create student record
       const { data, error } = await client
         .from("school_students")
         .insert({
           school_id: profile.school_id,
+          user_id: authData.user.id,
           firstName: editedItem.value.firstName,
           lastName: editedItem.value.lastName,
           email: editedItem.value.email,

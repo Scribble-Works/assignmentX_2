@@ -53,6 +53,7 @@ Stores students enrolled by schools.
 CREATE TABLE school_students (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   school_id UUID REFERENCES schools(id) ON DELETE CASCADE NOT NULL,
+  user_id UUID REFERENCES auth.users(id), -- Links to the student's user account
   firstName VARCHAR(255) NOT NULL,
   lastName VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
@@ -66,6 +67,7 @@ CREATE TABLE school_students (
 
 CREATE INDEX idx_school_students_school_id ON school_students(school_id);
 CREATE INDEX idx_school_students_status ON school_students(status);
+CREATE INDEX idx_school_students_user_id ON school_students(user_id);
 ```
 
 ### 4. `student_module_access` table

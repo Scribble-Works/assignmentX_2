@@ -69,6 +69,14 @@ Add, edit, and manage your school's students:
    - Grade Level
    - Status (Active/Inactive/Suspended)
 3. Click "Save"
+4. A user account will be automatically created with:
+   - **Default Password:** `helloworld`
+   - Students should be advised to change this password after first login
+
+**Important:** When you add a student, the system automatically creates a login account for them with the default password **`helloworld`**. Make sure to inform students to:
+
+- Log in using their email and the password `helloworld`
+- Change their password after their first login for security
 
 **Edit a Student:**
 
