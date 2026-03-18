@@ -1,4 +1,3 @@
-d
 <script setup>
 definePageMeta({
   layout: false,
@@ -376,6 +375,12 @@ const logout = async () => {
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6" class="text-right">
+                      <BulkStudentUpload
+                        v-if="school"
+                        :school-id="school.id"
+                        @upload-complete="loadStudents"
+                        class="mr-2"
+                      />
                       <v-btn
                         color="primary"
                         prepend-icon="mdi-plus"

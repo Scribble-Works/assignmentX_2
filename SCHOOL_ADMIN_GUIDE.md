@@ -78,6 +78,44 @@ Add, edit, and manage your school's students:
 - Log in using their email and the password `helloworld`
 - Change their password after their first login for security
 
+**Bulk Upload Students:**
+
+For adding multiple students at once:
+
+1. Click "Bulk Upload" button
+2. Download the CSV template by clicking "Download CSV Template"
+3. Open the template in Excel or any spreadsheet application
+4. Fill in the student details with the following columns:
+   - **firstName** - Student's first name
+   - **lastName** - Student's last name
+   - **email** - Valid email address (must be unique)
+   - **student_id** - Unique student identifier
+   - **grade_level** - e.g., Grade 9, Grade 10, etc.
+5. Save the file as CSV format
+6. Click "Choose File" and select your completed CSV file
+7. Review the preview data - the system will validate all entries
+8. Valid entries will show a green "Valid" status
+9. Entries with errors will show a red status with the error description
+10. Click "Import Students" to upload all valid students
+11. All students will be created with the default password: `helloworld`
+
+**CSV Template Example:**
+
+```
+firstName,lastName,email,student_id,grade_level
+John,Doe,john.doe@school.com,STU001,Grade 9
+Jane,Smith,jane.smith@school.com,STU002,Grade 10
+Michael,Johnson,michael.johnson@school.com,STU003,Grade 11
+```
+
+**Notes:**
+
+- The system will show upload progress and results
+- Successfully imported students appear in green
+- Failed imports will show error details
+- All students get the default password `helloworld`
+- Email addresses must be unique across the system
+
 **Edit a Student:**
 
 - Click the pencil icon next to any student
