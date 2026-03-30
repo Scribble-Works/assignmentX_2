@@ -77,7 +77,7 @@ const handleGuideComplete = () => {
           @click="showGuide = true"
           size="small"
         >
-          Need Help? Take the Tour
+          Take a Tour
         </v-btn>
       </div>
 
