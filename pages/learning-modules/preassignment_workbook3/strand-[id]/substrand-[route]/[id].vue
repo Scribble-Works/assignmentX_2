@@ -47,6 +47,15 @@ const vid2 = indicators_content[0].vid2;
 const vid3 = indicators_content[0].vid3;
 const game = indicators_content[0].games;
 
+const worked_examples = ref(
+  Object.entries(indicators_content[0])
+    .filter(([key, value]) => key.startsWith("worked_examples") && value)
+    .map(([key, url], idx) => ({
+      id: idx + 1,
+      url,
+    })),
+);
+
 // const conceptNote = files[0].concept_notes;
 // const bece = files[0].BECE_Qquestions;
 

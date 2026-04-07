@@ -50,6 +50,15 @@ const conceptNote = files[0].concept_notes;
 const bece = files[0].BECE_Qquestions;
 const game = indicators_content[0].games;
 
+const worked_examples = ref(
+  Object.entries(indicators_content[0])
+    .filter(([key, value]) => key.startsWith("worked_examples") && value)
+    .map(([key, url], idx) => ({
+      id: idx + 1,
+      url,
+    })),
+);
+
 console.log(indicators_content);
 // console.log(substrand_ref_id);
 const relatedVids = ref([vid2, vid3]);
