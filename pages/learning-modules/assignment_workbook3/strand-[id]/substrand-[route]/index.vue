@@ -161,7 +161,7 @@ watch(
           font-weight: bold;
           background-color: #2096f3;
           color: white;
-          border-radius: 10%;
+          border-radius: 8px;
           padding: 7px 24px;
           display: inline-block;
         "
@@ -205,7 +205,7 @@ watch(
               font-weight: bold;
               background-color: #4c9f38;
               color: white;
-              border-radius: 10%;
+              border-radius: 8px;
               padding: 7px 24px;
               display: inline-block;
             "

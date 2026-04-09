@@ -110,14 +110,22 @@ function swapVideo(video) {
   <div class="body">
     <v-container>
       <h2
-        class="text-left text-uppercase text-bold mb-0 mt-0"
-        style="font-weight: bold; font-size: 1.2rem"
+        class="text-left text-uppercase text-bold mb-10 mt-0"
+        style="
+          font-weight: bold;
+          font-size: 1.2rem;
+          background-color: #4c9f38;
+          color: white;
+          border-radius: 8px;
+          padding: 7px 24px;
+          display: inline-block;
+        "
       >
         {{ heading }}
       </h2>
       <br />
       <h3
-        class="text-h3 mb-5"
+        class="text-h3 mt-5 mb-0"
         style="font-family: &quot;Inter&quot;, sans-serif; font-weight: bold"
       >
         Video Les<span
@@ -139,7 +147,7 @@ function swapVideo(video) {
           </div>
         </v-col>
       </v-row>
-      <v-row class="mt-n5 mr-10">
+      <!-- <v-row class="mt-7 mr-10"> -->
         <!-- <v-col cols="" lg="6" sm="12" md="3">
           <v-btn @click="openNotes" rounded color="grey-darken-3"
             >Concept Note</v-btn
@@ -151,11 +159,11 @@ function swapVideo(video) {
         <!-- <v-col cols="" lg="3" sm="12" md="4">
                     <v-btn rounded color="grey-darken-3">Video transcription</v-btn>
                 </v-col> -->
-      </v-row>
+      <!-- </v-row> -->
 
-      <div class="mt-10">
+      <div class="mt-16">
         <h3
-          class="text-h3 mb-5"
+          class="text-h3 mb-n7"
           style="font-family: &quot;Inter&quot;, sans-serif; font-weight: bold"
         >
           Worked Exam<span
@@ -186,8 +194,8 @@ function swapVideo(video) {
           </div>
         </div>
       </div>
-      <v-container class="mt-10">
-        <div class="mt-10">
+      <v-container class="mt-0">
+        <div class="mt-5">
           <h3
             class="text-h3 mb-5"
             style="
@@ -207,7 +215,7 @@ function swapVideo(video) {
 
         <iframe
           :src="game"
-          style="width: 100%; height: 100vh; min-height: 800px; border: none"
+          style="width: 100%; height: 100dvh; min-height: 800px; border: none"
           frameborder="0"
         ></iframe>
       </v-container>

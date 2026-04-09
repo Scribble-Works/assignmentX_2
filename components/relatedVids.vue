@@ -153,7 +153,7 @@ const handlePlay = () => {
 .thumbnail-wrapper {
   position: relative;
   width: 100%;
-  padding-top: 56.25%; /* 16:9 aspect ratio */
+  padding-top: 65.25%; /* 16:9 aspect ratio */
   background-color: #000;
 }
 

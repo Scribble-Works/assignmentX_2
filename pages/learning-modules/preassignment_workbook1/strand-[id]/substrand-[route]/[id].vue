@@ -99,21 +99,29 @@ function swapVideo(video) {
   <div class="body">
     <v-container>
       <h2
-        class="text-left text-uppercase text-bold mb-0 mt-0"
-        style="font-weight: bold; font-size: 1.2rem"
+        class="text-left text-uppercase text-bold mb-10 mt-0"
+        style="
+          font-weight: bold;
+          font-size: 1.2rem;
+          background-color: #4c9f38;
+          color: white;
+          border-radius: 8px;
+          padding: 7px 24px;
+          display: inline-block;
+        "
       >
         {{ heading }}
       </h2>
       <br />
       <h3
-          class="text-h3 mb-5"
-          style="font-family: &quot;Inter&quot;, sans-serif; font-weight: bold"
+        class="text-h3 mb-5"
+        style="font-family: &quot;Inter&quot;, sans-serif; font-weight: bold"
+      >
+        Video Les<span
+          style="text-decoration: underline; text-decoration-color: #fcc30c"
+          >sons</span
         >
-          Video Les<span
-            style="text-decoration: underline; text-decoration-color: #fcc30c"
-            >sons</span
-          >
-        </h3>
+      </h3>
       <v-row>
         <v-col cols="" lg="9" md="6" sm="12">
           <vids :url="mainVideo" :showRating="true" />
@@ -177,14 +185,17 @@ function swapVideo(video) {
       <v-container class="mt-10">
         <div class="mt-10">
           <h3
-          class="text-h3 mb-5"
-          style="font-family: &quot;Inter&quot;, sans-serif; font-weight: bold"
-        >
-          Ga<span
-            style="text-decoration: underline; text-decoration-color: #fcc30c"
-            >mes</span
+            class="text-h3 mb-5"
+            style="
+              font-family: &quot;Inter&quot;, sans-serif;
+              font-weight: bold;
+            "
           >
-        </h3>
+            Ga<span
+              style="text-decoration: underline; text-decoration-color: #fcc30c"
+              >mes</span
+            >
+          </h3>
           <!-- <p class="text-center">Time Left: 20s</p> -->
           <br />
           <!-- <p class="text-center"><v-icon>mdi-clock</v-icon> Score: 2/4</p> -->
@@ -273,7 +284,7 @@ function swapVideo(video) {
   </div>
 </template>
 <style>
-.body {
+/* .body {
   background: white;
-}
+} */
 </style>
