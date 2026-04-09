@@ -41,7 +41,7 @@ onMounted(() => {
   if (shouldShowGuide) {
     // Show welcome modal after a short delay
     setTimeout(() => {
-      showWelcomeModal.value = true;
+      showWelcomeModal.value = false;
     }, 1000);
   }
 });

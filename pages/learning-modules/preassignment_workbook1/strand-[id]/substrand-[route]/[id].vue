@@ -61,29 +61,21 @@ const worked_examples = ref(
 
 console.log(indicators_content);
 // console.log(substrand_ref_id);
-const relatedVids = ref([vid2, vid3]);
 
-function openNotes() {
-  navigateTo(conceptNote, {
-    open: {
-      windowFeatures: {
-        width: 500,
-        height: 500,
-      },
-    },
-  });
-}
+// Video switching state
+const mainVideo = ref(vid1);
+const relatedVideos = ref([vid2, vid3].filter(Boolean)); // Filter out null/undefined videos
 
-function openBece() {
-  navigateTo(bece, {
-    open: {
-      windowFeatures: {
-        width: 500,
-        height: 500,
-      },
-    },
-  });
-}
+// function openNotes() {
+//   navigateTo(conceptNote, {
+//     open: {
+//       windowFeatures: {
+//         width: 500,
+//         height: 500,
+//       },
+//     },
+//   });
+// }
 
 // Course completion function
 const markCourseAsCompleted = () => {
@@ -93,9 +85,11 @@ const markCourseAsCompleted = () => {
   console.log(`Course ${id} marked as completed`);
 };
 
+// Function to swap videos
 function swapVideo(video) {
   const oldMain = mainVideo.value;
   mainVideo.value = video;
+  // Replace the clicked video with the old main video
   relatedVideos.value = relatedVideos.value.map((v) =>
     v === video ? oldMain : v,
   );
@@ -110,32 +104,39 @@ function swapVideo(video) {
       >
         {{ heading }}
       </h2>
+      <br />
+      <h3
+          class="text-h3 mb-5"
+          style="font-family: &quot;Inter&quot;, sans-serif; font-weight: bold"
+        >
+          Video Les<span
+            style="text-decoration: underline; text-decoration-color: #fcc30c"
+            >sons</span
+          >
+        </h3>
       <v-row>
         <v-col cols="" lg="9" md="6" sm="12">
-          <vids :url="vid1" :showRating="true" />
+          <vids :url="mainVideo" :showRating="true" />
         </v-col>
         <v-col cols="" lg="3" md="6" sm="12">
-          <div v-for="(video, index) in relatedVids" :key="index">
-            <vids
-              class="mb-4 cursor-pointer"
-              :url="video"
-              :showRating="false"
-              @click="swapVideo(video)"
-            />
+          <div
+            v-for="(video, index) in relatedVideos"
+            :key="index"
+            class="mb-4 mt-7"
+          >
+            <relatedVids :url="video" @play="swapVideo(video)" />
           </div>
         </v-col>
       </v-row>
       <v-row class="mt-n5 mr-10">
-        <v-col cols="" lg="6" sm="12" md="3">
+        <!-- <v-col cols="" lg="6" sm="12" md="3">
           <v-btn @click="openNotes" rounded color="grey-darken-3"
             >Concept Note</v-btn
           >
-        </v-col>
-        <v-col cols="" lg="6" sm="12" md="5">
-          <v-btn @click="openBece" rounded color="grey-darken-3"
-            >Sample Questions</v-btn
-          >
-        </v-col>
+        </v-col> -->
+        <!-- <v-col cols="" lg="6" sm="12" md="5">
+          
+        </v-col> -->
         <!-- <v-col cols="" lg="3" sm="12" md="4">
                     <v-btn rounded color="grey-darken-3">Video transcription</v-btn>
                 </v-col> --> </v-row
@@ -150,7 +151,7 @@ function swapVideo(video) {
             >ples</span
           >
         </h3>
-        <div style="background-color: #f3f4f6">
+        <div>
           <div v-if="worked_examples && worked_examples.length > 0">
             <div v-for="example in worked_examples" :key="example.id">
               <v-container>
@@ -173,18 +174,17 @@ function swapVideo(video) {
           </div>
         </div>
       </div>
-      <v-container class="mt-10" style="background-color: #f3f4f6">
+      <v-container class="mt-10">
         <div class="mt-10">
-          <h5
-            class="text-h5 text-center"
-            style="
-              font-family: &quot;Inter&quot;, sans-serif;
-              font-weight: bold;
-            "
+          <h3
+          class="text-h3 mb-5"
+          style="font-family: &quot;Inter&quot;, sans-serif; font-weight: bold"
+        >
+          Ga<span
+            style="text-decoration: underline; text-decoration-color: #fcc30c"
+            >mes</span
           >
-            Gamified Learning
-          </h5>
-          <br />
+        </h3>
           <!-- <p class="text-center">Time Left: 20s</p> -->
           <br />
           <!-- <p class="text-center"><v-icon>mdi-clock</v-icon> Score: 2/4</p> -->
@@ -192,7 +192,7 @@ function swapVideo(video) {
 
         <iframe
           :src="game"
-          style="width: 100%; height: 40em"
+          style="width: 100%; height: 100vh; min-height: 800px; border: none"
           frameborder="0"
         ></iframe>
       </v-container>

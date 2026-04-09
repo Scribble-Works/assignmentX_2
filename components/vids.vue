@@ -1,4 +1,9 @@
 <script setup>
+import { useVideoRatings } from "~/composables/useVideoRatings";
+import { computed } from "vue";
+
+const { generateVideoId } = useVideoRatings();
+
 const props = defineProps({
   url: String,
   showRating: {
@@ -9,7 +14,24 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  openBece: {
+    type: Function,
+    default() {
+      navigateTo(bece, {
+        open: {
+          windowFeatures: {
+            width: 500,
+            height: 500,
+          },
+        },
+      });
+    },
+  },
 });
+
+const videoIdentifier = computed(
+  () => props.videoId || generateVideoId(props.url),
+);
 </script>
 <template>
   <div>
@@ -56,7 +78,22 @@ const props = defineProps({
       ></iframe>
     </div>
 
-    <!-- Video Rating Component -->
-    <VideoRating v-if="showRating && url" :videoUrl="url" :videoId="videoId" />
+    <!-- Video Rating Component and sample questions -->
+    <v-row>
+      <v-col cols="" lg="6" sm="12" md="5">
+        <thumbsRating
+          class="mt-5"
+          v-if="showRating && url"
+          :contentId="videoIdentifier"
+          :initialThumbsUp="0"
+          :initialThumbsDown="0"
+        />
+      </v-col>
+      <v-col cols="" lg="6" sm="12" md="5" align="right">
+        <v-btn class="mt-9" @click="openBece" rounded color="grey-darken-3"
+          >Sample Questions</v-btn
+        >
+      </v-col>
+    </v-row>
   </div>
 </template>

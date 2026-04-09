@@ -95,7 +95,7 @@ function openBece() {
 
 const handleContentClick = (contentId) => {
   navigateTo(
-    `/learning-modules/assignment_workbook2/strand-${strand_ref_id}/substrand-${substrand_ref}/${contentId}`
+    `/learning-modules/assignment_workbook2/strand-${strand_ref_id}/substrand-${substrand_ref}/${contentId}`,
   );
   // Check if quiz is already completed
   // if (!isQuizCompleted(contentId)) {
@@ -144,8 +144,23 @@ const handleContentClick = (contentId) => {
 // }, { deep: true });
 </script>
 <template>
-  <div class="mt-5" style="height: auto; background-color: #f6f6f6">
+  <div class="mt-5" style="height: auto">
     <div class="container mx-auto p-4">
+      <div
+        style="
+          font-family: Inter, sans-serif;
+          font-weight: bold;
+          background-color: #2096f3;
+          color: white;
+          border-radius: 10%;
+          padding: 7px 24px;
+          display: inline-block;
+        "
+        class="text-h6 text-muted text-uppercase mb-5"
+      >
+        Discover
+      </div>
+      <br />
       <v-row>
         <v-col cols="" lg="8" sm="12">
           <h1
@@ -173,8 +188,22 @@ const handleContentClick = (contentId) => {
                 </v-col> -->
       </v-row>
       <ConceptNotes :concept-note="conceptNote" />
-      <div class="mt-10" style="height: auto; background-color: #f6f6f6">
+      <div class="mt-10" style="height: auto;">
         <div class="container mx-auto p-4">
+          <div
+            style="
+              font-family: Inter, sans-serif;
+              font-weight: bold;
+              background-color: #4c9f38;
+              color: white;
+              border-radius: 10%;
+              padding: 7px 24px;
+              display: inline-block;
+            "
+            class="text-h6 text-muted text-uppercase mb-5"
+          >
+            practice
+          </div>
           <v-row v-for="content in substrand_ls" :key="content.id">
             <v-col>
               <v-card>

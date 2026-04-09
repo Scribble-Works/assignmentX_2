@@ -1,10 +1,10 @@
 <template>
   <div class="video-ratings-section">
     <v-card variant="flat" class="pa-4">
-      <v-row align="center" justify="space-between">
-        <!-- Like Section -->
-        <v-col cols="12" sm="6" md="4">
-          <div class="d-flex align-center">
+      <v-row align="center" justify="center">
+        <!-- Like Section Only -->
+        <v-col cols="12" sm="auto">
+          <div class="d-flex align-center justify-center">
             <v-btn
               :color="userLiked ? 'red' : 'grey'"
               :variant="userLiked ? 'flat' : 'outlined'"
@@ -23,32 +23,6 @@
             </span>
           </div>
         </v-col>
-
-        <!-- Rating Section -->
-        <v-col cols="12" sm="6" md="8">
-          <div class="d-flex align-center justify-end">
-            <span class="text-subtitle-2 mr-3">Rate this video:</span>
-            <v-rating
-              v-model="userRating"
-              @update:model-value="handleRating"
-              :length="5"
-              :size="32"
-              color="amber"
-              active-color="amber"
-              hover
-              :loading="ratingLoading"
-            ></v-rating>
-            <div class="ml-3 text-center">
-              <div class="text-h6 font-weight-bold">
-                {{ averageRating.toFixed(1) }}
-              </div>
-              <div class="text-caption text-grey">
-                ({{ formatNumber(totalRatings) }}
-                {{ totalRatings === 1 ? "rating" : "ratings" }})
-              </div>
-            </div>
-          </div>
-        </v-col>
       </v-row>
 
       <!-- Success Message -->
@@ -65,10 +39,6 @@
         <template v-else-if="successMessage === 'unliked'">
           <v-icon class="mr-2">mdi-heart-outline</v-icon>
           Like removed
-        </template>
-        <template v-else>
-          <v-icon class="mr-2">mdi-star</v-icon>
-          Thanks for rating this video!
         </template>
       </v-snackbar>
     </v-card>
@@ -90,17 +60,12 @@ const props = defineProps({
   },
 });
 
-const { getVideoRating, toggleLike, rateVideo, generateVideoId } =
-  useVideoRatings();
+const { getVideoRating, toggleLike, generateVideoId } = useVideoRatings();
 
 // State
 const likes = ref(0);
-const averageRating = ref(0);
-const totalRatings = ref(0);
 const userLiked = ref(false);
-const userRating = ref(0);
 const likeLoading = ref(false);
-const ratingLoading = ref(false);
 const showSuccess = ref(false);
 const successMessage = ref("");
 const justLiked = ref(false);
@@ -112,10 +77,7 @@ const videoIdentifier = props.videoId || generateVideoId(props.videoUrl);
 const loadRatings = async () => {
   const data = await getVideoRating(videoIdentifier);
   likes.value = data.likes;
-  averageRating.value = data.rating;
-  totalRatings.value = data.totalRatings || 0;
   userLiked.value = data.userLiked;
-  userRating.value = data.userRating;
 };
 
 onMounted(() => {
@@ -136,22 +98,15 @@ const handleLike = async () => {
   justLiked.value = true;
 
   try {
-    const newLikedStatus = await toggleLike(videoIdentifier);
-    userLiked.value = newLikedStatus;
+    const result = await toggleLike(videoIdentifier);
 
-    // Update likes count
-    if (newLikedStatus) {
-      likes.value += 1;
-      successMessage.value = "liked";
-    } else {
-      likes.value = Math.max(likes.value - 1, 0);
-      successMessage.value = "unliked";
+    if (result) {
+      likes.value = result.likes;
+      userLiked.value = result.liked;
     }
 
+    successMessage.value = userLiked.value ? "liked" : "unliked";
     showSuccess.value = true;
-
-    // Reload to sync with database
-    setTimeout(() => loadRatings(), 500);
   } catch (error) {
     console.error("Error liking video:", error);
   } finally {
@@ -159,26 +114,6 @@ const handleLike = async () => {
     setTimeout(() => {
       justLiked.value = false;
     }, 600);
-  }
-};
-
-// Handle rating change
-const handleRating = async (newRating) => {
-  if (newRating === userRating.value) return;
-
-  ratingLoading.value = true;
-
-  try {
-    await rateVideo(videoIdentifier, newRating);
-    successMessage.value = "rated";
-    showSuccess.value = true;
-
-    // Reload to get updated average
-    setTimeout(() => loadRatings(), 500);
-  } catch (error) {
-    console.error("Error rating video:", error);
-  } finally {
-    ratingLoading.value = false;
   }
 };
 
