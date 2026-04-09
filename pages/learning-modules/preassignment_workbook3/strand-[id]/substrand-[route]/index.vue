@@ -153,7 +153,7 @@ const substrand_ls = computed(() => {
 });
 </script>
 <template>
-  <div class="mt-5" style="height: auto;">
+  <div class="mt-5" style="height: auto">
     <div class="container mx-auto p-4">
       <div
         style="
@@ -161,7 +161,7 @@ const substrand_ls = computed(() => {
           font-weight: bold;
           background-color: #2096f3;
           color: white;
-          border-radius: 10%;
+          border-radius: 8px;
           padding: 7px 24px;
           display: inline-block;
         "
@@ -197,7 +197,7 @@ const substrand_ls = computed(() => {
                 </v-col> -->
       </v-row>
       <ConceptNotes :concept-note="conceptNote" />
-      <div class="mt-10" style="height: auto;">
+      <div class="mt-10" style="height: auto">
         <div class="container mx-auto p-4">
           <div
             style="
@@ -205,7 +205,7 @@ const substrand_ls = computed(() => {
               font-weight: bold;
               background-color: #4c9f38;
               color: white;
-              border-radius: 10%;
+              border-radius: 8px;
               padding: 7px 24px;
               display: inline-block;
             "

@@ -110,8 +110,16 @@ function swapVideo(video) {
   <div class="body">
     <v-container>
       <h2
-        class="text-left text-uppercase text-bold mb-0 mt-0"
-        style="font-weight: bold; font-size: 1.2rem"
+        class="text-left text-uppercase text-bold mb-10 mt-0"
+        style="
+          font-weight: bold;
+          font-size: 1.2rem;
+          background-color: #4c9f38;
+          color: white;
+          border-radius: 8px;
+          padding: 7px 24px;
+          display: inline-block;
+        "
       >
         {{ heading }}
       </h2>
@@ -150,7 +158,7 @@ function swapVideo(video) {
             >Sample Questions</v-btn
           >
         </v-col> -->
-        <!-- <v-col cols="" lg="3" sm="12" md="4">
+      <!-- <v-col cols="" lg="3" sm="12" md="4">
                     <v-btn rounded color="grey-darken-3">Video transcription</v-btn>
                 </v-col>  </v-row-->
       <!-- ><br /> -->
