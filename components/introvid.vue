@@ -1,4 +1,9 @@
 <script setup>
+import { useVideoRatings } from "~/composables/useVideoRatings";
+import { computed } from "vue";
+
+const { generateVideoId } = useVideoRatings();
+
 const props = defineProps({
   intro: String,
   showRating: {
@@ -10,6 +15,16 @@ const props = defineProps({
     default: null,
   },
 });
+
+const videoIdentifier = computed(
+  () => props.videoId || generateVideoId(props.intro),
+);
+
+// Handle raise issue button
+const handleRaiseIssue = () => {
+  // TODO: Implement issue reporting functionality
+  console.log("Raise issue clicked for video:", videoIdentifier.value);
+};
 </script>
 <template>
   <div>
@@ -57,10 +72,37 @@ const props = defineProps({
     </div>
 
     <!-- Video Rating Component -->
-    <VideoRating
+    <!-- <VideoRating
       v-if="showRating && intro"
       :videoUrl="intro"
       :videoId="videoId"
-    />
+    /> -->
+    <v-card variant="flat" class="pa-4 mt-n2 vid-note-rating">
+      <v-row align="center" justify="space-between">
+        <v-col cols="12" md="auto">
+          <thumbs-rating
+            v-if="showRating && intro"
+            :contentId="videoIdentifier"
+            :initialThumbsUp="0"
+            :initialThumbsDown="0"
+          />
+        </v-col>
+        <v-col cols="12" md="auto" class="text-right">
+          <v-btn
+            color="error"
+            variant="outlined"
+            @click="handleRaiseIssue"
+            prepend-icon="mdi-flag-outline"
+          >
+            Raise an Issue
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-card>
   </div>
 </template>
+<style>
+/* .vid-note-rating {
+  background-color: #F6F6F6;
+} */
+</style>
