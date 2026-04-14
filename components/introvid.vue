@@ -87,7 +87,7 @@ const handleRaiseIssue = () => {
             :initialThumbsDown="0"
           />
         </v-col>
-        <v-col cols="12" md="auto" class="text-right">
+        <v-col cols="12" md="auto" class="text-md-right text-left">
           <v-btn
             color="error"
             variant="outlined"
