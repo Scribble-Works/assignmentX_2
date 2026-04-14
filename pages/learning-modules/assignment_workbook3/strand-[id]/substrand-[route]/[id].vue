@@ -133,11 +133,12 @@ function swapVideo(video) {
           >sons</span
         >
       </h3>
-      <v-row>
-        <v-col cols="" lg="9" md="6" sm="12">
+      <!-- Desktop layout: main video + related sidebar -->
+      <v-row class="d-none d-md-flex">
+        <v-col cols="12" lg="9" md="6">
           <vids :url="mainVideo" :showRating="true" />
         </v-col>
-        <v-col cols="" lg="3" md="6" sm="12">
+        <v-col cols="12" lg="3" md="6">
           <div
             v-for="(video, index) in relatedVideos"
             :key="index"
@@ -147,16 +148,37 @@ function swapVideo(video) {
           </div>
         </v-col>
       </v-row>
+
+      <!-- Mobile layout: all videos stacked full-width -->
+      <div class="d-md-none">
+        <vids
+          :url="mainVideo"
+          :showRating="true"
+          :showSampleQuestions="false"
+        />
+        <div
+          v-for="(video, index) in relatedVideos"
+          :key="'mobile-' + index"
+          class="mt-6"
+        >
+          <vids :url="video" :showRating="true" :showSampleQuestions="false" />
+        </div>
+        <div class="mt-4">
+          <v-btn @click="openBece" rounded color="grey-darken-3" block
+            >Sample Questions</v-btn
+          >
+        </div>
+      </div>
       <!-- <v-row class="mt-7 mr-10"> -->
-        <!-- <v-col cols="" lg="6" sm="12" md="3">
+      <!-- <v-col cols="" lg="6" sm="12" md="3">
           <v-btn @click="openNotes" rounded color="grey-darken-3"
             >Concept Note</v-btn
           >
         </v-col> -->
-        <!-- <v-col cols="" lg="6" sm="12" md="5">
+      <!-- <v-col cols="" lg="6" sm="12" md="5">
           
         </v-col> -->
-        <!-- <v-col cols="" lg="3" sm="12" md="4">
+      <!-- <v-col cols="" lg="3" sm="12" md="4">
                     <v-btn rounded color="grey-darken-3">Video transcription</v-btn>
                 </v-col> -->
       <!-- </v-row> -->

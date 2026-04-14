@@ -14,6 +14,10 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  showSampleQuestions: {
+    type: Boolean,
+    default: true,
+  },
   openBece: {
     type: Function,
     default() {
@@ -89,7 +93,14 @@ const videoIdentifier = computed(
           :initialThumbsDown="0"
         />
       </v-col>
-      <v-col cols="" lg="6" sm="12" md="5" align="right">
+      <v-col
+        cols=""
+        lg="6"
+        sm="12"
+        md="5"
+        align="right"
+        v-if="showSampleQuestions"
+      >
         <v-btn class="mt-9" @click="openBece" rounded color="grey-darken-3"
           >Sample Questions</v-btn
         >
