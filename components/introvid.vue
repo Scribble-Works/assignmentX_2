@@ -1,8 +1,10 @@
 <script setup>
 import { useVideoRatings } from "~/composables/useVideoRatings";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 const { generateVideoId } = useVideoRatings();
+const client = useSupabaseClient();
+const user = useSupabaseUser();
 
 const props = defineProps({
   intro: String,
@@ -20,10 +22,42 @@ const videoIdentifier = computed(
   () => props.videoId || generateVideoId(props.intro),
 );
 
-// Handle raise issue button
+// Issue dialog state
+const showIssueDialog = ref(false);
+const issueText = ref("");
+const issueLoading = ref(false);
+const showSuccess = ref(false);
+const showError = ref(false);
+const errorMessage = ref("");
+
 const handleRaiseIssue = () => {
-  // TODO: Implement issue reporting functionality
-  console.log("Raise issue clicked for video:", videoIdentifier.value);
+  showIssueDialog.value = true;
+};
+
+const submitIssue = async () => {
+  if (!issueText.value.trim()) return;
+  issueLoading.value = true;
+
+  try {
+    const { error } = await client.from("video_issues").insert({
+      video_id: videoIdentifier.value,
+      video_url: props.intro,
+      user_id: user.value?.id || null,
+      issue_description: issueText.value.trim(),
+    });
+
+    if (error) throw error;
+
+    showIssueDialog.value = false;
+    issueText.value = "";
+    showSuccess.value = true;
+  } catch (err) {
+    console.error("Error submitting issue:", err);
+    errorMessage.value = "Failed to submit issue. Please try again.";
+    showError.value = true;
+  } finally {
+    issueLoading.value = false;
+  }
 };
 </script>
 <template>
@@ -99,6 +133,71 @@ const handleRaiseIssue = () => {
         </v-col>
       </v-row>
     </v-card>
+
+    <!-- Raise Issue Dialog -->
+    <v-dialog v-model="showIssueDialog" max-width="500">
+      <v-card>
+        <v-card-title class="d-flex align-center">
+          <v-icon color="error" class="mr-2">mdi-flag-outline</v-icon>
+          Report an Issue
+        </v-card-title>
+        <v-card-text>
+          <p class="mb-3 text-body-2 text-grey-darken-1">
+            Describe the issue you encountered with this video.
+          </p>
+          <v-textarea
+            v-model="issueText"
+            label="Describe the issue"
+            placeholder="e.g. Video not loading, audio out of sync, incorrect content..."
+            rows="4"
+            variant="outlined"
+            counter="500"
+            maxlength="500"
+            :disabled="issueLoading"
+          ></v-textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            variant="text"
+            @click="showIssueDialog = false"
+            :disabled="issueLoading"
+            >Cancel</v-btn
+          >
+          <v-btn
+            color="error"
+            variant="flat"
+            @click="submitIssue"
+            :loading="issueLoading"
+            :disabled="!issueText.trim()"
+          >
+            Submit
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- Success Snackbar -->
+    <v-snackbar
+      v-model="showSuccess"
+      :timeout="3000"
+      color="success"
+      location="bottom"
+    >
+      <v-icon class="mr-2">mdi-check-circle</v-icon>
+      Issue reported successfully. Thank you!
+    </v-snackbar>
+
+    <!-- Error Snackbar -->
+    <v-snackbar
+      v-model="showError"
+      :timeout="3000"
+      color="error"
+      location="bottom"
+    >
+      <v-icon class="mr-2">mdi-alert-circle</v-icon>
+      {{ errorMessage }}
+    </v-snackbar>
   </div>
 </template>
 <style>
