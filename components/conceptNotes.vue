@@ -2,6 +2,9 @@
 import { ref, onMounted, watch } from "vue";
 import { useVideoRatings } from "~/composables/useVideoRatings";
 
+const client = useSupabaseClient();
+const user = useSupabaseUser();
+
 const props = defineProps({
   conceptNote: String,
   conceptNoteId: {
@@ -19,6 +22,11 @@ const userRating = ref(0);
 const ratingLoading = ref(false);
 const showSuccess = ref(false);
 const showIssueDialog = ref(false);
+const issueText = ref("");
+const issueLoading = ref(false);
+const showIssueSuccess = ref(false);
+const showIssueError = ref(false);
+const issueErrorMessage = ref("");
 
 // Generate or use provided concept note ID (computed for reactivity)
 const noteIdentifier = computed(
@@ -79,8 +87,32 @@ const formatNumber = (num) => {
 // Handle raise issue button
 const handleRaiseIssue = () => {
   showIssueDialog.value = true;
-  // TODO: Implement issue reporting functionality
-  console.log("Raise issue clicked for:", noteIdentifier.value);
+};
+
+const submitIssue = async () => {
+  if (!issueText.value.trim()) return;
+  issueLoading.value = true;
+
+  try {
+    const { error } = await client.from("video_issues").insert({
+      video_id: noteIdentifier.value,
+      video_url: props.conceptNote,
+      user_id: user.value?.id || null,
+      issue_description: issueText.value.trim(),
+    });
+
+    if (error) throw error;
+
+    showIssueDialog.value = false;
+    issueText.value = "";
+    showIssueSuccess.value = true;
+  } catch (err) {
+    console.error("Error submitting issue:", err);
+    issueErrorMessage.value = "Failed to submit issue. Please try again.";
+    showIssueError.value = true;
+  } finally {
+    issueLoading.value = false;
+  }
 };
 </script>
 <template>
@@ -183,6 +215,71 @@ const handleRaiseIssue = () => {
         Thanks for rating this concept note!
       </v-snackbar>
     </v-card>
+
+    <!-- Raise Issue Dialog -->
+    <v-dialog v-model="showIssueDialog" max-width="500">
+      <v-card>
+        <v-card-title class="d-flex align-center">
+          <v-icon color="error" class="mr-2">mdi-flag-outline</v-icon>
+          Report an Issue
+        </v-card-title>
+        <v-card-text>
+          <p class="mb-3 text-body-2 text-grey-darken-1">
+            Describe the issue you encountered with this concept note.
+          </p>
+          <v-textarea
+            v-model="issueText"
+            label="Describe the issue"
+            placeholder="e.g. Content not loading, incorrect information, broken links..."
+            rows="4"
+            variant="outlined"
+            counter="500"
+            maxlength="500"
+            :disabled="issueLoading"
+          ></v-textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            variant="text"
+            @click="showIssueDialog = false"
+            :disabled="issueLoading"
+            >Cancel</v-btn
+          >
+          <v-btn
+            color="error"
+            variant="flat"
+            @click="submitIssue"
+            :loading="issueLoading"
+            :disabled="!issueText.trim()"
+          >
+            Submit
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- Issue Success Snackbar -->
+    <v-snackbar
+      v-model="showIssueSuccess"
+      :timeout="3000"
+      color="success"
+      location="bottom"
+    >
+      <v-icon class="mr-2">mdi-check-circle</v-icon>
+      Issue reported successfully. Thank you!
+    </v-snackbar>
+
+    <!-- Issue Error Snackbar -->
+    <v-snackbar
+      v-model="showIssueError"
+      :timeout="3000"
+      color="error"
+      location="bottom"
+    >
+      <v-icon class="mr-2">mdi-alert-circle</v-icon>
+      {{ issueErrorMessage }}
+    </v-snackbar>
   </div>
 </template>
 
