@@ -1,6 +1,7 @@
 <script setup>
 import compare from "~/components/flipcards/compare.vue";
 import { useQuizProgress } from "~/composables/useQuizProgress";
+import { useVideoRatings } from "~/composables/useVideoRatings";
 import { ref, onMounted } from "vue";
 
 // import strand1 from '~/strand1.json';
@@ -22,6 +23,7 @@ const courseCompleted = ref(false);
 onMounted(() => {
   loadStateFromStorage();
   courseCompleted.value = isQuizCompleted(id);
+  loadGameRating();
 });
 
 const { data: substrands } = await client
@@ -46,6 +48,46 @@ const vid1 = indicators_content[0].vid1;
 const vid2 = indicators_content[0].vid2;
 const vid3 = indicators_content[0].vid3;
 const game = indicators_content[0].games;
+
+// Game emoji rating
+const { getVideoRating, rateVideo, generateVideoId } = useVideoRatings();
+const gameIdentifier = generateVideoId(game || `game_${id}`);
+const gameUserRating = ref(0);
+const gameAverageRating = ref(0);
+const gameTotalRatings = ref(0);
+const gameRatingLoading = ref(false);
+const gameRatingSuccess = ref(false);
+
+const emojiOptions = [
+  { value: 1, emoji: "😞", label: "Unsatisfied" },
+  { value: 2, emoji: "🙁", label: "Bad" },
+  { value: 3, emoji: "😐", label: "Neutral" },
+  { value: 4, emoji: "🙂", label: "Good" },
+  { value: 5, emoji: "😄", label: "Satisfied" },
+];
+
+const loadGameRating = async () => {
+  if (!gameIdentifier) return;
+  const data = await getVideoRating(gameIdentifier);
+  gameAverageRating.value = data.rating;
+  gameTotalRatings.value = data.totalRatings || 0;
+  gameUserRating.value = data.userRating;
+};
+
+const handleGameRating = async (value) => {
+  if (gameRatingLoading.value) return;
+  gameRatingLoading.value = true;
+  try {
+    await rateVideo(gameIdentifier, value);
+    gameUserRating.value = value;
+    gameRatingSuccess.value = true;
+    await loadGameRating();
+  } catch (err) {
+    console.error("Error rating game:", err);
+  } finally {
+    gameRatingLoading.value = false;
+  }
+};
 
 const worked_examples = ref(
   Object.entries(indicators_content[0])
@@ -238,6 +280,49 @@ function swapVideo(video) {
           style="width: 100%; height: 100vh; min-height: 800px; border: none"
           frameborder="0"
         ></iframe>
+
+        <!-- Game Emoji Rating -->
+        <v-card variant="flat" class="pa-4 mt-4">
+          <div class="text-center">
+            <p class="text-body-1 font-weight-medium mb-3">
+              How was this game?
+            </p>
+            <div class="d-flex justify-center align-center" style="gap: 16px">
+              <div
+                v-for="option in emojiOptions"
+                :key="option.value"
+                class="emoji-option"
+                :class="{ 'emoji-selected': gameUserRating === option.value }"
+                @click="handleGameRating(option.value)"
+                :style="{
+                  opacity: gameRatingLoading ? 0.5 : 1,
+                  cursor: gameRatingLoading ? 'wait' : 'pointer',
+                }"
+              >
+                <span style="font-size: 2rem">{{ option.emoji }}</span>
+                <span class="text-caption d-block mt-1">{{
+                  option.label
+                }}</span>
+              </div>
+            </div>
+            <div class="mt-3 text-caption text-grey">
+              Average: {{ gameAverageRating.toFixed(1) }} / 5 ({{
+                gameTotalRatings
+              }}
+              {{ gameTotalRatings === 1 ? "rating" : "ratings" }})
+            </div>
+          </div>
+        </v-card>
+
+        <v-snackbar
+          v-model="gameRatingSuccess"
+          :timeout="2000"
+          color="success"
+          location="bottom"
+        >
+          <v-icon class="mr-2">mdi-check-circle</v-icon>
+          Thanks for rating this game!
+        </v-snackbar>
       </v-container>
 
       <!-- <div class="mt-15">
@@ -314,5 +399,24 @@ function swapVideo(video) {
 <style>
 .body {
   background: white;
+}
+
+.emoji-option {
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.emoji-option:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.15);
+}
+
+.emoji-selected {
+  background-color: #e3f2fd;
+  border: 2px solid #2096f3;
+  transform: scale(1.15);
 }
 </style>
