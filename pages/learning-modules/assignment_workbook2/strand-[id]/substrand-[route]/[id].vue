@@ -286,7 +286,9 @@ function swapVideo(video) {
             <p class="text-body-1 font-weight-medium mb-3">
               How was this game?
             </p>
-            <div class="d-flex justify-center align-center" style="gap: 16px">
+            <div
+              class="d-flex justify-center align-center flex-wrap emoji-container"
+            >
               <div
                 v-for="option in emojiOptions"
                 :key="option.value"
@@ -298,7 +300,7 @@ function swapVideo(video) {
                   cursor: gameRatingLoading ? 'wait' : 'pointer',
                 }"
               >
-                <span style="font-size: 2rem">{{ option.emoji }}</span>
+                <span class="emoji-icon">{{ option.emoji }}</span>
                 <span class="text-caption d-block mt-1">{{
                   option.label
                 }}</span>
@@ -400,6 +402,14 @@ function swapVideo(video) {
   background: white;
 }
 
+.emoji-container {
+  gap: 16px;
+}
+
+.emoji-icon {
+  font-size: 2rem;
+}
+
 .emoji-option {
   text-align: center;
   padding: 8px 12px;
@@ -417,5 +427,17 @@ function swapVideo(video) {
   background-color: #e3f2fd;
   border: 2px solid #2096f3;
   transform: scale(1.15);
+}
+
+@media (max-width: 600px) {
+  .emoji-container {
+    gap: 8px;
+  }
+  .emoji-icon {
+    font-size: 1.5rem;
+  }
+  .emoji-option {
+    padding: 6px 8px;
+  }
 }
 </style>
