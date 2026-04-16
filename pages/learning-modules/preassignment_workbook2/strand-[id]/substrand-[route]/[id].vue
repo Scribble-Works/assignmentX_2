@@ -59,11 +59,11 @@ const gameRatingLoading = ref(false);
 const gameRatingSuccess = ref(false);
 
 const emojiOptions = [
-  { value: 1, emoji: "😞", label: "Unsatisfied" },
-  { value: 2, emoji: "🙁", label: "Bad" },
-  { value: 3, emoji: "😐", label: "Neutral" },
-  { value: 4, emoji: "🙂", label: "Good" },
-  { value: 5, emoji: "😄", label: "Satisfied" },
+  { value: 1, emoji: "😞", label: "Boring" },
+  { value: 2, emoji: "🙁", label: "Slow" },
+  { value: 3, emoji: "😐", label: "Okay" },
+  { value: 4, emoji: "🙂", label: "Fun" },
+  { value: 5, emoji: "😄", label: "Addictive" },
 ];
 
 const loadGameRating = async () => {
