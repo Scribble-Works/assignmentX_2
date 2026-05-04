@@ -14,25 +14,20 @@ const { data: strand1 } = await client
   .from("preassignment_workbook1_substrands_contents")
   .select()
   .eq("id", id);
-const substrand_ref = strand1[0].substrand_ref;
-const { data: unsorted_substrand } = await client
+const substrand_ref = strand1?.[0]?.substrand_ref;
+const { data: substrands } = await client
   .from("preassignment_workbook1_strand_substrands_lists")
   .select()
-  .eq("strand_ref", id);
-const { data: substrands } = computed(() => {
-  if (unsorted_substrand) {
-    return [...unsorted_substrand].sort((a, b) => a.id - b.id);
-  }
-  return [];
-});
-const conceptNote = workbook[0].concept_notes;
-const strandNumber = substrands[0].strand_ref;
+  .eq("strand_ref", id)
+  .order("id", { ascending: true });
+const conceptNote = workbook?.[0]?.concept_notes;
+const strandNumber = substrands?.[0]?.strand_ref ?? id;
 const { data: strandtitle } = await client
   .from("pre-assignment_Workbook1")
   .select()
   .eq("id", strandNumber);
-const title = strandtitle[0].strand_name;
-const vid = strandtitle[0].vid;
+const title = strandtitle?.[0]?.strand_name ?? "";
+const vid = strandtitle?.[0]?.vid ?? "";
 console.log(strand1);
 console.log(substrands);
 console.log(workbook);
