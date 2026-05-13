@@ -7,7 +7,7 @@ const { data: files } = await client.from('facilitator-resources').select('files
 const decodedId = Object.keys(files[0].files).find(key => key === 'id');
 const file = files[0].files[Object.keys(files[0].files).find(key => files[0].files[key].slug === slug)];
 
-const fileKeys = Object.keys(files[0].files[decodedId] || {});
+// const fileKeys = Object.keys(files[0].files[decodedId] || {});
 
 console.log(file);
 
