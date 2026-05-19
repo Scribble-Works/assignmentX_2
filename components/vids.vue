@@ -14,28 +14,53 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  sampleQuestions: {
+    type: [Array, String, Object],
+  },
   showSampleQuestions: {
     type: Boolean,
     default: true,
-  },
-  openBece: {
-    type: Function,
-    default() {
-      navigateTo(bece, {
-        open: {
-          windowFeatures: {
-            width: 500,
-            height: 500,
-          },
-        },
-      });
-    },
   },
 });
 
 const videoIdentifier = computed(
   () => props.videoId || generateVideoId(props.url),
 );
+
+const hasSampleQuestions = computed(() => {
+  const value = props.sampleQuestions;
+
+  if (Array.isArray(value)) {
+    return value.some((item) => {
+      if (typeof item === "string") {
+        return item.trim().length > 0;
+      }
+      return !!item;
+    });
+  }
+
+  if (typeof value === "string") {
+    return value.trim().length > 0;
+  }
+
+  if (value && typeof value === "object") {
+    if (Array.isArray(value.questions)) {
+      return value.questions.some(
+        (item) => typeof item === "string" && item.trim().length > 0,
+      );
+    }
+
+    if (typeof value.url === "string") {
+      return value.url.trim().length > 0;
+    }
+
+    return false;
+  }
+
+  return false;
+});
+
+console.log("SampleQuestions:", props.sampleQuestions);
 </script>
 <template>
   <div>
@@ -99,11 +124,9 @@ const videoIdentifier = computed(
         sm="12"
         md="5"
         align="right"
-        v-if="showSampleQuestions"
+        v-if="showSampleQuestions && hasSampleQuestions"
       >
-        <v-btn class="mt-9" @click="openBece" rounded color="grey-darken-3"
-          >Sample Questions</v-btn
-        >
+        <sampleQuestionsPopup class="mt-9" :pages="sampleQuestions" />
       </v-col>
     </v-row>
   </div>

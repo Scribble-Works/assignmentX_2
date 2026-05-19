@@ -2,7 +2,7 @@
 import compare from "~/components/flipcards/compare.vue";
 import { useQuizProgress } from "~/composables/useQuizProgress";
 import { useVideoRatings } from "~/composables/useVideoRatings";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 
 // import strand1 from '~/strand1.json';
 // definePageMeta({
@@ -49,7 +49,7 @@ const vid2 = indicators_content[0].vid2;
 const vid3 = indicators_content[0].vid3;
 
 const conceptNote = files[0].concept_notes;
-const bece = files[0].BECE_Qquestions;
+// const bece = files[0].BECE_Qquestions;
 const game = indicators_content[0].games;
 
 // Game emoji rating
@@ -101,8 +101,8 @@ const worked_examples = ref(
     })),
 );
 
-console.log(indicators_content);
-// console.log(substrand_ref_id);
+const sampleQuestions =
+  indicators_content[0]?.sample_questions?.questions || [];
 
 // Video switching state
 const mainVideo = ref(vid1);
@@ -118,16 +118,6 @@ const relatedVideos = ref([vid2, vid3].filter(Boolean)); // Filter out null/unde
 //     },
 //   });
 // }
-
-// Open sample questions
-function openBece() {
-  const link = document.createElement("a");
-  link.href = bece;
-  link.download = "BECE_Questions.pdf";
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
 
 // Course completion function
 const markCourseAsCompleted = () => {
@@ -177,7 +167,11 @@ function swapVideo(video) {
       <!-- Desktop layout: main video + related sidebar -->
       <v-row class="d-none d-md-flex">
         <v-col cols="12" lg="9" md="6">
-          <vids :url="mainVideo" :showRating="true" />
+          <vids
+            :url="mainVideo"
+            :showRating="true"
+            :sampleQuestions="sampleQuestions"
+          />
         </v-col>
         <v-col cols="12" lg="3" md="6">
           <div
@@ -205,11 +199,10 @@ function swapVideo(video) {
           <vids :url="video" :showRating="true" :showSampleQuestions="false" />
         </div>
         <div class="mt-4">
-          <v-btn @click="openBece" rounded color="grey-darken-3" block
-            >Sample Questions</v-btn
-          >
+          <sampleQuestionsPopup :pages="sampleQuestions" :button-block="true" />
         </div>
       </div>
+
       <v-row class="mt-n5 mr-10">
         <!-- <v-col cols="" lg="6" sm="12" md="3">
           <v-btn @click="openNotes" rounded color="grey-darken-3"
@@ -444,5 +437,14 @@ function swapVideo(video) {
   .emoji-option {
     padding: 6px 8px;
   }
+}
+
+.sample-slide-frame {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f8f8;
 }
 </style>
