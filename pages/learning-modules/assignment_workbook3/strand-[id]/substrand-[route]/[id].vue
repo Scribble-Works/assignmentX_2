@@ -50,6 +50,8 @@ const vid3 = indicators_content[0].vid3;
 
 const conceptNote = files[0].concept_notes;
 const bece = files[0].BECE_Qquestions;
+const sampleQuestions =
+  indicators_content[0]?.sample_questions?.questions || [];
 const game = indicators_content[0].games;
 
 // Game emoji rating
@@ -119,17 +121,6 @@ function openNotes() {
   });
 }
 
-function openBece() {
-  navigateTo(bece, {
-    open: {
-      windowFeatures: {
-        width: 500,
-        height: 500,
-      },
-    },
-  });
-}
-
 // Course completion function
 const markCourseAsCompleted = () => {
   courseCompleted.value = true;
@@ -178,7 +169,11 @@ function swapVideo(video) {
       <!-- Desktop layout: main video + related sidebar -->
       <v-row class="d-none d-md-flex">
         <v-col cols="12" lg="9" md="6">
-          <vids :url="mainVideo" :showRating="true" />
+          <vids
+            :url="mainVideo"
+            :showRating="true"
+            :sampleQuestions="sampleQuestions"
+          />
         </v-col>
         <v-col cols="12" lg="3" md="6">
           <div
@@ -206,9 +201,7 @@ function swapVideo(video) {
           <vids :url="video" :showRating="true" :showSampleQuestions="false" />
         </div>
         <div class="mt-4">
-          <v-btn @click="openBece" rounded color="grey-darken-3" block
-            >Sample Questions</v-btn
-          >
+          <sampleQuestionsPopup :pages="sampleQuestions" :button-block="true" />
         </div>
       </div>
       <!-- <v-row class="mt-7 mr-10"> -->
