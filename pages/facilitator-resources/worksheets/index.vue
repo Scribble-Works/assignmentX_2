@@ -22,7 +22,7 @@ const resources = computed(() => {
     <v-row v-for="resource in resources" :key="resource.title">
       <v-col>
         <NuxtLink
-          :to="'/facilitator-resources/' + resource.route + '/'"
+          :to="'/facilitator-resources/worksheets/' + resource.route + '/'"
           class="no-underline"
         >
           <card-resources

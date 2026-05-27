@@ -95,7 +95,7 @@ console.log(fileDisp);
 
           <!-- Filename as link -->
           <NuxtLink
-            :to="`/facilitator-resources/`+files[0].route+`/`+file.slug"
+            :to="`/facilitator-resources/worksheets/`+files[0].route+`/`+file.slug"
             class="text-sm text-blue-600 hover:text-blue-800 transition"
           >
             {{ file.name }}
