@@ -7,19 +7,19 @@ const message = ref("");
 const dialog = ref(false);
 
 const sendMessage = async () => {
-    try {
-        mail.send({
-            from: 'AssignmentX',
-            subject:'ASSIGNMENTX USER MESSAGE',
-            text:`\n Name: ${name.value} \n \n Email: ${email.value} \n \n Message: ${message.value}`,
-        })
-        dialog.value = true;
-        name.value = "";
-        email.value = "";
-        message.value = "";
-    } catch (error) {
-        console.log(error);
-    }
+  try {
+    mail.send({
+      from: "AssignmentX",
+      subject: "ASSIGNMENTX USER MESSAGE",
+      text: `\n Name: ${name.value} \n \n Email: ${email.value} \n \n Message: ${message.value}`,
+    });
+    dialog.value = true;
+    name.value = "";
+    email.value = "";
+    message.value = "";
+  } catch (error) {
+    console.log(error);
+  }
 };
 const testimonials = [
   {
@@ -49,7 +49,15 @@ const testimonials = [
           src="https://www.youtube.com/embed/J7GwxhKuy7s"
           title="AssignmentX Discovery V4 2"
           frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allow="
+            accelerometer;
+            autoplay;
+            clipboard-write;
+            encrypted-media;
+            gyroscope;
+            picture-in-picture;
+            web-share;
+          "
           referrerpolicy="strict-origin-when-cross-origin"
           allowfullscreen
         ></iframe>
@@ -273,8 +281,8 @@ const testimonials = [
             <v-col sm="9" lg="9" md="9">
               <h5 class="text-h5">Curriculum-aligned content</h5>
               <p>
-                Specifically tailored for Ghanaian basic schools(B4 - B9), ensuring
-                relevance to local educational standards.
+                Specifically tailored for Ghanaian basic schools(B4 - B9),
+                ensuring relevance to local educational standards.
               </p>
             </v-col>
           </v-row>
@@ -339,7 +347,7 @@ const testimonials = [
       <v-row class="mt-10">
         <v-col cols="" sm="12" md="12" lg="6" class="mt-16 pt-10">
           <h4
-            style="color: #3e4f5c; font-family: 'Inter', sans-serif"
+            style="color: #3e4f5c; font-family: &quot;Inter&quot;, sans-serif"
             class="text-h4"
           >
             Don't Have The
@@ -353,7 +361,9 @@ const testimonials = [
             Get your Assignment Maths Workbook now and unlock a <br />
             world of learning with a digital companion!
           </p>
-          <v-btn color="blue-darken-1" to="/store" size="large">Buy the Book</v-btn>
+          <v-btn color="blue-darken-1" to="/store" size="large"
+            >Buy the Book</v-btn
+          >
         </v-col>
         <v-col cols="" sm="12" md="12" lg="6">
           <img src="/img/buyabout.png" alt="" />
@@ -371,7 +381,7 @@ const testimonials = [
           <br />
           <p>
             <v-icon>mdi-phone</v-icon> +233 20 100 1041 <br /><br />
-            <v-icon>mdi-email</v-icon> scribbleworksonline@gmail.com
+            <v-icon>mdi-email</v-icon> mails@scribbleworks.tech
           </p>
         </v-col>
         <v-col cols="" lg="6" md="12" sm="12">
@@ -391,7 +401,8 @@ const testimonials = [
               variant="underlined"
             ></v-text-field>
             <label>Message</label>
-            <v-textarea type="text"
+            <v-textarea
+              type="text"
               v-model="message"
               placeholder="Enter your message"
               variant="underlined"
@@ -408,7 +419,9 @@ const testimonials = [
                 Thank you for your message! We will get back to you shortly.
               </v-card-text>
               <v-card-actions>
-                <v-btn color="blue-darken-1" text @click="dialog = false">Close</v-btn>
+                <v-btn color="blue-darken-1" text @click="dialog = false"
+                  >Close</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-dialog>
