@@ -1,17 +1,21 @@
 <script setup>
 const route = useRoute();
 const router = useRouter();
+const { searchQuery } = useResourceSearch();
 
 const navItems = [
-  { label: "Worksheets", value: "/facilitator-resources/worksheets" },
+  { label: "Worksheets", value: "/facilitator-resources/worksheets/" },
   {
     label: "AI Teaching Assistant",
     value: "/facilitator-resources/ai-assistant",
   },
-  { label: "Curriculum Materials", value: "/facilitator-resources/curriculum" },
+  {
+    label: "Curriculum Materials",
+    value: "/facilitator-resources/curriculum/",
+  },
   {
     label: "BECE Past Questions",
-    value: "/facilitator-resources/bece-past-questions",
+    value: "/facilitator-resources/bece-past-questions/",
   },
   { label: "Live Sessions", value: "/facilitator-resources/live-sessions" },
 ];
@@ -59,9 +63,11 @@ const selectedPath = computed({
         />
 
         <v-text-field
+          v-model="searchQuery"
           prepend-inner-icon="mdi-magnify"
           label="Search chapters and topics..."
           variant="outlined"
+          clearable
         ></v-text-field>
         <br />
         <slot />

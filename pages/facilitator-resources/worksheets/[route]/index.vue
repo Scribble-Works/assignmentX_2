@@ -1,9 +1,9 @@
 <script setup>
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import { useBookmarks } from "~/composables/useBookmarks";
 
 definePageMeta({
-  layout: "default",
+  layout: "resources",
 });
 const route = useRoute();
 const client = useSupabaseClient();
@@ -21,29 +21,21 @@ const fileDisp = files[0].files;
 const { bookmarks, toggleBookmark, isBookmarked, bookmarkCount } =
   useBookmarks();
 
-const searchQuery = ref("");
+const { searchQuery } = useResourceSearch();
 
-// const filteredFiles = computed(() =>
-//   files.value.filter((file) =>
-//     file.toLowerCase().includes(searchQuery.value.toLowerCase())
-//   )
-// );
+const filteredFiles = computed(() => {
+  if (!fileDisp) return [];
+  const q = (searchQuery.value || "").trim().toLowerCase();
+  if (!q) return fileDisp;
+  return fileDisp.filter((file) => file.name?.toLowerCase().includes(q));
+});
+
 console.log(files);
 console.log(fileDisp);
 </script>
 
 <template>
-  <div class="w-[80%] mx-auto px-4 py-10">
-    <!-- Search -->
-    <div class="mb-6">
-      <input
-        type="text"
-        placeholder="Search chapters and topics..."
-        v-model="searchQuery"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-    </div>
-
+  <div class="w-[100%] mx-auto px-4 py-0">
     <!-- Bookmarks Count -->
     <div class="flex justify-end mb-4">
       <NuxtLink
@@ -74,7 +66,7 @@ console.log(fileDisp);
     <!-- File List -->
     <ul class="space-y-4">
       <li
-        v-for="file in fileDisp"
+        v-for="file in filteredFiles"
         :key="file"
         class="flex items-center justify-between bg-white p-4 rounded-md shadow-sm border border-gray-100"
       >
@@ -95,7 +87,12 @@ console.log(fileDisp);
 
           <!-- Filename as link -->
           <NuxtLink
-            :to="`/facilitator-resources/worksheets/`+files[0].route+`/`+file.slug"
+            :to="
+              `/facilitator-resources/worksheets/` +
+              files[0].route +
+              `/` +
+              file.slug
+            "
             class="text-sm text-blue-600 hover:text-blue-800 transition"
           >
             {{ file.name }}
