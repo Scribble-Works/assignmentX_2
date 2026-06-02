@@ -16,14 +16,6 @@ export default defineNuxtConfig({
       PAYSTACK_PUBLIC_KEY: process.env.PAYSTACK_PUBLIC_KEY,
     },
   },
-  script:{
-    registry:{
-      googleAnalytics: {
-        id: process.env.GOOGLE_ANALYTICS_ID,
-        trigger: 'onNuxtReady'
-      }
-    }
-  },
   modules: [
     [
       "@nuxtjs/supabase",
@@ -34,7 +26,8 @@ export default defineNuxtConfig({
       },
     ],
     "@nuxt/fonts",
-    'nuxt-mail'
+    'nuxt-mail',
+    'nuxt-gtag'
   ],
 
   // nuxt-mail SMTP configuration
@@ -50,6 +43,9 @@ export default defineNuxtConfig({
         pass: process.env.GOOGLE_PASSWORD,
       },
     }
+  },
+  gtag:{
+    id: process.env.GOOGLE_ANALYTICS_ID,
   },
 
   css: [
