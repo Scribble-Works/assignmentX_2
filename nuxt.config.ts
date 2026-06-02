@@ -16,7 +16,14 @@ export default defineNuxtConfig({
       PAYSTACK_PUBLIC_KEY: process.env.PAYSTACK_PUBLIC_KEY,
     },
   },
-
+  script:{
+    registry:{
+      googleAnalytics: {
+        id: process.env.GOOGLE_ANALYTICS_ID,
+        trigger: 'onNuxtReady'
+      }
+    }
+  },
   modules: [
     [
       "@nuxtjs/supabase",
