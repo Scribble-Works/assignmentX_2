@@ -9,6 +9,11 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    // Server-only (never sent to the client)
+    SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY,
+    GOOGLE_SERVICE_ACCOUNT_EMAIL: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+    GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY:
+      process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY,
     public: {
       APPLICATION_CREDENTIALS: process.env.APPLICATION_CREDENTIALS,
       GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
@@ -26,8 +31,8 @@ export default defineNuxtConfig({
       },
     ],
     "@nuxt/fonts",
-    'nuxt-mail',
-    'nuxt-gtag'
+    "nuxt-mail",
+    "nuxt-gtag",
   ],
 
   // nuxt-mail SMTP configuration
@@ -37,14 +42,14 @@ export default defineNuxtConfig({
     },
     smtp: {
       // host: "smtp.gmail.com",
-      service: 'gmail',
+      service: "gmail",
       auth: {
         user: process.env.EMAIL,
         pass: process.env.GOOGLE_PASSWORD,
       },
-    }
+    },
   },
-  gtag:{
+  gtag: {
     id: process.env.GOOGLE_ANALYTICS_ID,
   },
 
