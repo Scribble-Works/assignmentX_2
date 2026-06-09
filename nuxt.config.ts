@@ -10,6 +10,8 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     // Server-only (never sent to the client)
+    // Override via NUXT_GEMINI_API_KEY env var (or set GEMINI_API_KEY and reference here)
+    geminiApiKey: process.env.GEMINI_API_KEY ?? "",
     SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY,
     GOOGLE_SERVICE_ACCOUNT_EMAIL: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
     GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY:
