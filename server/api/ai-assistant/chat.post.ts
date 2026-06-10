@@ -152,10 +152,9 @@ export default defineEventHandler(async (event) => {
         "Gemini API key is not configured. Add GEMINI_API_KEY to your .env file.",
     });
   }
-
   const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
+    model: "gemini-2.5-flash",
     systemInstruction: BASE_CONTEXT,
     generationConfig: { maxOutputTokens: 8192 },
   });
