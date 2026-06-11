@@ -10,8 +10,14 @@ const user = useSupabaseUser();
 const client = useSupabaseClient();
 const show = ref(false);
 const router = useRouter();
+const route = useRoute();
 const email = ref("");
 const password = ref("");
+
+// Where to send the user after login (falls back to home)
+const redirectPath = computed(() =>
+  typeof route.query.redirect === "string" ? route.query.redirect : "/",
+);
 // const alert = ref(false);
 
 const rules = {
@@ -55,7 +61,7 @@ const googleSignIN = async () => {
     const { data, error } = await auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: window.location.origin + "/",
+        redirectTo: window.location.origin + redirectPath.value,
       },
     });
     if (!user.value) {
@@ -68,7 +74,7 @@ const googleSignIN = async () => {
     } else if (profile.data == null) {
       router.push("/bio");
     } else {
-      router.push("/");
+      router.push(redirectPath.value);
       console.log(user.value);
     }
     if (error) {
@@ -140,11 +146,14 @@ const googleSignIN = async () => {
         <v-container class="w-auto" role="presentation">
           <h1
             class="text-h2"
-            style="font-family: 'Inter', sans-serif; font-weight: bold"
+            style="
+              font-family: &quot;Inter&quot;, sans-serif;
+              font-weight: bold;
+            "
           >
             Welcome back!
           </h1>
-          <p style="font-family: 'Inter', sans-serif">
+          <p style="font-family: &quot;Inter&quot;, sans-serif">
             Enter your credentials to access your account
           </p>
           <form class="mt-16" @submit.prevent="login">
@@ -163,7 +172,10 @@ const googleSignIN = async () => {
               <v-col>
                 <NuxtLink
                   to="/forget"
-                  style="color: #2096f3; font-family: 'Inter', sans-serif"
+                  style="
+                    color: #2096f3;
+                    font-family: &quot;Inter&quot;, sans-serif;
+                  "
                   >Forgot Password?</NuxtLink
                 >
               </v-col> </v-row
