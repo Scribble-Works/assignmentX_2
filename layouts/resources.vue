@@ -2,8 +2,27 @@
 const route = useRoute();
 const router = useRouter();
 const { searchQuery } = useResourceSearch();
+const user = useSupabaseUser();
+const client = useSupabaseClient();
 
-const navItems = [
+// ─── Fetch role from onboarding table ─────────────────────────────────────────
+const { data: onboarding } = await useAsyncData(
+  () => `user-role-${user.value?.id}`,
+  async () => {
+    if (!user.value?.id) return null;
+    const { data } = await client
+      .from("onboarding")
+      .select("role")
+      .eq("id", user.value.id)
+      .single();
+    return data;
+  },
+);
+
+const isStudent = computed(() => onboarding.value?.role === "student");
+
+// ─── Nav items ─────────────────────────────────────────────────────────────────
+const allNavItems = [
   { label: "Worksheets", value: "/facilitator-resources/worksheets/" },
   {
     label: "AI Teaching Assistant",
@@ -20,9 +39,44 @@ const navItems = [
   { label: "Live Sessions", value: "/facilitator-resources/live-sessions" },
 ];
 
+const studentNavItems = [
+  {
+    label: "BECE Past Questions",
+    value: "/facilitator-resources/bece-past-questions/",
+  },
+  { label: "Live Sessions", value: "/facilitator-resources/live-sessions" },
+];
+
+const navItems = computed(() =>
+  isStudent.value ? studentNavItems : allNavItems,
+);
+
+const pageTitle = computed(() =>
+  isStudent.value ? "Student Resources" : "Facilitator Resources",
+);
+
+// ─── Redirect students away from non-allowed pages ─────────────────────────────
+const studentAllowedPaths = [
+  "/facilitator-resources/bece-past-questions",
+  "/facilitator-resources/live-sessions",
+];
+
+watchEffect(() => {
+  if (
+    isStudent.value &&
+    !studentAllowedPaths.some((p) => route.path.startsWith(p))
+  ) {
+    navigateTo("/facilitator-resources/bece-past-questions/", {
+      replace: true,
+    });
+  }
+});
+
 const selectedPath = computed({
   get() {
-    const match = navItems.find((item) => route.path.startsWith(item.value));
+    const match = navItems.value.find((item) =>
+      route.path.startsWith(item.value),
+    );
     return match ? match.value : null;
   },
   set(val) {
@@ -36,6 +90,9 @@ const selectedPath = computed({
     <div class="body">
       <theHeader />
       <v-container>
+        <!-- Page title -->
+        <h1 class="text-h5 font-weight-bold mb-4">{{ pageTitle }}</h1>
+
         <!-- Desktop sub-navigation -->
         <v-tabs
           class="d-none d-md-flex mb-4"
