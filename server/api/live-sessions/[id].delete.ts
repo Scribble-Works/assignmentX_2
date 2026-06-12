@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
 
   const supabase = createClient(
     process.env.SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_KEY!,
+    process.env.SUPABASE_KEY!,
   );
 
   const { error } = await supabase.from("live_sessions").delete().eq("id", id);

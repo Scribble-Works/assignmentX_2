@@ -36,6 +36,14 @@ console.log(fileDisp);
 
 <template>
   <div class="w-[100%] mx-auto px-4 py-0">
+     <v-text-field
+      v-model="searchQuery"
+      prepend-inner-icon="mdi-magnify"
+      label="Search chapters and topics..."
+      variant="outlined"
+      clearable
+      class="mb-4"
+    />
     <!-- Bookmarks Count -->
     <div class="flex justify-end mb-4">
       <NuxtLink
