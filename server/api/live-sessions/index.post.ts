@@ -48,6 +48,7 @@ export default defineEventHandler(async (event) => {
   const auth = new google.auth.GoogleAuth({
     credentials: { client_email: email, private_key: privateKey },
     scopes: ["https://www.googleapis.com/auth/meetings.space.created"],
+    clientOptions: { subject: "mails@scribbleworks.tech" }
   });
 
   const meet = google.meet({ version: "v2", auth });
@@ -69,7 +70,7 @@ export default defineEventHandler(async (event) => {
   // Persist session in Supabase
   const supabase = createClient(
     process.env.SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_KEY!,
+    process.env.SUPABASE_KEY!,
   );
 
   const { data, error } = await supabase
