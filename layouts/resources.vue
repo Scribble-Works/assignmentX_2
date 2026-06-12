@@ -80,8 +80,34 @@ const selectedPath = computed({
     return match ? match.value : null;
   },
   set(val) {
-    if (val) router.push(val);
+    if (val) handleNavigate(val);
   },
+});
+
+// ─── Auth-guarded navigation ───────────────────────────────────────────────────
+const authProtectedPaths = [
+  "/facilitator-resources/ai-assistant",
+  "/facilitator-resources/live-sessions",
+];
+
+// Redirect to login (with return path) if the user is not authenticated
+const handleNavigate = (path) => {
+  const needsAuth = authProtectedPaths.some((p) => path.startsWith(p));
+  if (needsAuth && !user.value) {
+    navigateTo(`/login?redirect=${encodeURIComponent(path)}`);
+  } else {
+    router.push(path);
+  }
+};
+
+// Guard direct URL access (e.g. pasting the URL while logged out)
+watchEffect(() => {
+  const needsAuth = authProtectedPaths.some((p) => route.path.startsWith(p));
+  if (needsAuth && !user.value) {
+    navigateTo(`/login?redirect=${encodeURIComponent(route.path)}`, {
+      replace: true,
+    });
+  }
 });
 </script>
 
@@ -100,7 +126,17 @@ const selectedPath = computed({
           bg-color="transparent"
           show-arrows
         >
-          <v-tab v-for="item in navItems" :key="item.value" :to="item.value">
+          <v-tab
+            v-for="item in navItems"
+            :key="item.value"
+            :value="item.value"
+            :to="
+              !authProtectedPaths.some((p) => item.value.startsWith(p)) || user
+                ? item.value
+                : undefined
+            "
+            @click.prevent="handleNavigate(item.value)"
+          >
             {{ item.label }}
           </v-tab>
         </v-tabs>
