@@ -1,7 +1,7 @@
 <script setup>
 const route = useRoute();
 const router = useRouter();
-const { searchQuery } = useResourceSearch();
+
 const user = useSupabaseUser();
 const client = useSupabaseClient();
 
@@ -155,14 +155,6 @@ watchEffect(() => {
           hide-details
         />
 
-        <v-text-field
-          v-model="searchQuery"
-          prepend-inner-icon="mdi-magnify"
-          label="Search chapters and topics..."
-          variant="outlined"
-          clearable
-        ></v-text-field>
-        <br />
         <slot />
       </v-container>
       <theFooter />

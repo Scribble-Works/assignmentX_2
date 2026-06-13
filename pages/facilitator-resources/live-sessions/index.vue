@@ -133,13 +133,20 @@ const cancelSession = async () => {
   canceling.value = true;
   errorMsg.value = "";
   try {
-    await $fetch(`/api/live-sessions/${sessionToCancel.value.id}`, {
-      method: "DELETE",
-    });
-    cancelDialog.value = false;
-    sessionToCancel.value = null;
-    showSuccess("Session cancelled.");
-    await fetchSessions();
+    if (user.value?.id != sessionToCancel.value?.created_by) {
+      cancelDialog.value = false;
+      sessionToCancel.value = null;
+      errorMsg.value = "You don't have permission to cancel this session.";
+      // await fetchSessions();
+    } else {
+      await $fetch(`/api/live-sessions/${sessionToCancel.value.id}`, {
+        method: "DELETE",
+      });
+      cancelDialog.value = false;
+      sessionToCancel.value = null;
+      showSuccess("Session cancelled.");
+      await fetchSessions();
+    }
   } catch {
     errorMsg.value = "Failed to cancel session.";
   } finally {

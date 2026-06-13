@@ -222,7 +222,7 @@ const printDoc = () => {
       <div>
         <h2 class="text-h5 font-weight-bold">AI Teaching Assistant</h2>
         <p class="text-grey text-body-2">
-          Powered by Google Gemini · Aligned with Ghana's NACA Mathematics
+          Powered by Google Gemini · Aligned with Ghana's NaCCA Mathematics
           Curriculum
         </p>
       </div>
@@ -243,7 +243,7 @@ const printDoc = () => {
           rounded="lg"
           elevation="1"
           class="d-flex flex-column"
-          style="height: 560px"
+          style="height: 350px"
         >
           <!-- Messages -->
           <div

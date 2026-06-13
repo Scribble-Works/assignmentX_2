@@ -2854,6 +2854,11 @@ commander@^4.0.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-4.1.1.tgz#9fd602bd936294e9e9ef46a3f4d6964044b18068"
   integrity sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==
 
+commander@^8.3.0:
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-8.3.0.tgz#4837ea1b2da67b9c616a67afbb0fafee567bca66"
+  integrity sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==
+
 commondir@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/commondir/-/commondir-1.0.1.tgz#ddd800da0c66127393cca5950ea968a3aaf1253b"
@@ -4267,6 +4272,13 @@ jws@^4.0.0:
   dependencies:
     jwa "^2.0.1"
     safe-buffer "^5.0.1"
+
+katex@^0.17.0:
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/katex/-/katex-0.17.0.tgz#536e25874ec9ac8728e3b4b7bf7fec6557b7dbf4"
+  integrity sha512-Vdw0ATsQ9V+LuegM/BTwQqV/6cTl5lbGcIrU+BCgLxyf6bo38ybOr372tuSIxir3CN720flu1meYR6XzNMwQnw==
+  dependencies:
+    commander "^8.3.0"
 
 kleur@^4.1.5:
   version "4.1.5"
@@ -6705,6 +6717,13 @@ vue-devtools-stub@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/vue-devtools-stub/-/vue-devtools-stub-0.1.0.tgz#a65b9485edecd4273cedcb8102c739b83add2c81"
   integrity sha512-RutnB7X8c5hjq39NceArgXg28WZtZpGc3+J16ljMiYnFhKvd8hITxSWQSQ5bvldxMDU6gG5mkxl1MTQLXckVSQ==
+
+vue-katex@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/vue-katex/-/vue-katex-0.5.0.tgz#af178cc50932847ce2be28e2a35c30246e890e32"
+  integrity sha512-KsjSK4ftpw9q8SP1OJbigPOozdthOS46+6GmqkToXZVmmPejBHGGmDUxJ/2UtkyAuHf5dHL+2RvOXi/RV77YOA==
+  dependencies:
+    deepmerge "^4.2.2"
 
 vue-router@^4.6.4:
   version "4.6.4"
