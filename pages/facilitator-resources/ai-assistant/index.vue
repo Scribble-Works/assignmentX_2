@@ -1,5 +1,22 @@
 <script setup>
 import { marked } from "marked";
+import renderMathInElement from "katex/contrib/auto-render";
+import "katex/dist/katex.min.css";
+
+// ─── KaTeX auto-render directive ─────────────────────────────────────────────
+const katexOptions = {
+  delimiters: [
+    { left: "$$", right: "$$", display: true },
+    { left: "$", right: "$", display: false },
+    { left: "\\(", right: "\\)", display: false },
+    { left: "\\[", right: "\\]", display: true },
+  ],
+  throwOnError: false,
+};
+const vMathRender = {
+  mounted: (el) => renderMathInElement(el, katexOptions),
+  updated: (el) => renderMathInElement(el, katexOptions),
+};
 
 definePageMeta({ layout: "resources" });
 
@@ -172,8 +189,9 @@ const downloadDoc = async () => {
       th{background:#f0f0f0;font-weight:700}
     </style>${renderMarkdown(docContent.value)}`;
     container.style.cssText =
-      "position:fixed;left:-9999px;top:0;width:780px;padding:32px;background:#fff";
+      "position:absolute;left:-9999px;top:0;width:780px;padding:32px;background:#fff";
     document.body.appendChild(container);
+    renderMathInElement(container, katexOptions);
 
     await html2pdf()
       .set({
@@ -194,16 +212,35 @@ const downloadDoc = async () => {
 
 const printDoc = () => {
   if (!docContent.value) return;
+  const katexCssUrl = "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css";
+  const katexJsUrl = "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js";
+  const autoRenderUrl = "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js";
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>${docTitle.value}</title>
+  <link rel="stylesheet" href="${katexCssUrl}" />
   <style>${docStyles}</style>
 </head>
 <body>
   ${renderMarkdown(docContent.value)}
-  <script>window.onload = () => { window.print(); }<\/script>
+  <script src="${katexJsUrl}"><\/script>
+  <script src="${autoRenderUrl}"><\/script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      renderMathInElement(document.body, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "$", right: "$", display: false },
+          { left: "\\\\(", right: "\\\\)", display: false },
+          { left: "\\\\[", right: "\\\\]", display: true },
+        ],
+        throwOnError: false,
+      });
+      window.print();
+    });
+  <\/script>
 </body>
 </html>`;
   const blob = new Blob([html], { type: "text/html" });
@@ -307,6 +344,7 @@ const printDoc = () => {
                 <div
                   v-else-if="chatViewMode === 'rendered'"
                   class="text-body-2 mb-0 ai-markdown"
+                  v-math-render
                   v-html="renderMarkdown(msg.text)"
                 />
                 <p
@@ -587,6 +625,7 @@ const printDoc = () => {
                 <div
                   v-if="docViewMode === 'rendered'"
                   class="ai-markdown"
+                  v-math-render
                   v-html="renderMarkdown(docContent)"
                 />
                 <!-- Raw text -->
