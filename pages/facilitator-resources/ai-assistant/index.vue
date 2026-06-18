@@ -49,18 +49,18 @@ const docError = ref("");
 const levels = ["JHS 1", "JHS 2", "JHS 3"];
 
 const suggestedTopics = [
-  "Pythagoras Theorem",
-  "Quadratic Equations",
-  "Circle Theorems",
-  "Simultaneous Equations",
-  "Linear Inequalities",
-  "Trigonometry (SOH-CAH-TOA)",
-  "Percentages and Ratios",
-  "Statistics and Probability",
-  "Indices and Logarithms",
-  "Vectors",
-  "Transformation",
-  "Number Bases",
+  "Number and Numeration Systems",
+  "Number Operations",
+  "Fractions, Decimals and Percentages",
+  "Ratios and Proportion",
+  "Pattern and Relationships",
+  "Algebraic Expressions",
+  "Variables and Equations",
+  "Shapes and Space",
+  "Measurement",
+  "Position and Transformation",
+  "Data",
+  "Chance or Probability"
 ];
 
 // ─── Chat actions ──────────────────────────────────────────────────────────────
