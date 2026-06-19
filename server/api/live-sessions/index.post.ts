@@ -48,7 +48,7 @@ export default defineEventHandler(async (event) => {
   const auth = new google.auth.GoogleAuth({
     credentials: { client_email: email, private_key: privateKey },
     scopes: ["https://www.googleapis.com/auth/meetings.space.created"],
-    clientOptions: { subject: "mails@scribbleworks.tech" }
+    clientOptions: { subject: "mails@scribbleworks.tech" },
   });
 
   const meet = google.meet({ version: "v2", auth });
@@ -57,7 +57,15 @@ export default defineEventHandler(async (event) => {
   let meetSpaceId: string | null = null;
 
   try {
-    const space = await meet.spaces.create({ requestBody: {} });
+    const space = await meet.spaces.create({
+      requestBody: {
+        config: {
+          accessType: "OPEN",
+          entryPointAccess: "ALL",
+          moderation: "OFF",
+        },
+      },
+    });
     meetLink = space.data.meetingUri ?? null;
     meetSpaceId = space.data.name ?? null; // e.g. "spaces/abc123"
   } catch (err: any) {
