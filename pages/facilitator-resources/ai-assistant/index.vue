@@ -19,6 +19,7 @@ const vMathRender = {
 };
 
 definePageMeta({ layout: "resources" });
+const user = useSupabaseUser();
 
 // ─── Markdown ────────────────────────────────────────────────────────────────────
 marked.use({ breaks: true, gfm: true });
@@ -40,13 +41,109 @@ const docViewMode = ref("rendered"); // 'rendered' | 'raw'
 
 // Document generator
 const docTopic = ref("");
-const docLevel = ref("JHS 1");
+const docLevel = ref("Primary 4");
 const docContent = ref("");
 const docTitle = ref("");
 const docLoading = ref(false);
 const docError = ref("");
+const docHistory = ref([]);
 
-const levels = ["JHS 1", "JHS 2", "JHS 3"];
+const MAX_CHAT_MESSAGES = 100;
+const MAX_DOC_HISTORY = 20;
+
+const makeStorageKey = (suffix) =>
+  `ai-assistant:${user.value?.id ?? "anonymous"}:${suffix}`;
+
+const persistChatHistory = () => {
+  if (typeof window === "undefined") return;
+  const trimmed = chatHistory.value.slice(-MAX_CHAT_MESSAGES);
+  localStorage.setItem(makeStorageKey("chat"), JSON.stringify(trimmed));
+};
+
+const persistDocHistory = () => {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(
+    makeStorageKey("docs"),
+    JSON.stringify(docHistory.value.slice(0, MAX_DOC_HISTORY)),
+  );
+};
+
+const loadPersistedData = () => {
+  if (typeof window === "undefined") return;
+
+  try {
+    const savedChat = localStorage.getItem(makeStorageKey("chat"));
+    chatHistory.value = savedChat ? JSON.parse(savedChat) : [];
+  } catch {
+    chatHistory.value = [];
+  }
+
+  try {
+    const savedDocs = localStorage.getItem(makeStorageKey("docs"));
+    docHistory.value = savedDocs ? JSON.parse(savedDocs) : [];
+  } catch {
+    docHistory.value = [];
+  }
+};
+
+const saveGeneratedDoc = (mode, content) => {
+  const entry = {
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    mode,
+    topic: docTopic.value,
+    level: docLevel.value,
+    title: docTitle.value,
+    content,
+    createdAt: new Date().toISOString(),
+  };
+  docHistory.value = [entry, ...docHistory.value].slice(0, MAX_DOC_HISTORY);
+  persistDocHistory();
+};
+
+const openSavedDoc = (doc) => {
+  activeTab.value = "docs";
+  docTopic.value = doc.topic || "";
+  docLevel.value = doc.level || docLevel.value;
+  docTitle.value = doc.title || "";
+  docContent.value = doc.content || "";
+  docError.value = "";
+};
+
+const clearDocHistory = () => {
+  docHistory.value = [];
+  persistDocHistory();
+};
+
+const formatHistoryDate = (isoDate) =>
+  new Date(isoDate).toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+
+onMounted(async () => {
+  loadPersistedData();
+  await nextTick();
+  scrollChat();
+});
+
+watch(
+  () => user.value?.id,
+  () => {
+    loadPersistedData();
+  },
+);
+
+const levels = [
+  "Primary 4",
+  "Primary 5",
+  "Primary 6",
+  "JHS 1",
+  "JHS 2",
+  "JHS 3",
+];
 
 const suggestedTopics = [
   "Number and Numeration Systems",
@@ -60,7 +157,7 @@ const suggestedTopics = [
   "Measurement",
   "Position and Transformation",
   "Data",
-  "Chance or Probability"
+  "Chance or Probability",
 ];
 
 // ─── Chat actions ──────────────────────────────────────────────────────────────
@@ -69,6 +166,7 @@ const sendMessage = async () => {
   if (!text || chatLoading.value) return;
 
   chatHistory.value.push({ role: "user", text });
+  persistChatHistory();
   chatInput.value = "";
   chatLoading.value = true;
   chatError.value = "";
@@ -86,12 +184,14 @@ const sendMessage = async () => {
       },
     });
     chatHistory.value.push({ role: "assistant", text: content });
+    persistChatHistory();
     await nextTick();
     scrollChat();
   } catch (err) {
     chatError.value =
       err?.data?.statusMessage || "Something went wrong. Please try again.";
     chatHistory.value.pop(); // remove the user message on error
+    persistChatHistory();
   } finally {
     chatLoading.value = false;
   }
@@ -100,6 +200,7 @@ const sendMessage = async () => {
 const clearChat = () => {
   chatHistory.value = [];
   chatError.value = "";
+  persistChatHistory();
 };
 
 const scrollChat = () => {
@@ -127,7 +228,14 @@ const generateDoc = async (mode) => {
       method: "POST",
       body: { mode, topic: docTopic.value, level: docLevel.value },
     });
-    docContent.value = content;
+    if (mode === "lesson-notes" || mode === "lesson-plan") {
+      const logoUrl = `${window.location.origin}/img/logo.png`;
+      const logoBlock = `<p align="center"><img src="${logoUrl}" alt="AssignmentX logo" width="120" /></p>\n\n`;
+      docContent.value = `${logoBlock}${content}`;
+    } else {
+      docContent.value = content;
+    }
+    saveGeneratedDoc(mode, docContent.value);
   } catch (err) {
     docError.value =
       err?.data?.statusMessage || "Failed to generate document. Please retry.";
@@ -158,63 +266,66 @@ const docStyles = `
 
 const docDownloading = ref(false);
 
-const downloadDoc = async () => {
-  if (!docContent.value || docDownloading.value) return;
-  docDownloading.value = true;
+// const downloadDoc = async () => {
+//   if (!docContent.value || docDownloading.value) return;
+//   docDownloading.value = true;
 
-  try {
-    // Dynamic import keeps this browser-only (safe for Nuxt SSR)
-    const html2pdf = (await import("html2pdf.js")).default;
+//   try {
+//     // Dynamic import keeps this browser-only (safe for Nuxt SSR)
+//     const html2pdf = (await import("html2pdf.js")).default;
 
-    const safeName = docTitle.value
-      .replace(/[^a-z0-9\s\-]/gi, "")
-      .replace(/\s+/g, "_");
+//     const safeName = docTitle.value
+//       .replace(/[^a-z0-9\s\-]/gi, "")
+//       .replace(/\s+/g, "_");
 
-    // Build a temporary off-screen container with styled markdown HTML
-    const container = document.createElement("div");
-    container.innerHTML = `<style>
-      body,div{font-family:Arial,sans-serif;color:#222;line-height:1.7}
-      h1,h2,h3,h4{color:#1b5e20;margin-top:1.2em;margin-bottom:0.4em}
-      h1{font-size:22px;border-bottom:2px solid #1b5e20;padding-bottom:8px}
-      h2{font-size:18px}h3{font-size:16px}
-      p{margin-bottom:8px}
-      ul,ol{padding-left:20px;margin-bottom:8px}li{margin-bottom:3px}
-      code{background:#f0f0f0;border-radius:3px;padding:1px 5px;font-family:monospace;font-size:0.9em}
-      pre{background:#f5f5f5;border-radius:6px;padding:12px 16px;margin-bottom:12px}
-      pre code{background:none;padding:0}
-      blockquote{border-left:3px solid #388e3c;padding-left:12px;color:#555;margin:8px 0}
-      hr{border:none;border-top:1px solid #ccc;margin:16px 0}
-      table{border-collapse:collapse;width:100%;margin-bottom:12px}
-      th,td{border:1px solid #ccc;padding:6px 10px;text-align:left}
-      th{background:#f0f0f0;font-weight:700}
-    </style>${renderMarkdown(docContent.value)}`;
-    container.style.cssText =
-      "position:absolute;left:-9999px;top:0;width:780px;padding:32px;background:#fff";
-    document.body.appendChild(container);
-    renderMathInElement(container, katexOptions);
+//     // Build a temporary off-screen container with styled markdown HTML
+//     const container = document.createElement("div");
+//     container.innerHTML = `<style>
+//       body,div{font-family:Arial,sans-serif;color:#222;line-height:1.7}
+//       h1,h2,h3,h4{color:#1b5e20;margin-top:1.2em;margin-bottom:0.4em}
+//       h1{font-size:22px;border-bottom:2px solid #1b5e20;padding-bottom:8px}
+//       h2{font-size:18px}h3{font-size:16px}
+//       p{margin-bottom:8px}
+//       ul,ol{padding-left:20px;margin-bottom:8px}li{margin-bottom:3px}
+//       code{background:#f0f0f0;border-radius:3px;padding:1px 5px;font-family:monospace;font-size:0.9em}
+//       pre{background:#f5f5f5;border-radius:6px;padding:12px 16px;margin-bottom:12px}
+//       pre code{background:none;padding:0}
+//       blockquote{border-left:3px solid #388e3c;padding-left:12px;color:#555;margin:8px 0}
+//       hr{border:none;border-top:1px solid #ccc;margin:16px 0}
+//       table{border-collapse:collapse;width:100%;margin-bottom:12px}
+//       th,td{border:1px solid #ccc;padding:6px 10px;text-align:left}
+//       th{background:#f0f0f0;font-weight:700}
+//     </style>${renderMarkdown(docContent.value)}`;
+//     container.style.cssText =
+//       "position:absolute;left:-9999px;top:0;width:780px;padding:32px;background:#fff";
+//     document.body.appendChild(container);
+//     renderMathInElement(container, katexOptions);
 
-    await html2pdf()
-      .set({
-        margin: [15, 15, 15, 15],
-        filename: `${safeName}.pdf`,
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      })
-      .from(container)
-      .save();
+//     await html2pdf()
+//       .set({
+//         margin: [15, 15, 15, 15],
+//         filename: `${safeName}.pdf`,
+//         image: { type: "jpeg", quality: 0.98 },
+//         html2canvas: { scale: 2, useCORS: true, logging: false },
+//         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+//       })
+//       .from(container)
+//       .save();
 
-    document.body.removeChild(container);
-  } finally {
-    docDownloading.value = false;
-  }
-};
+//     document.body.removeChild(container);
+//   } finally {
+//     docDownloading.value = false;
+//   }
+// };
 
 const printDoc = () => {
   if (!docContent.value) return;
-  const katexCssUrl = "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css";
-  const katexJsUrl = "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js";
-  const autoRenderUrl = "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js";
+  const katexCssUrl =
+    "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css";
+  const katexJsUrl =
+    "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js";
+  const autoRenderUrl =
+    "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js";
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -526,6 +637,55 @@ const printDoc = () => {
                   Generate Lesson Plan
                 </v-btn>
               </div>
+
+              <v-divider class="my-4" />
+              <div class="d-flex align-center justify-space-between mb-2">
+                <p class="text-body-2 font-weight-bold mb-0">Recent Documents</p>
+                <v-btn
+                  icon
+                  size="x-small"
+                  variant="text"
+                  color="grey"
+                  :disabled="docHistory.length === 0"
+                  @click="clearDocHistory"
+                >
+                  <v-icon size="16">mdi-delete-outline</v-icon>
+                </v-btn>
+              </div>
+              <p
+                v-if="docHistory.length === 0"
+                class="text-caption text-grey mb-0"
+              >
+                Your generated lesson notes and plans will appear here.
+              </p>
+              <v-list v-else density="compact" class="pa-0">
+                <v-list-item
+                  v-for="doc in docHistory"
+                  :key="doc.id"
+                  rounded="lg"
+                  class="mb-1"
+                  @click="openSavedDoc(doc)"
+                >
+                  <template #prepend>
+                    <v-icon
+                      size="18"
+                      :color="doc.mode === 'lesson-notes' ? 'green-darken-2' : 'green-darken-1'"
+                    >
+                      {{
+                        doc.mode === "lesson-notes"
+                          ? "mdi-file-document-outline"
+                          : "mdi-calendar-text-outline"
+                      }}
+                    </v-icon>
+                  </template>
+                  <v-list-item-title class="text-body-2">{{
+                    doc.title
+                  }}</v-list-item-title>
+                  <v-list-item-subtitle class="text-caption">{{
+                    formatHistoryDate(doc.createdAt)
+                  }}</v-list-item-subtitle>
+                </v-list-item>
+              </v-list>
             </v-card>
           </v-col>
 
@@ -604,9 +764,9 @@ const printDoc = () => {
                     prepend-icon="mdi-printer-outline"
                     @click="printDoc"
                   >
-                    Print / PDF
+                    Print / Download PDF
                   </v-btn>
-                  <v-btn
+                  <!-- <v-btn
                     size="small"
                     variant="flat"
                     color="green-darken-2"
@@ -615,7 +775,7 @@ const printDoc = () => {
                     @click="downloadDoc"
                   >
                     Download PDF
-                  </v-btn>
+                  </v-btn> -->
                 </div>
               </div>
               <v-divider />
