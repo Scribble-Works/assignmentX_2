@@ -79,6 +79,6 @@ const startQuiz = () => {
   // This should be passed from the parent component
   const substrandRoute = props.substrandRoute || 'substrand-number-and-numeration-system';
   const strandId = props.strandId || '1';
-  navigateTo(`/quiz/${props.contentId}?substrand=${substrandRoute}&strand=${strandId}`);
+  navigateTo(`/learning-modules/quiz/${props.contentId}?substrand=${substrandRoute}&strand=${strandId}`);
 };
 </script> 

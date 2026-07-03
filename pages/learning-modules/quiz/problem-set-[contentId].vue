@@ -326,7 +326,7 @@
     </div>
 
     <!-- Background Audio -->
-    <audio
+    <!-- <audio
       ref="backgroundAudio"
       loop
       preload="auto"
@@ -338,7 +338,7 @@
         type="audio/mp4"
       />
       Your browser does not support the audio element.
-    </audio>
+    </audio> -->
   </div>
 </template>
 
