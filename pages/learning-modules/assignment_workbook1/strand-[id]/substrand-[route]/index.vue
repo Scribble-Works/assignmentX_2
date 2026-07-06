@@ -331,6 +331,7 @@ const substrand_ls = computed(() => {
             :content-id="selectedContentId"
             :substrand-route="`substrand-${substrand_ref}`"
             :strand-id="strand_ref_id"
+            :route="`/learning-modules/assignment_workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/quiz/${selectedContentId}`"
             @close="closeQuizModal"
             @start-quiz="startQuiz"
           />
@@ -342,6 +343,7 @@ const substrand_ls = computed(() => {
         :content-id="selectedContentId"
         :substrand-route="`substrand-${substrand_ref}`"
         :strand-id="strand_ref_id"
+        :route="`/learning-modules/assignment_workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/quiz/${selectedContentId}`"
         @close="closeQuizModal"
         @start-quiz="startQuiz"
       />

@@ -38,25 +38,24 @@ export const useStrapiQuiz = () => {
    * @param {string} quizType - 'pre-quiz' or 'post-quiz'
    * @returns {Promise<Array>} Array of questions
    */
-  const fetchQuestionsFromModel = async (indicator, quizType) => {
-    if (!topicId) {
-      console.warn('useStrapiQuiz: topicId is required');
+  const fetchQuestionsFromModel = async (indicator, quiz_type) => {
+    if (!indicator) {
+      console.warn('useStrapiQuiz: indicator is required');
       return null;
     }
-    if (!quizType || !['pre-quiz', 'post-quiz'].includes(quizType)) {
-      console.warn('useStrapiQuiz: quizType must be "pre-quiz" or "post-quiz"');
+    if (!quiz_type || !['pre-quiz', 'post-quiz'].includes(quiz_type)) {
+      console.warn('useStrapiQuiz: quiz_type must be "pre-quiz" or "post-quiz"');
       return null;
     }
 
     try {
-      console.log(`[Supabase] ⚡ Fetching questions (${quizType}) for topic ID: ${topicId}`);
+      console.log(`[Supabase] ⚡ Fetching questions (${quiz_type}) for indicator: ${indicator}`);
 
       // Fetch questions from Supabase
       const { data: questionsData, error } = await client
         .from('questions')
         .select('*')
-        .eq('indicator', indicator)
-        .eq('quiz_type', pre-quiz);
+        .eq('indicator', indicator);
 
       if (error) {
         console.error(`[Supabase] ❌ Error fetching questions:`, error);
@@ -100,13 +99,12 @@ export const useStrapiQuiz = () => {
    * @param {string} questionId - The question ID
    * @returns {Promise<Object|null>} Quiz question object or null
    */
-  const fetchQuizQuestionById = async (questionId) => {
+  const fetchQuizQuestionById = async (indicator) => {
     try {
       const { data, error } = await client
         .from('questions')
         .select('*')
-        .eq('id', questionId)
-        .single();
+        .eq('indicator', indicator);
 
       if (error) {
         console.error('[Supabase] Error fetching quiz question:', error);

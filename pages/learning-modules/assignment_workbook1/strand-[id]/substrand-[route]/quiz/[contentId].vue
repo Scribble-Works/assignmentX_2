@@ -272,6 +272,7 @@ const strandId = route.params.id;
 const substrandRoute = route.params.route;
 const lessonContentId = route.query.contentId || null; // The actual lesson contentId for navigation
 
+
 // Validate required params
 if (!substrandRefId || !strandId || !substrandRoute) {
   console.error("Missing required route parameters");
@@ -334,7 +335,7 @@ const completeQuiz = () => {
     quizCompleted.value = true;
 
     // Save pre-quiz score to localStorage
-    saveQuizScore(substrandRefId, "preQuiz", {
+    saveQuizScore(substrandRefId, "pre-quiz", {
       score: score.value,
       correctAnswers: correct,
       totalQuestions: questions.value.length,
