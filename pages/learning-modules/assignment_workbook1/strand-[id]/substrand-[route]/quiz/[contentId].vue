@@ -257,6 +257,9 @@ import { getTopicIdFromSubstrand } from "~/composables/useSubstrandTopicMapping"
 
 const route = useRoute();
 const router = useRouter();
+const client = useSupabaseClient();
+
+
 const {
   markQuizCompleted,
   unmarkQuizCompleted,
@@ -270,7 +273,18 @@ const { fetchQuizQuestions, fetchAllQuestionsDebug } = useStrapiQuiz();
 const substrandRefId = route.params.contentId;
 const strandId = route.params.id;
 const substrandRoute = route.params.route;
-const lessonContentId = route.query.contentId || null; // The actual lesson contentId for navigation
+const lessonContentId = route.params.contentId || null; // The actual lesson contentId for navigation
+// const indicators = route.query || null; // Optional indicators for fetching questions
+console.log(`[Quiz] Route lessons:`, lessonContentId);
+
+
+const { data: indicators_content } = await client
+  .from("book1_substrand_indicators")
+  .select()
+  .eq("id", lessonContentId);
+
+const indicators = indicators_content[0]?.indicators || null;
+console.log('Lesson Indicator:', indicators);
 
 
 // Validate required params
@@ -419,7 +433,7 @@ const loadQuestions = async () => {
     console.log(`[Quiz] 📝 Route params:`, route.params);
 
     // Map substrand ID to Strapi topic ID
-    const topicId = getTopicIdFromSubstrand(substrandRefId);
+    const topicId = getTopicIdFromSubstrand(lessonContentId);
 
     if (!topicId) {
       console.error(
@@ -435,7 +449,7 @@ const loadQuestions = async () => {
     console.log(
       `[Quiz] 📡 Fetching questions from Strapi for topic ID: ${topicId}`,
     );
-    const strapiQuestions = await fetchQuizQuestions(topicId);
+    const strapiQuestions = await fetchQuizQuestions(indicators);
 
     console.log(`[Quiz] 📊 Strapi fetch result:`, {
       isNull: strapiQuestions === null,

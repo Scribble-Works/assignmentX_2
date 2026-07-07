@@ -55,7 +55,8 @@ export const useStrapiQuiz = () => {
       const { data: questionsData, error } = await client
         .from('questions')
         .select('*')
-        .eq('indicator', indicator);
+        .eq('indicator', indicator)
+        .eq('quiz_type', quiz_type);
 
       if (error) {
         console.error(`[Supabase] ❌ Error fetching questions:`, error);
@@ -63,7 +64,7 @@ export const useStrapiQuiz = () => {
       }
 
       if (!questionsData || questionsData.length === 0) {
-        console.warn(`[Supabase] No questions found for topic ${topicId} with quizType ${quizType}`);
+        console.warn(`[Supabase] No questions found for indicator ${indicator} with quizType ${quiz_type}`);
         return [];
       }
 
@@ -71,7 +72,7 @@ export const useStrapiQuiz = () => {
       console.log(`[Supabase] ✅ Loaded ${questions.length} questions`);
       return questions;
     } catch (error) {
-      console.error(`[Supabase] ❌ Error fetching questions for topic ${topicId} (${quizType}):`, error);
+      console.error(`[Supabase] ❌ Error fetching questions for indicator ${indicator} (${quiz_type}):`, error);
       return null;
     }
   };
@@ -82,7 +83,7 @@ export const useStrapiQuiz = () => {
    * @returns {Promise<Array>} Array of quiz questions
    */
   const fetchQuizQuestions = async (topicId) => {
-    return fetchQuestionsFromModel(quiz_type, 'pre-quiz');
+    return fetchQuestionsFromModel(topicId, 'indicators');
   };
 
   /**
@@ -91,7 +92,7 @@ export const useStrapiQuiz = () => {
    * @returns {Promise<Array>} Array of problem set questions
    */
   const fetchProblemSetQuestions = async (topicId) => {
-    return fetchQuestionsFromModel(quiz_type, 'post-quiz');
+    return fetchQuestionsFromModel(topicId, 'indicators');
   };
 
   /**
