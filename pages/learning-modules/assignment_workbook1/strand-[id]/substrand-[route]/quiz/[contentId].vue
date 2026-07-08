@@ -259,7 +259,6 @@ const route = useRoute();
 const router = useRouter();
 const client = useSupabaseClient();
 
-
 const {
   markQuizCompleted,
   unmarkQuizCompleted,
@@ -277,15 +276,13 @@ const lessonContentId = route.params.contentId || null; // The actual lesson con
 // const indicators = route.query || null; // Optional indicators for fetching questions
 console.log(`[Quiz] Route lessons:`, lessonContentId);
 
-
 const { data: indicators_content } = await client
   .from("book1_substrand_indicators")
   .select()
   .eq("id", lessonContentId);
 
 const indicators = indicators_content[0]?.indicators || null;
-console.log('Lesson Indicator:', indicators);
-
+console.log("Lesson Indicator:", indicators);
 
 // Validate required params
 if (!substrandRefId || !strandId || !substrandRoute) {
