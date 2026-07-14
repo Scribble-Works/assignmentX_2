@@ -47,7 +47,16 @@ export default defineEventHandler(async (event) => {
       ? "school_admin"
       : onboarding?.role || profile.role || null;
 
-  if (!actorRole || !["school_admin", "educator"].includes(actorRole)) {
+  const normalizedActorRole = ["teacher", "facilitator"].includes(
+    actorRole || "",
+  )
+    ? "educator"
+    : actorRole;
+
+  if (
+    !normalizedActorRole ||
+    !["school_admin", "educator"].includes(normalizedActorRole)
+  ) {
     throw createError({
       statusCode: 403,
       statusMessage: "Only school admins or educators can access this page.",
@@ -55,7 +64,7 @@ export default defineEventHandler(async (event) => {
   }
 
   let school = null as any;
-  if (actorRole === "school_admin") {
+  if (normalizedActorRole === "school_admin") {
     const schoolByAdmin = await supabase
       .from("schools")
       .select("id, name, district, school_type, admin_id")
@@ -118,7 +127,7 @@ export default defineEventHandler(async (event) => {
   let classIds = (memberships || [])
     .map((m: any) => m.class_id)
     .filter(Boolean);
-  if (actorRole === "educator") {
+  if (normalizedActorRole === "educator") {
     classIds = (memberships || [])
       .filter((m: any) => m.teacher_id === userId)
       .map((m: any) => m.class_id)
@@ -171,7 +180,7 @@ export default defineEventHandler(async (event) => {
   }));
 
   return {
-    actorRole,
+    actorRole: normalizedActorRole,
     user: profile,
     school,
     teachers: teachers || [],

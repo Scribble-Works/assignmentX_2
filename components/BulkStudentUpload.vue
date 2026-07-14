@@ -2,15 +2,19 @@
 const props = defineProps({
   schoolId: {
     type: String,
-    required: true,
+    default: "",
+  },
+  classId: {
+    type: String,
+    default: "",
+  },
+  actorId: {
+    type: String,
+    default: "",
   },
 });
 
 const emit = defineEmits(["upload-complete"]);
-
-const { auth } = useSupabaseClient();
-const client = useSupabaseClient();
-const user = useSupabaseUser();
 
 const dialog = ref(false);
 const file = ref(null);
@@ -24,19 +28,17 @@ const successCount = ref(0);
 const errorCount = ref(0);
 
 const headers = [
+  { title: "Email", key: "email" },
   { title: "First Name", key: "firstName" },
   { title: "Last Name", key: "lastName" },
-  { title: "Email", key: "email" },
-  { title: "Student ID", key: "student_id" },
-  { title: "Grade Level", key: "grade_level" },
   { title: "Status", key: "status", value: (item) => item.status || "Valid" },
 ];
 
 const downloadTemplate = () => {
-  const template = `firstName,lastName,email,student_id,grade_level
-John,Doe,john.doe@school.com,STU001,Grade 9
-Jane,Smith,jane.smith@school.com,STU002,Grade 10
-Michael,Johnson,michael.johnson@school.com,STU003,Grade 11`;
+  const template = `email,firstName,lastName
+john.doe@school.com,John,Doe
+jane.smith@school.com,Jane,Smith
+michael.johnson@school.com,Michael,Johnson`;
 
   const blob = new Blob([template], { type: "text/csv" });
   const url = window.URL.createObjectURL(blob);
@@ -48,19 +50,42 @@ Michael,Johnson,michael.johnson@school.com,STU003,Grade 11`;
 };
 
 const parseCSV = (text) => {
-  const lines = text.split("\n").filter((line) => line.trim());
+  const lines = text.split(/\r?\n/).filter((line) => line.trim());
   if (lines.length < 2) {
     throw new Error("CSV file must contain headers and at least one data row");
   }
 
-  const headers = lines[0].split(",").map((h) => h.trim());
-  const requiredHeaders = [
-    "firstName",
-    "lastName",
-    "email",
-    "student_id",
-    "grade_level",
-  ];
+  const parseLine = (line) => {
+    const values = [];
+    let current = "";
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      const next = line[i + 1];
+      if (char === '"' && inQuotes && next === '"') {
+        current += '"';
+        i++;
+        continue;
+      }
+      if (char === '"') {
+        inQuotes = !inQuotes;
+        continue;
+      }
+      if (char === "," && !inQuotes) {
+        values.push(current.trim());
+        current = "";
+        continue;
+      }
+      current += char;
+    }
+
+    values.push(current.trim());
+    return values;
+  };
+
+  const headers = parseLine(lines[0]).map((h) => h.trim());
+  const requiredHeaders = ["email"];
 
   const missingHeaders = requiredHeaders.filter((h) => !headers.includes(h));
   if (missingHeaders.length > 0) {
@@ -68,8 +93,9 @@ const parseCSV = (text) => {
   }
 
   const data = [];
+  const seenEmails = new Set();
   for (let i = 1; i < lines.length; i++) {
-    const values = lines[i].split(",").map((v) => v.trim());
+    const values = parseLine(lines[i]);
     if (values.length < headers.length) continue;
 
     const row = {};
@@ -86,12 +112,16 @@ const parseCSV = (text) => {
     if (missing.length > 0) {
       row.status = `Missing: ${missing.join(", ")}`;
       row.hasError = true;
+    } else if (seenEmails.has(String(row.email).toLowerCase())) {
+      row.status = "Duplicate email in CSV";
+      row.hasError = true;
     } else if (!isValidEmail(row.email)) {
       row.status = "Invalid email format";
       row.hasError = true;
     } else {
       row.status = "Valid";
       row.hasError = false;
+      seenEmails.add(String(row.email).toLowerCase());
     }
 
     data.push(row);
@@ -157,68 +187,57 @@ const uploadStudents = async () => {
   successCount.value = 0;
   errorCount.value = 0;
 
-  for (let i = 0; i < validStudents.length; i++) {
-    const student = validStudents[i];
+  try {
+    const response = await $fetch("/api/school-admin/bulk-enroll-students", {
+      method: "POST",
+      body: {
+        actorId: props.actorId,
+        schoolId: props.schoolId,
+        classId: props.classId,
+        students: validStudents.map((student) => ({
+          email: student.email,
+          firstName: student.firstName || "",
+          lastName: student.lastName || "",
+        })),
+      },
+    });
 
-    try {
-      // Create user account with default password
-      const { data: authData, error: authError } = await auth.signUp({
-        email: student.email,
-        password: "helloworld",
-        options: {
-          data: {
-            firstName: student.firstName,
-            lastName: student.lastName,
-            role: "student",
-          },
-        },
-      });
+    successCount.value = response?.successCount || 0;
+    errorCount.value = response?.errorCount || 0;
+    errors.value = response?.errors || [];
 
-      if (authError) {
-        throw authError;
-      }
-
-      // Create profile for the student
-      await client.from("profiles").insert({
-        id: authData.user.id,
-        email: student.email,
-        firstName: student.firstName,
-        lastName: student.lastName,
-        role: "student",
-        school_id: props.schoolId,
-      });
-
-      // Create student record
-      await client.from("school_students").insert({
-        school_id: props.schoolId,
-        user_id: authData.user.id,
-        firstName: student.firstName,
-        lastName: student.lastName,
-        email: student.email,
-        student_id: student.student_id,
-        grade_level: student.grade_level,
-        status: "active",
-      });
-
-      successCount.value++;
+    validStudents.forEach((student) => {
       student.uploadStatus = "success";
-    } catch (error) {
-      errorCount.value++;
-      student.uploadStatus = "error";
-      errors.value.push({
-        student: `${student.firstName} ${student.lastName}`,
-        error: error.message,
-      });
+    });
+
+    if (Array.isArray(response?.errors) && response.errors.length > 0) {
+      for (const err of response.errors) {
+        const match = uploadedData.value.find(
+          (student) =>
+            String(student.email).toLowerCase() ===
+            String(err.email).toLowerCase(),
+        );
+        if (match) match.uploadStatus = "error";
+      }
     }
 
-    uploadProgress.value = Math.round(((i + 1) / validStudents.length) * 100);
+    uploadProgress.value = 100;
+
+    if (successCount.value > 0) {
+      emit("upload-complete");
+    }
+  } catch (error) {
+    errorCount.value = validStudents.length;
+    errors.value = [
+      {
+        student: "Bulk upload",
+        error:
+          error?.data?.statusMessage || error.message || "Bulk upload failed.",
+      },
+    ];
   }
 
   uploading.value = false;
-
-  if (successCount.value > 0) {
-    emit("upload-complete");
-  }
 };
 
 const close = () => {
@@ -253,7 +272,7 @@ const getRowColor = (item) => {
       <v-card>
         <v-card-title class="d-flex align-center pa-4">
           <v-icon class="mr-2">mdi-file-upload</v-icon>
-          <span>Bulk Student Upload</span>
+          <span>Bulk Student Enrolment</span>
           <v-spacer></v-spacer>
           <v-btn icon variant="text" @click="close">
             <v-icon>mdi-close</v-icon>
@@ -267,18 +286,26 @@ const getRowColor = (item) => {
           <v-alert type="info" variant="tonal" class="mb-4">
             <div class="text-subtitle-2 mb-2">Instructions:</div>
             <ol class="pl-4">
+              <li>Select the class you want to add students to</li>
               <li>Download the CSV template below</li>
               <li>
-                Fill in student details (firstName, lastName, email, student_id,
-                grade_level)
+                Fill in student email addresses (firstName/lastName optional)
               </li>
-              <li>Upload the completed CSV file</li>
-              <li>Review the data and click "Import Students"</li>
+              <li>Upload the completed CSV file and import</li>
             </ol>
             <div class="mt-2">
-              <strong>Note:</strong> All students will be created with the
-              default password: <code>helloworld</code>
+              <strong>Note:</strong> Students must already have AssignmentX
+              accounts and be onboarded as students.
             </div>
+          </v-alert>
+
+          <v-alert
+            v-if="!props.classId"
+            type="warning"
+            variant="tonal"
+            class="mb-4"
+          >
+            Please select a class before importing students.
           </v-alert>
 
           <!-- Download Template Button -->
@@ -312,7 +339,7 @@ const getRowColor = (item) => {
               <h3 class="text-h6">Preview Data</h3>
               <v-spacer></v-spacer>
               <v-chip color="success" variant="outlined">
-                {{ uploadedData.filter((s) => !s.hasError).length }} Valid
+                {{ uploadedData.filter((s) => !s.hasError).length }} Ready
               </v-chip>
               <v-chip color="error" variant="outlined" class="ml-2">
                 {{ uploadedData.filter((s) => s.hasError).length }} Errors
@@ -424,6 +451,7 @@ const getRowColor = (item) => {
             variant="flat"
             @click="uploadStudents"
             :disabled="
+              !props.classId ||
               !uploadedData.length ||
               uploadedData.every((s) => s.hasError) ||
               uploading

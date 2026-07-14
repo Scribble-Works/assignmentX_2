@@ -21,14 +21,16 @@ const getSupabase = () => {
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const adminId = String(body?.adminId || "").trim();
+  const teacherId = String(body?.teacherId || "").trim();
   const teacherEmail = String(body?.teacherEmail || "")
     .trim()
     .toLowerCase();
 
-  if (!adminId || !teacherEmail) {
+  if (!adminId || (!teacherId && !teacherEmail)) {
     throw createError({
       statusCode: 400,
-      statusMessage: "adminId and teacherEmail are required.",
+      statusMessage:
+        "adminId and either teacherId or teacherEmail are required.",
     });
   }
 
@@ -64,10 +66,34 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  let resolvedTeacherId = "";
+  let resolvedTeacherEmail = "";
+
+  if (teacherId) {
+    const { data: authUserData, error: authUserError } =
+      await supabase.auth.admin.getUserById(teacherId);
+
+    if (authUserError || !authUserData?.user) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: "Teacher auth user not found.",
+      });
+    }
+
+    resolvedTeacherId = authUserData.user.id;
+    resolvedTeacherEmail = String(authUserData.user.email || "")
+      .trim()
+      .toLowerCase();
+  }
+
   const { data: teacherProfile, error: teacherError } = await supabase
     .from("profiles")
     .select("id, firstName, lastName, email, role")
-    .eq("email", teacherEmail)
+    .or(
+      resolvedTeacherId
+        ? `id.eq.${resolvedTeacherId}`
+        : `email.ilike.${teacherEmail.replace(/,/g, "")}`,
+    )
     .single();
 
   if (teacherError || !teacherProfile) {
@@ -85,11 +111,13 @@ export default defineEventHandler(async (event) => {
     .maybeSingle();
 
   const isTeacherRole =
-    onboarding?.role === "educator" || teacherProfile.role === "educator";
+    ["educator", "teacher", "facilitator"].includes(onboarding?.role || "") ||
+    ["educator", "teacher", "facilitator"].includes(teacherProfile.role || "");
   if (!isTeacherRole) {
     throw createError({
       statusCode: 400,
-      statusMessage: "This user is not onboarded as a teacher (educator).",
+      statusMessage:
+        "This user is not onboarded as a teacher (educator/teacher/facilitator).",
     });
   }
 
@@ -111,7 +139,7 @@ export default defineEventHandler(async (event) => {
       id: teacherProfile.id,
       firstName: teacherProfile.firstName,
       lastName: teacherProfile.lastName,
-      email: teacherProfile.email,
+      email: resolvedTeacherEmail || teacherProfile.email,
       school_id: schoolId,
     },
   };

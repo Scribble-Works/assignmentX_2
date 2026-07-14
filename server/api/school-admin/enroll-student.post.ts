@@ -20,76 +20,104 @@ const getSupabase = () => {
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const teacherId = String(body?.teacherId || "").trim();
+  const actorId = String(
+    body?.actorId || body?.teacherId || body?.adminId || "",
+  ).trim();
   const classId = String(body?.classId || "").trim();
   const studentEmail = String(body?.studentEmail || "")
     .trim()
     .toLowerCase();
 
-  if (!teacherId || !classId || !studentEmail) {
+  if (!actorId || !classId || !studentEmail) {
     throw createError({
       statusCode: 400,
-      statusMessage: "teacherId, classId and studentEmail are required.",
+      statusMessage: "actorId, classId and studentEmail are required.",
     });
   }
 
   const supabase = getSupabase();
 
-  const { data: teacherProfile, error: teacherError } = await supabase
+  const { data: actorProfile, error: actorError } = await supabase
     .from("profiles")
     .select("id, role, school_id")
-    .eq("id", teacherId)
+    .eq("id", actorId)
     .single();
 
-  if (teacherError || !teacherProfile) {
+  if (actorError || !actorProfile) {
     throw createError({
       statusCode: 404,
-      statusMessage: "Teacher profile not found.",
+      statusMessage: "User profile not found.",
     });
   }
 
-  const { data: teacherOnboarding } = await supabase
+  const { data: actorOnboarding } = await supabase
     .from("onboarding")
     .select("role")
-    .eq("id", teacherId)
+    .eq("id", actorId)
     .maybeSingle();
 
-  const canTeach =
-    teacherProfile.role === "educator" ||
-    teacherOnboarding?.role === "educator";
-  if (!canTeach) {
+  const actorRole = actorProfile.role || actorOnboarding?.role || "";
+  const isTeacher = ["educator", "teacher", "facilitator"].includes(actorRole);
+  const isAdmin = actorRole === "school_admin";
+
+  if (!isTeacher && !isAdmin) {
     throw createError({
       statusCode: 403,
-      statusMessage: "Only teachers can enroll students.",
+      statusMessage: "Only school admins or teachers can add students.",
     });
   }
 
-  if (!teacherProfile.school_id) {
+  let schoolId = actorProfile.school_id as string | null;
+  if (!schoolId) {
+    const { data: schoolRow } = await supabase
+      .from("schools")
+      .select("id")
+      .eq("admin_id", actorId)
+      .maybeSingle();
+    schoolId = schoolRow?.id || null;
+  }
+
+  if (!schoolId) {
     throw createError({
       statusCode: 400,
-      statusMessage: "Teacher is not linked to a school yet.",
+      statusMessage: "User is not linked to a school yet.",
     });
   }
 
-  const { data: membership, error: membershipError } = await supabase
-    .from("school_teacher_memberships")
-    .select("id, school_id, teacher_id, class_id")
-    .eq("teacher_id", teacherId)
-    .eq("class_id", classId)
-    .maybeSingle();
+  const { data: classRow, error: classError } = await supabase
+    .from("school_classes")
+    .select("id, school_id")
+    .eq("id", classId)
+    .single();
 
-  if (membershipError) {
+  if (classError || !classRow || classRow.school_id !== schoolId) {
     throw createError({
-      statusCode: 500,
-      statusMessage: membershipError.message,
+      statusCode: 404,
+      statusMessage: "Class not found for this school.",
     });
   }
 
-  if (!membership) {
-    throw createError({
-      statusCode: 403,
-      statusMessage: "You are not assigned to this class.",
-    });
+  if (isTeacher) {
+    const { data: membership, error: membershipError } = await supabase
+      .from("school_teacher_memberships")
+      .select("id, school_id, teacher_id, class_id")
+      .eq("teacher_id", actorId)
+      .eq("class_id", classId)
+      .maybeSingle();
+
+    if (membershipError) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: membershipError.message,
+      });
+    }
+
+    if (!membership) {
+      throw createError({
+        statusCode: 403,
+        statusMessage: "You are not assigned to this class.",
+      });
+    }
   }
 
   const { data: studentProfile, error: studentError } = await supabase
@@ -113,7 +141,8 @@ export default defineEventHandler(async (event) => {
     .maybeSingle();
 
   const isStudentRole =
-    studentOnboarding?.role === "student" || studentProfile.role === "student";
+    ["student"].includes(studentOnboarding?.role || "") ||
+    ["student"].includes(studentProfile.role || "");
 
   if (!isStudentRole) {
     throw createError({
@@ -122,10 +151,10 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  if (studentProfile.school_id !== teacherProfile.school_id) {
+  if (studentProfile.school_id !== schoolId) {
     const { error: updateStudentError } = await supabase
       .from("profiles")
-      .update({ school_id: teacherProfile.school_id, role: "student" })
+      .update({ school_id: schoolId, role: "student" })
       .eq("id", studentProfile.id);
 
     if (updateStudentError) {
@@ -149,7 +178,7 @@ export default defineEventHandler(async (event) => {
       .insert({
         class_id: classId,
         student_id: studentProfile.id,
-        added_by: teacherId,
+        added_by: actorId,
       });
 
     if (insertError) {

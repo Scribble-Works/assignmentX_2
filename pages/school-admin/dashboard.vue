@@ -25,7 +25,11 @@ const assignClassId = ref("");
 
 const canManageTeachers = computed(() => actorRole.value === "school_admin");
 const canCreateClass = computed(() => actorRole.value === "school_admin");
-const canEnrollStudents = computed(() => actorRole.value === "educator");
+const canEnrollStudents = computed(() =>
+  ["school_admin", "educator", "teacher", "facilitator"].includes(
+    actorRole.value,
+  ),
+);
 
 const teacherClassIds = computed(() => {
   if (!user.value?.id) return [];
@@ -35,7 +39,9 @@ const teacherClassIds = computed(() => {
 });
 
 const classOptions = computed(() => {
-  const source = canEnrollStudents.value
+  const source = ["educator", "teacher", "facilitator"].includes(
+    actorRole.value,
+  )
     ? classes.value.filter((c) => teacherClassIds.value.includes(c.id))
     : classes.value;
   return source.map((c) => ({
@@ -190,7 +196,7 @@ const enrollStudent = async () => {
     await $fetch("/api/school-admin/enroll-student", {
       method: "POST",
       body: {
-        teacherId: user.value.id,
+        actorId: user.value.id,
         classId: selectedClassId.value,
         studentEmail: studentEmail.value.trim().toLowerCase(),
       },
@@ -348,7 +354,7 @@ onMounted(async () => {
         </v-card>
 
         <v-card v-if="canEnrollStudents">
-          <v-card-title>Enroll Student To Class</v-card-title>
+          <v-card-title>Add Student To Class</v-card-title>
           <v-card-text>
             <p class="text-caption text-grey-darken-1 mb-2">
               Student must already have an AssignmentX account and be onboarded
@@ -382,6 +388,22 @@ onMounted(async () => {
               Enroll Student
             </v-btn>
           </v-card-actions>
+        </v-card>
+
+        <v-card class="mt-4" v-if="canEnrollStudents">
+          <v-card-title>Bulk Upload Students</v-card-title>
+          <v-card-text>
+            <p class="text-caption text-grey-darken-1 mb-4">
+              Import a CSV file to add multiple existing students to the
+              selected class at once.
+            </p>
+            <BulkStudentUpload
+              :actor-id="user.id"
+              :school-id="school?.id || ''"
+              :class-id="selectedClassId"
+              @upload-complete="loadDashboard"
+            />
+          </v-card-text>
         </v-card>
       </v-col>
 
