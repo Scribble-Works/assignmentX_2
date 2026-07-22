@@ -52,13 +52,13 @@ const hasPages = computed(() => pages.value.length > 0);
       hide-delimiters
       height="950"
       show-arrows="hover"
-      class="rounded-l shadow-lg"
+      class="rounded-l"
     >
       <v-carousel-item v-for="(page, i) in pages" :key="i">
         <img
           :src="page.src"
           :alt="page.id"
-          class="w-full h-full rounded-l shadow-lg object-contain"
+          class="w-full h-full rounded-l object-contain"
         />
       </v-carousel-item>
     </v-carousel>
