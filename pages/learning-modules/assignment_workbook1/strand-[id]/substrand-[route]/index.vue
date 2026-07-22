@@ -45,7 +45,10 @@ const bece = strands[0].BECE_Qquestions;
 
 // Check if all quizzes are completed
 const allQuizzesCompleted = computed(() => {
-  return substrand_ls && completedQuizzes.value.size === substrand_ls.length;
+  return (
+    substrand_ls.value.length > 0 &&
+    completedQuizzes.value.size === substrand_ls.value.length
+  );
 });
 
 function openNotes() {
@@ -86,29 +89,27 @@ const startQuiz = (contentId) => {
 };
 
 const handleContentClick = (contentId) => {
-  navigateTo(
-    `/learning-modules/assignment_workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/${contentId}`,
-  );
   // Check if quiz is already completed
-  // if (!isQuizCompleted(contentId)) {
-  //     // Set status to in progress when starting
-  //     markQuizInProgress(contentId);
-  //     openQuizModal(contentId);
-  // } else {
-  //     // Navigate to content if quiz is completed
-  //     navigateTo(`/workbook/workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/${contentId}`);
-  // }
+  if (!isQuizCompleted(contentId)) {
+    // Set status to in progress when starting
+    markQuizInProgress(contentId);
+    openQuizModal(contentId);
+  } else {
+    // Navigate to content if quiz is completed
+    navigateTo(
+      `/learning-modules/assignment_workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/${contentId}`,
+    );
+  }
 };
 
 // Add a completion indicator to the title
 const completedCount = computed(() => {
-  return substrand_ls
-    ? substrand_ls.filter((content) => isQuizCompleted(content.id)).length
-    : 0;
+  return substrand_ls.value.filter((content) => isQuizCompleted(content.id))
+    .length;
 });
 
 const totalCount = computed(() => {
-  return substrand_ls ? substrand_ls.length : 0;
+  return substrand_ls.value.length;
 });
 
 const solveProblem = () => {
@@ -179,18 +180,23 @@ const substrand_ls = computed(() => {
             {{ title }}
           </h1>
           <!-- Progress Indicator -->
-          <!-- <div class="mt-2 flex items-center">
-                        <div class="flex items-center text-sm text-gray-600">
-                            <span class="mr-2">Progress:</span>
-                            <span class="font-semibold text-green-600">{{ completedCount }}/{{ totalCount }}</span>
-                            <span class="ml-2">courses completed</span>
-                        </div>
-                        <div class="ml-4 w-32 bg-gray-200 rounded-full h-2">
-                            <div class="bg-green-600 h-2 rounded-full transition-all duration-300"
-                                :style="{ width: `${totalCount > 0 ? (completedCount / totalCount) * 100 : 0}%` }">
-                            </div>
-                        </div>
-                    </div> -->
+          <div class="mt-2 flex items-center">
+            <div class="flex items-center text-sm text-gray-600">
+              <span class="mr-2">Progress:</span>
+              <span class="font-semibold text-green-600"
+                >{{ completedCount }}/{{ totalCount }}</span
+              >
+              <span class="ml-2">courses completed</span>
+            </div>
+            <div class="ml-4 w-32 bg-gray-200 rounded-full h-2">
+              <div
+                class="bg-green-600 h-2 rounded-full transition-all duration-300"
+                :style="{
+                  width: `${totalCount > 0 ? (completedCount / totalCount) * 100 : 0}%`,
+                }"
+              ></div>
+            </div>
+          </div>
         </v-col>
         <!-- <v-col cols="" lg="4" sm="12" align="right">
                     <v-btn to="/progress" color="primary">View Progress Report</v-btn>
@@ -236,24 +242,29 @@ const substrand_ls = computed(() => {
                     </div>
                   </div>
                 </v-card-title>
-                <!-- <v-card-actions class="flex items-center justify-between"> -->
-                <!-- <div class="gap-2">
+                <!-- <v-card-actions class="flex items-center justify-between">
+                <div class="gap-2">
                                         <v-btn @click="openNotes" color="primary">concept note</v-btn>
                                         <v-btn @click="openBece" color="success">BECE Questions</v-btn>
-                                    </div> -->
+                                    </div>
+                </v-card-actions> -->
 
                 <!-- Status Indicator -->
-                <!-- <div class="flex items-center">
-                                        <span :class="[
-                                            'px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-1',
-                                            getStatusInfo(getContentStatus(content.id)).bgColor,
-                                            getStatusInfo(getContentStatus(content.id)).color
-                                        ]" style="border-radius: 10px;">
-                                            <span>{{ getStatusInfo(getContentStatus(content.id)).icon }}</span>
-                                            {{ getStatusInfo(getContentStatus(content.id)).text }}
-                                        </span>
-                                    </div> -->
-                <!-- </v-card-actions> -->
+                <v-card-actions class="flex items-center">
+                  <span
+                    :class="[
+                      'px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-1',
+                      getStatusInfo(getContentStatus(content.id)).bgColor,
+                      getStatusInfo(getContentStatus(content.id)).color,
+                    ]"
+                    style="border-radius: 10px"
+                  >
+                    <span>{{
+                      getStatusInfo(getContentStatus(content.id)).icon
+                    }}</span>
+                    {{ getStatusInfo(getContentStatus(content.id)).text }}
+                  </span>
+                </v-card-actions>
               </v-card>
 
               <v-spacer></v-spacer>
@@ -320,6 +331,7 @@ const substrand_ls = computed(() => {
             :content-id="selectedContentId"
             :substrand-route="`substrand-${substrand_ref}`"
             :strand-id="strand_ref_id"
+            :route="`/learning-modules/assignment_workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/quiz/${selectedContentId}`"
             @close="closeQuizModal"
             @start-quiz="startQuiz"
           />
@@ -331,6 +343,7 @@ const substrand_ls = computed(() => {
         :content-id="selectedContentId"
         :substrand-route="`substrand-${substrand_ref}`"
         :strand-id="strand_ref_id"
+        :route="`/learning-modules/assignment_workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/quiz/${selectedContentId}`"
         @close="closeQuizModal"
         @start-quiz="startQuiz"
       />

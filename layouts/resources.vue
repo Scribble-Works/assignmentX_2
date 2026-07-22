@@ -115,7 +115,7 @@ watchEffect(() => {
   <v-app>
     <div class="body">
       <theHeader />
-      <v-container>
+      <v-container class="pt-4">
         <!-- Page title -->
         <h1 class="text-h5 font-weight-bold mb-4">{{ pageTitle }}</h1>
 

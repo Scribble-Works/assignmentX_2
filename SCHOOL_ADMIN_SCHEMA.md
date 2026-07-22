@@ -14,6 +14,16 @@ The School Admin Portal allows school administrators to:
 
 ## Required Database Tables
 
+### 0. `onboarding` table (already in project)
+
+This feature relies on existing onboarding roles:
+
+- `educator` for teachers
+- `student` for students
+
+Teachers and students must already have AssignmentX accounts and an onboarding
+record before they can be linked to schools/classes.
+
 ### 1. `schools` table
 
 Stores information about registered schools.
@@ -128,6 +138,59 @@ CREATE TABLE school_activity_log (
 
 CREATE INDEX idx_activity_log_school_id ON school_activity_log(school_id);
 CREATE INDEX idx_activity_log_created_at ON school_activity_log(created_at);
+```
+
+### 7. `school_classes` table
+
+Stores classes created by a school admin.
+
+```sql
+CREATE TABLE IF NOT EXISTS school_classes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  school_id UUID REFERENCES schools(id) ON DELETE CASCADE NOT NULL,
+  name TEXT NOT NULL,
+  grade_level TEXT,
+  created_by UUID REFERENCES auth.users(id),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_school_classes_school_id ON school_classes(school_id);
+```
+
+### 8. `school_teacher_memberships` table
+
+Assigns teachers to classes in a school.
+
+```sql
+CREATE TABLE IF NOT EXISTS school_teacher_memberships (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  school_id UUID REFERENCES schools(id) ON DELETE CASCADE NOT NULL,
+  teacher_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  class_id UUID REFERENCES school_classes(id) ON DELETE CASCADE NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(teacher_id, class_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_teacher_memberships_school_id ON school_teacher_memberships(school_id);
+CREATE INDEX IF NOT EXISTS idx_teacher_memberships_teacher_id ON school_teacher_memberships(teacher_id);
+```
+
+### 9. `class_students` table
+
+Stores students enrolled by teachers into classes.
+
+```sql
+CREATE TABLE IF NOT EXISTS class_students (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  class_id UUID REFERENCES school_classes(id) ON DELETE CASCADE NOT NULL,
+  student_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  added_by UUID REFERENCES auth.users(id),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(class_id, student_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_class_students_class_id ON class_students(class_id);
+CREATE INDEX IF NOT EXISTS idx_class_students_student_id ON class_students(student_id);
 ```
 
 ## Row Level Security (RLS) Policies
