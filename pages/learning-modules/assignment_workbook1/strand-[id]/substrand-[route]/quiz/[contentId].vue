@@ -253,7 +253,6 @@
 import { ref, computed, onMounted } from "vue";
 import { useQuizProgress } from "~/composables/useQuizProgress";
 import { useStrapiQuiz } from "~/composables/useStrapiQuiz";
-import { getTopicIdFromSubstrand } from "~/composables/useSubstrandTopicMapping";
 
 const route = useRoute();
 const router = useRouter();
@@ -429,24 +428,14 @@ const loadQuestions = async () => {
     console.log(`[Quiz] 📍 Current route:`, route.path);
     console.log(`[Quiz] 📝 Route params:`, route.params);
 
-    // Map substrand ID to Strapi topic ID
-    const topicId = getTopicIdFromSubstrand(lessonContentId);
-
-    if (!topicId) {
-      console.error(
-        `[Quiz] ❌ No topic ID mapping found for substrand ${substrandRefId}`,
-      );
-      console.error(`[Quiz] Please add mapping in useSubstrandTopicMapping.js`);
-      questions.value = [];
-      loading.value = false;
-      return;
-    }
-
-    // Try to fetch from Strapi using topic ID
+    // The pre-quiz is keyed by the indicator TEXT (the `indicators` column in
+    // the questions table), not by a numeric topicId, so no substrand->topic
+    // mapping is required here.
+    const indicatorValue = indicators != null ? String(indicators).trim() : "";
     console.log(
-      `[Quiz] 📡 Fetching questions from Strapi for topic ID: ${topicId}`,
+      `[Quiz] 📡 Fetching questions from Strapi for indicator: ${indicatorValue}`,
     );
-    const strapiQuestions = await fetchQuizQuestions(indicators);
+    const strapiQuestions = await fetchQuizQuestions(indicatorValue);
 
     console.log(`[Quiz] 📊 Strapi fetch result:`, {
       isNull: strapiQuestions === null,

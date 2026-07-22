@@ -345,7 +345,6 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useStrapiQuiz } from "~/composables/useStrapiQuiz";
-import { getTopicIdFromSubstrand } from "~/composables/useSubstrandTopicMapping";
 import { useQuizProgress } from "~/composables/useQuizProgress";
 
 const route = useRoute();
@@ -362,6 +361,17 @@ const substrandRoute = route.params.route;
 if (!substrandRefId || !strandId || !substrandRoute) {
   console.error("Missing required route parameters");
 }
+
+// Look up the indicator TEXT for this content (matches the `indicators`
+// column in the questions table). The problem set is keyed the same way as
+// the pre-quiz: by the indicator string, not a numeric topicId.
+const { data: psIndicatorsContent } = await useSupabaseClient()
+  .from("book1_substrand_indicators")
+  .select("indicators")
+  .eq("id", substrandRefId)
+  .maybeSingle();
+const indicators = psIndicatorsContent?.indicators ?? null;
+console.log("Problem Set Lesson Indicator:", indicators);
 
 const currentQuestionIndex = ref(0);
 const selectedAnswer = ref(null); // For multiple choice
@@ -620,15 +630,13 @@ const loadQuestions = async () => {
     );
     console.log(`[Problem Set] 📍 Current route:`, route.path);
 
-    // Map substrand ID to Strapi topic ID
-    const topicId = getTopicIdFromSubstrand(substrandRefId);
+    // The problem set is keyed by the indicator TEXT (same as the pre-quiz),
+    // not a numeric topicId.
+    const indicatorValue = indicators != null ? String(indicators).trim() : "";
 
-    if (!topicId) {
+    if (!indicatorValue) {
       console.error(
-        `[Problem Set] ❌ No topic ID mapping found for substrand ${substrandRefId}`,
-      );
-      console.error(
-        `[Problem Set] Please add mapping in useSubstrandTopicMapping.js`,
+        `[Problem Set] ❌ No indicator found for content ${substrandRefId}`,
       );
       questions.value = [];
       loading.value = false;
@@ -637,9 +645,9 @@ const loadQuestions = async () => {
 
     // Fetch problem set questions from Strapi
     console.log(
-      `[Problem Set] 📡 Fetching problem set questions from Strapi for topic ID: ${topicId}`,
+      `[Problem Set] 📡 Fetching problem set questions from Strapi for indicator: ${indicatorValue}`,
     );
-    const strapiQuestions = await fetchProblemSetQuestions(topicId);
+    const strapiQuestions = await fetchProblemSetQuestions(indicatorValue);
 
     console.log(`[Problem Set] 📊 Strapi fetch result:`, {
       isNull: strapiQuestions === null,
