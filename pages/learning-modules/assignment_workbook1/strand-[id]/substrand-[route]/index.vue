@@ -7,10 +7,6 @@ const route = useRoute();
 const id = route.params.id;
 const substrand_ref = route.params.route;
 
-// Quiz modal state
-const showQuizModal = ref(false);
-const selectedContentId = ref(null);
-
 // Use the quiz progress composable
 const {
   completedQuizzes,
@@ -43,13 +39,19 @@ const title = substrand[0].title;
 const conceptNote = strands[0].concept_notes;
 const bece = strands[0].BECE_Qquestions;
 
-// Check if all quizzes are completed
-const allQuizzesCompleted = computed(() => {
-  return (
-    substrand_ls.value.length > 0 &&
-    completedQuizzes.value.size === substrand_ls.value.length
-  );
-});
+// Canonical completion key used by BOTH this list and the shared quiz
+// component (components/SubstrandQuiz.vue stores the selected indicator as
+// `substrand-<id>`). Keeping the keys identical is what makes a completed
+// indicator recognized on return and lets the progress counter increment.
+const quizKey = (id) => `substrand-${id}`;
+
+// All indicators are done once each one has been started (quiz taken).
+const allQuizzesCompleted = computed(() =>
+  substrand_ls.value.length > 0 &&
+  substrand_ls.value.every(
+    (content) => getContentStatus(quizKey(content.id)) !== "not-started",
+  ),
+);
 
 function openNotes() {
   navigateTo(conceptNote, {
@@ -71,41 +73,33 @@ function openBece() {
   document.body.removeChild(link);
 }
 
-// Quiz modal functions
-const openQuizModal = (contentId) => {
-  selectedContentId.value = contentId;
-  showQuizModal.value = true;
-};
-
-const closeQuizModal = () => {
-  showQuizModal.value = false;
-  selectedContentId.value = null;
-};
-
-const startQuiz = (contentId) => {
-  // Quiz is now handled by the separate quiz page
-  // This function is no longer needed as the modal navigates directly
-  console.log(`Quiz started for content: ${contentId}`);
-};
+// Quiz modal functions removed — routing now goes straight to the shared
+// SubstrandQuiz page (components/SubstrandQuiz.vue) on first click.
 
 const handleContentClick = (contentId) => {
-  // Check if quiz is already completed
-  if (!isQuizCompleted(contentId)) {
-    // Set status to in progress when starting
-    markQuizInProgress(contentId);
-    openQuizModal(contentId);
+  // First click on an indicator routes to the whole-substrand pre-quiz (10
+  // questions). Once that indicator is started/completed, clicking it opens
+  // the course content directly. Each indicator is tracked independently, so
+  // only the selected one advances; the rest stay "not started".
+  const key = quizKey(contentId);
+  if (getContentStatus(key) === "not-started") {
+    markQuizInProgress(key);
+    navigateTo(
+      `/learning-modules/assignment_workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/quiz/${contentId}`,
+    );
   } else {
-    // Navigate to content if quiz is completed
     navigateTo(
       `/learning-modules/assignment_workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/${contentId}`,
     );
   }
 };
 
-// Add a completion indicator to the title
+// Progress: count every indicator that has been started (in-progress or
+// completed). Per-indicator, so only the quizzed indicator advances.
 const completedCount = computed(() => {
-  return substrand_ls.value.filter((content) => isQuizCompleted(content.id))
-    .length;
+  return substrand_ls.value.filter(
+    (content) => getContentStatus(quizKey(content.id)) !== "not-started",
+  ).length;
 });
 
 const totalCount = computed(() => {
@@ -254,15 +248,15 @@ const substrand_ls = computed(() => {
                   <span
                     :class="[
                       'px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-1',
-                      getStatusInfo(getContentStatus(content.id)).bgColor,
-                      getStatusInfo(getContentStatus(content.id)).color,
+                      getStatusInfo(getContentStatus(quizKey(content.id))).bgColor,
+                      getStatusInfo(getContentStatus(quizKey(content.id))).color,
                     ]"
                     style="border-radius: 10px"
                   >
                     <span>{{
-                      getStatusInfo(getContentStatus(content.id)).icon
+                      getStatusInfo(getContentStatus(quizKey(content.id))).icon
                     }}</span>
-                    {{ getStatusInfo(getContentStatus(content.id)).text }}
+                    {{ getStatusInfo(getContentStatus(quizKey(content.id))).text }}
                   </span>
                 </v-card-actions>
               </v-card>
@@ -325,28 +319,8 @@ const substrand_ls = computed(() => {
             </v-row>
           </div>
 
-          <!-- Quiz Modal -->
-          <QuizModal
-            :is-open="showQuizModal"
-            :content-id="selectedContentId"
-            :substrand-route="`substrand-${substrand_ref}`"
-            :strand-id="strand_ref_id"
-            :route="`/learning-modules/assignment_workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/quiz/${selectedContentId}`"
-            @close="closeQuizModal"
-            @start-quiz="startQuiz"
-          />
         </div>
       </div>
-      <!-- Quiz Modal -->
-      <QuizModal
-        :is-open="showQuizModal"
-        :content-id="selectedContentId"
-        :substrand-route="`substrand-${substrand_ref}`"
-        :strand-id="strand_ref_id"
-        :route="`/learning-modules/assignment_workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/quiz/${selectedContentId}`"
-        @close="closeQuizModal"
-        @start-quiz="startQuiz"
-      />
     </div>
   </div>
 </template>

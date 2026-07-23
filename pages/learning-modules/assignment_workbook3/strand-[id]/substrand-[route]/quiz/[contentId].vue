@@ -1,11 +1,10 @@
 <script setup>
-// Thin wrapper: delegates the whole-substrand pre-quiz to the shared
-// SubstrandQuiz component. The actual quiz logic lives in components/SubstrandQuiz.vue
-// so every learning module can reuse the exact same flow.
+// Thin wrapper delegating to the shared SubstrandQuiz component (same flow as
+// assignment_workbook1). See components/SubstrandQuiz.vue for the logic.
 const route = useRoute();
 
-const moduleSlug = "assignment_workbook1";
-const indicatorsTable = "book1_substrand_indicators";
+const moduleSlug = "assignment_workbook3";
+const indicatorsTable = "book3_substrand_indicators";
 const substrandsTable = "book1_strand_substrands_lists";
 const strandId = route.params.id;
 const substrandRoute = route.params.route;
