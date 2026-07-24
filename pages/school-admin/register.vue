@@ -13,10 +13,11 @@ const mobile = useMediaQuery("(max-width: 600px)");
 const tablet = useMediaQuery("(min-width: 601px) and (max-width: 1024px)");
 
 // Form fields
-const email = ref("");
+const route = useRoute();
+const email = ref(typeof route.query.email === "string" ? route.query.email : "");
 const password = ref("");
 const confPassword = ref("");
-const schoolName = ref("");
+const schoolName = ref(typeof route.query.school === "string" ? route.query.school : "");
 const adminFirstName = ref("");
 const adminLastName = ref("");
 const phone = ref("");
@@ -24,6 +25,26 @@ const schoolAddress = ref("");
 const numberOfStudents = ref("");
 const schoolType = ref("");
 const district = ref("");
+
+// Carried over from the pricing page after a successful school-plan payment
+const paidPlan = computed(() => (typeof route.query.plan === "string" ? route.query.plan : ""));
+const paidTeachers = computed(() =>
+  typeof route.query.teachers === "string" ? route.query.teachers : "",
+);
+const paidBilling = computed(() =>
+  typeof route.query.billing === "string" ? route.query.billing : "",
+);
+const paidAmount = computed(() =>
+  typeof route.query.amount === "string" ? route.query.amount : "",
+);
+const paidReference = computed(() =>
+  typeof route.query.reference === "string" ? route.query.reference : "",
+);
+const paidBanner = computed(() =>
+  paidPlan.value === "school" && paidAmount.value
+    ? `School Plan selected — ${paidTeachers.value || "?"} teachers, ${paidBilling.value || "termly"} billing, GHS ${paidAmount.value} (ref ${paidReference.value || "n/a"}). Create your admin account to finish.`
+    : "",
+);
 
 // UI state
 const alert = ref(false);
@@ -106,6 +127,12 @@ const signUp = async () => {
           estimated_students: parseInt(numberOfStudents.value),
           contact_email: email.value,
           contact_phone: phone.value,
+          // Carried over from the pricing page after a school-plan payment
+          plan: paidPlan.value || null,
+          paid_teachers: paidTeachers.value ? parseInt(paidTeachers.value) : null,
+          billing_cycle: paidBilling.value || null,
+          paid_amount: paidAmount.value ? parseInt(paidAmount.value) : null,
+          paystack_reference: paidReference.value || null,
         })
         .select()
         .single();
@@ -216,6 +243,16 @@ const signUp = async () => {
                     students
                   </p>
                 </div>
+
+                <v-alert
+                  v-if="paidBanner"
+                  type="success"
+                  variant="tonal"
+                  icon="mdi-check-decagram"
+                  class="mb-4 text-left"
+                >
+                  {{ paidBanner }}
+                </v-alert>
 
                 <v-alert
                   v-if="alert"

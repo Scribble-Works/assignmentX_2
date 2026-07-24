@@ -8,6 +8,31 @@ import { useMediaQuery } from '@vueuse/core';
 const mobile = useMediaQuery('(max-width: 600px)');
 const tablet = useMediaQuery('(min-width: 601px) and (max-width: 1024px)');
 
+// Student-aware label for the Facilitator/Student Resources nav entry
+const { data: headerOnboarding } = await useAsyncData(
+  () => `header-role-${user.value?.id}`,
+  async () => {
+    if (!user.value?.id) return null;
+    const { data } = await client
+      .from('onboarding')
+      .select('role')
+      .eq('id', user.value.id)
+      .single();
+    return data;
+  },
+);
+const isStudentUser = computed(
+  () => headerOnboarding.value?.role === 'student',
+);
+const resourcesLabel = computed(() =>
+  isStudentUser.value ? 'Students Resources' : 'Facilitator Resources',
+);
+const resourcesLink = computed(() =>
+  isStudentUser.value
+    ? '/facilitator-resources/bece-past-questions/'
+    : '/facilitator-resources/',
+);
+
 
 const signout = async () => {
     try {
@@ -55,11 +80,13 @@ router.beforeEach((to, from, next) => {
                     <NuxtLink class="hover:text-blue-500 py-2" to="/">Home</NuxtLink>
                     <NuxtLink class="hover:text-blue-500 py-2" to="/about">About</NuxtLink>
                     <NuxtLink class="hover:text-blue-500 py-2" to="/learning-modules/">Learning Modules</NuxtLink>
-                    <NuxtLink class="hover:text-blue-500 py-2" to="/facilitator-resources/">Facilitator Resources
+                    <NuxtLink class="hover:text-blue-500 py-2" :to="resourcesLink">{{ resourcesLabel }}
                     </NuxtLink>
+                    <NuxtLink class="hover:text-blue-500 py-2" to="/pricing">Pricing</NuxtLink>
 
                     <div v-if="!user">
                         <v-btn color="blue" class=" text-white py-2 px-0 rounded" to="/login">Login</v-btn>
+                        <v-btn color="green-darken-2" class=" text-white py-2 px-0 rounded ml-1" to="/pricing">For Schools</v-btn>
                     </div>
                     <div v-else>
                         <avartar />
@@ -85,8 +112,9 @@ router.beforeEach((to, from, next) => {
                 </NuxtLink>
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/learning-modules/">Learning Modules
                 </NuxtLink>
-                <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/facilitator-resources/">Facilitator Resources
+                <NuxtLink class="block px-4 py-2 hover:bg-gray-200" :to="resourcesLink">{{ resourcesLabel }}
                 </NuxtLink>
+                <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/pricing">Pricing</NuxtLink>
 
 
                 <template v-slot:append>
@@ -105,7 +133,8 @@ router.beforeEach((to, from, next) => {
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/">Home</NuxtLink>
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/about">About
                 </NuxtLink>
-                <NuxtLink class="hover:text-blue-500 py-2 block px-4" to="/resources">Facilitator Resources</NuxtLink>
+                <NuxtLink class="hover:text-blue-500 py-2 block px-4" :to="resourcesLink">{{ resourcesLabel }}</NuxtLink>
+                <NuxtLink class="hover:text-blue-500 py-2 block px-4" to="/pricing">Pricing</NuxtLink>
                
             </div> -->
         </header>

@@ -23,3 +23,6 @@ logs
 .env.*
 !.env.example
 .qodo
+
+# Hermes agent internal state
+.hermes/
