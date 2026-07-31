@@ -15,8 +15,12 @@ const {
   isQuizCompleted,
   getContentStatus,
   getStatusInfo,
+  hasSeenSubstrandQuiz,
+  markSubstrandQuizSeen,
   loadStateFromStorage,
 } = useQuizProgress();
+
+const moduleSlug = "preassignment_workbook3";
 
 const { data: substrand } = await client
   .from("preassignment_workbook3_strand_substrands_lists")
@@ -24,6 +28,9 @@ const { data: substrand } = await client
   .eq("route", substrand_ref);
 const strand_ref_id = substrand[0].strand_ref;
 const substrand_ref_id = substrand[0].id;
+// One-time gate for the whole-substrand pre-quiz: shown on the first
+// indicator click in this substrand, skipped on every click after that.
+const substrandQuizKey = `${moduleSlug}-substrand-${substrand_ref_id}`;
 
 const { data: strands } = await client
   .from("preassignment_workbook3_substrands_contents")
@@ -75,16 +82,20 @@ function openBece() {
 // SubstrandQuiz page (components/SubstrandQuiz.vue) on first click.
 
 const handleContentClick = (contentId) => {
-  // First click routes to the whole-substrand pre-quiz; once that indicator is
-  // started/completed it opens content directly. Only the selected indicator
-  // advances; the rest stay "not started".
+  // The pre-quiz is shown only once per substrand, on the first indicator
+  // click. Every indicator click after that (whichever indicator) goes
+  // straight to that indicator's content.
   const key = quizKey(contentId);
-  if (getContentStatus(key) === "not-started") {
+  if (!hasSeenSubstrandQuiz(substrandQuizKey)) {
+    markSubstrandQuizSeen(substrandQuizKey);
     markQuizInProgress(key);
     navigateTo(
       `/learning-modules/preassignment_workbook3/strand-${strand_ref_id}/substrand-${substrand_ref}/quiz/${contentId}`,
     );
   } else {
+    if (getContentStatus(key) === "not-started") {
+      markQuizInProgress(key);
+    }
     navigateTo(
       `/learning-modules/preassignment_workbook3/strand-${strand_ref_id}/substrand-${substrand_ref}/${contentId}`,
     );
