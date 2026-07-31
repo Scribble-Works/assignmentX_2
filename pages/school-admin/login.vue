@@ -201,7 +201,7 @@ const login = async () => {
                     <p class="text-body-2 mb-2">
                       Don't have a school account?
                       <NuxtLink
-                        to="/school-admin/register"
+                        to="/pricing"
                         class="auth-link font-weight-bold"
                       >
                         Register your school

@@ -43,6 +43,12 @@ const { data: files } = await client
   .select()
   .eq("id", substrand_ref_id);
 
+const goBackToSubstrand = () => {
+  navigateTo(
+    `/learning-modules/assignment_workbook2/strand-${strand_ref_id}/substrand-${strand_ref}`,
+  );
+};
+
 const heading = indicators_content[0].indicators;
 const vid1 = indicators_content[0].vid1;
 const vid2 = indicators_content[0].vid2;
@@ -141,6 +147,28 @@ function swapVideo(video) {
 <template>
   <div class="body">
     <v-container>
+      <button
+        @click="goBackToSubstrand"
+        class="d-flex align-center mb-6 back-to-topics-btn"
+        type="button"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          class="mr-2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+        Back to Topics
+      </button>
       <h2
         class="text-left text-uppercase text-bold mb-10 mt-0"
         style="
@@ -394,6 +422,20 @@ function swapVideo(video) {
 <style>
 .body {
   background: white;
+}
+
+.back-to-topics-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.back-to-topics-btn:hover {
+  color: #374151;
 }
 
 .emoji-container {
