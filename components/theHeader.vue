@@ -82,11 +82,11 @@ router.beforeEach((to, from, next) => {
                     <NuxtLink class="hover:text-blue-500 py-2" to="/learning-modules/">Learning Modules</NuxtLink>
                     <NuxtLink class="hover:text-blue-500 py-2" :to="resourcesLink">{{ resourcesLabel }}
                     </NuxtLink>
-                    <NuxtLink class="hover:text-blue-500 py-2" to="/pricing">Pricing</NuxtLink>
+                    <!-- <NuxtLink class="hover:text-blue-500 py-2" to="/pricing">Pricing</NuxtLink> -->
 
                     <div v-if="!user">
                         <v-btn color="blue" class=" text-white py-2 px-0 rounded" to="/login">Login</v-btn>
-                        <v-btn color="green-darken-2" class=" text-white py-2 px-0 rounded ml-1" to="/pricing">For Schools</v-btn>
+                        <!-- <v-btn color="green-darken-2" class=" text-white py-2 px-0 rounded ml-1" to="/pricing">For Schools</v-btn> -->
                     </div>
                     <div v-else>
                         <avartar />
@@ -114,7 +114,7 @@ router.beforeEach((to, from, next) => {
                 </NuxtLink>
                 <NuxtLink class="block px-4 py-2 hover:bg-gray-200" :to="resourcesLink">{{ resourcesLabel }}
                 </NuxtLink>
-                <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/pricing">Pricing</NuxtLink>
+                <!-- <NuxtLink class="block px-4 py-2 hover:bg-gray-200" to="/pricing">Pricing</NuxtLink> -->
 
 
                 <template v-slot:append>
