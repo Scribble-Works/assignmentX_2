@@ -119,11 +119,19 @@ export const useStrapiQuiz = () => {
         `[Supabase] ⚡ Fetching questions (${quiz_type}) for indicator: ${normalizedIndicator}`,
       );
 
-      const { data: questionsData, error } = await client
+      let query = client
         .from("questions")
         .select("*")
         .eq("indicators", normalizedIndicator)
         .eq("quiz_type", quiz_type);
+
+      // Pre-quiz only ever shows multiple-choice questions; post-quiz keeps
+      // the full mix (MCQ, True/False, Fill in the blank, Multiple blanks).
+      if (quiz_type === "pre-quiz") {
+        query = query.eq("question_type", "MCQ");
+      }
+
+      const { data: questionsData, error } = await query;
 
       if (error) {
         console.error(`[Supabase] ❌ Error fetching questions:`, error);
