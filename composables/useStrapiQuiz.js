@@ -1,3 +1,24 @@
+/**
+ * Spread `count` items evenly across the supplied per-indicator pools, so a
+ * substrand-wide quiz (pre or post) draws roughly the same number of
+ * questions from each indicator instead of exhausting one pool first.
+ * Mutates the input pools (shifts items off them).
+ */
+export const capQuestionsEvenly = (pools, count) => {
+  const result = [];
+  let added = true;
+  while (result.length < count && added) {
+    added = false;
+    for (const pool of pools) {
+      if (pool.length > 0 && result.length < count) {
+        result.push(pool.shift());
+        added = true;
+      }
+    }
+  }
+  return result;
+};
+
 export const useStrapiQuiz = () => {
   const client = useSupabaseClient();
 
@@ -125,10 +146,12 @@ export const useStrapiQuiz = () => {
         .eq("indicators", normalizedIndicator)
         .eq("quiz_type", quiz_type);
 
-      // Pre-quiz only ever shows multiple-choice questions; post-quiz keeps
-      // the full mix (MCQ, True/False, Fill in the blank, Multiple blanks).
+      // Pre-quiz only ever shows MCQ. Post-quiz shows MCQ and True/False —
+      // Fill in the blank / Multiple blanks are excluded from both.
       if (quiz_type === "pre-quiz") {
         query = query.eq("question_type", "MCQ");
+      } else if (quiz_type === "post-quiz") {
+        query = query.in("question_type", ["MCQ", "True/False"]);
       }
 
       const { data: questionsData, error } = await query;

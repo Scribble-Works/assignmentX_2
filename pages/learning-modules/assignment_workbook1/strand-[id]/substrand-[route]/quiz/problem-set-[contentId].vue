@@ -162,9 +162,11 @@
       >
         <!-- Question -->
         <div class="mb-8" v-if="currentQuestion">
-          <h2 class="text-xl font-semibold text-gray-800 mb-4">
-            {{ currentQuestion.question }}
-          </h2>
+          <h2
+            class="text-xl font-semibold text-gray-800 mb-4 prose-quiz"
+            v-html="renderMarkdown(currentQuestion.question)"
+            v-math
+          ></h2>
 
           <!-- Question Image (if exists) -->
           <div v-if="currentQuestion.image" class="mb-6">
@@ -177,10 +179,7 @@
         </div>
 
         <!-- Multiple Choice / True-False Answer Options -->
-        <div
-          v-if="currentQuestion && isMultipleChoiceQuestion"
-          class="space-y-3 mb-6"
-        >
+        <div v-if="currentQuestion" class="space-y-3 mb-6">
           <div
             v-for="(option, index) in currentQuestion.options"
             :key="index"
@@ -205,62 +204,11 @@
                   >✓</span
                 >
               </div>
-              <span class="text-gray-800">{{ option }}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Fill in the Blank - Single Input -->
-        <div
-          v-else-if="
-            currentQuestion &&
-            currentQuestion.questionType === 'Fill in the blank'
-          "
-          class="mb-6"
-        >
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Enter your answer:
-            </label>
-            <input
-              type="text"
-              v-model="manualAnswer"
-              @input="updateManualAnswer"
-              placeholder="Type your answer here..."
-              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-colors text-lg"
-            />
-          </div>
-        </div>
-
-        <!-- Multiple Blanks - Multiple Inputs -->
-        <div
-          v-else-if="
-            currentQuestion &&
-            currentQuestion.questionType === 'Multiple blanks'
-          "
-          class="mb-6"
-        >
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-3">
-              Fill in all the blanks:
-            </label>
-            <div class="space-y-3">
-              <div
-                v-for="(blank, index) in blankCount"
-                :key="index"
-                class="flex items-center gap-3"
-              >
-                <span class="text-gray-600 font-medium min-w-[80px]"
-                  >Blank {{ index + 1 }}:</span
-                >
-                <input
-                  type="text"
-                  v-model="multipleAnswers[index]"
-                  @input="updateMultipleAnswers"
-                  :placeholder="`Answer for blank ${index + 1}`"
-                  class="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-colors"
-                />
-              </div>
+              <span
+                class="text-gray-800 prose-quiz"
+                v-html="renderMarkdown(option)"
+                v-math
+              ></span>
             </div>
           </div>
         </div>
@@ -344,39 +292,68 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
-import { useStrapiQuiz } from "~/composables/useStrapiQuiz";
+import { useStrapiQuiz, capQuestionsEvenly } from "~/composables/useStrapiQuiz";
 import { useQuizProgress } from "~/composables/useQuizProgress";
+import { marked } from "marked";
+import renderMathInElement from "katex/contrib/auto-render";
+import "katex/dist/katex.min.css";
+
+// Same markdown + LaTeX rendering pattern as components/SubstrandQuiz.vue —
+// see that file for why bare LaTeX gets wrapped in "$...$" instead of "\(...\)".
+marked.use({ breaks: true, gfm: true });
+const wrapBareLatex = (text) =>
+  text.replace(/\\[a-zA-Z]+(?:\s*\{[^{}]*\})*/g, (match) => `$${match}$`);
+// Trim first: a stray leading tab/4-spaces in the source text (seen in some
+// DB rows) reads as a CommonMark indented code block otherwise, rendering
+// the whole line in a <pre><code> box instead of plain text.
+const renderMarkdown = (text) =>
+  text ? marked.parse(wrapBareLatex(text.trim())) : "";
+
+// Some DB rows duplicate the same question text under both quiz_type
+// 'pre-quiz' and 'post-quiz' for a given indicator. Normalize prompts so we
+// can filter those duplicates out of the post-quiz pool below.
+const normalizePrompt = (text) =>
+  (text || "").toString().trim().toLowerCase().replace(/\s+/g, " ");
+
+const katexOptions = {
+  delimiters: [
+    { left: "$$", right: "$$", display: true },
+    { left: "$", right: "$", display: false },
+    { left: "\\(", right: "\\)", display: false },
+    { left: "\\[", right: "\\]", display: true },
+  ],
+  throwOnError: false,
+};
+const vMath = {
+  mounted: (el) => renderMathInElement(el, katexOptions),
+  updated: (el) => renderMathInElement(el, katexOptions),
+};
 
 const route = useRoute();
 const router = useRouter();
-const { fetchProblemSetQuestions, fetchAllQuestionsDebug } = useStrapiQuiz();
+const client = useSupabaseClient();
+const { fetchProblemSetQuestions, fetchQuizQuestions, fetchAllQuestionsDebug } =
+  useStrapiQuiz();
 const { saveQuizScore } = useQuizProgress();
 
-// Extract route parameters from the dynamic route
-const substrandRefId = route.params.contentId;
+const moduleSlug = "assignment_workbook1";
+const TARGET_QUESTION_COUNT = 10;
+
+// The contentId route segment is the substrand's numeric DB id (same entity
+// the pre-quiz gate and progress report key off), not a single indicator id —
+// the problem set spans every indicator in the substrand, just like the
+// pre-quiz does.
+const substrandDbId = route.params.contentId;
 const strandId = route.params.id;
 const substrandRoute = route.params.route;
 
 // Validate required params
-if (!substrandRefId || !strandId || !substrandRoute) {
+if (!substrandDbId || !strandId || !substrandRoute) {
   console.error("Missing required route parameters");
 }
 
-// Look up the indicator TEXT for this content (matches the `indicators`
-// column in the questions table). The problem set is keyed the same way as
-// the pre-quiz: by the indicator string, not a numeric topicId.
-const { data: psIndicatorsContent } = await useSupabaseClient()
-  .from("book1_substrand_indicators")
-  .select("indicators")
-  .eq("id", substrandRefId)
-  .maybeSingle();
-const indicators = psIndicatorsContent?.indicators ?? null;
-console.log("Problem Set Lesson Indicator:", indicators);
-
 const currentQuestionIndex = ref(0);
-const selectedAnswer = ref(null); // For multiple choice
-const manualAnswer = ref(""); // For fill in the blank (single)
-const multipleAnswers = ref([]); // For multiple blanks
+const selectedAnswer = ref(null); // Selected option index
 const answers = ref([]); // Store all answers
 const quizCompleted = ref(false);
 const score = ref(0);
@@ -397,89 +374,13 @@ const currentQuestion = computed(() => {
   return questions.value[currentQuestionIndex.value] || null;
 });
 
-// Check if question is multiple choice type (MCQ or True/False)
-const isMultipleChoiceQuestion = computed(() => {
-  if (!currentQuestion.value) return false;
-  const type = currentQuestion.value.questionType;
-  return (
-    !type ||
-    type === "MCQ" ||
-    type === "True/False" ||
-    type === "multiple-choice"
-  );
-});
-
-// Count number of blanks for multiple blanks questions
-const blankCount = computed(() => {
-  if (
-    !currentQuestion.value ||
-    currentQuestion.value.questionType !== "Multiple blanks"
-  ) {
-    return 0;
-  }
-  // Count underscores in the question or use correctAnswer format (comma-separated)
-  const correctAnswer = currentQuestion.value.correctAnswer || "";
-  if (correctAnswer.includes(",")) {
-    return correctAnswer.split(",").length;
-  }
-  // Count underscores in the prompt
-  const prompt = currentQuestion.value.question || "";
-  const underscoreCount = (prompt.match(/_/g) || []).length;
-  return Math.max(underscoreCount, 2); // At least 2 blanks for multiple blanks
-});
-
-// Check if current answer is valid
-const isAnswerValid = computed(() => {
-  if (!currentQuestion.value) return false;
-
-  const questionType = currentQuestion.value.questionType || "MCQ";
-
-  // MCQ or True/False - need selected answer
-  if (
-    questionType === "MCQ" ||
-    questionType === "True/False" ||
-    questionType === "multiple-choice"
-  ) {
-    return selectedAnswer.value !== null;
-  }
-
-  // Fill in the blank - need text input
-  if (questionType === "Fill in the blank") {
-    return manualAnswer.value.trim() !== "";
-  }
-
-  // Multiple blanks - all blanks must be filled
-  if (questionType === "Multiple blanks") {
-    return (
-      multipleAnswers.value.length >= blankCount.value &&
-      multipleAnswers.value
-        .slice(0, blankCount.value)
-        .every((a) => a && a.trim() !== "")
-    );
-  }
-
-  return false;
-});
+// Post-quiz only ever contains MCQ / True-False rows (filtered at the
+// composable query level), so an answer is valid once an option is picked.
+const isAnswerValid = computed(() => selectedAnswer.value !== null);
 
 const selectAnswer = (index) => {
   selectedAnswer.value = index;
   answers.value[currentQuestionIndex.value] = { type: "choice", value: index };
-};
-
-const updateManualAnswer = () => {
-  // Store the manual answer for fill in the blank
-  answers.value[currentQuestionIndex.value] = {
-    type: "text",
-    value: manualAnswer.value.trim(),
-  };
-};
-
-const updateMultipleAnswers = () => {
-  // Store all answers for multiple blanks
-  answers.value[currentQuestionIndex.value] = {
-    type: "multiple",
-    value: [...multipleAnswers.value].map((a) => (a || "").trim()),
-  };
 };
 
 const nextQuestion = () => {
@@ -500,90 +401,20 @@ const previousQuestion = () => {
 
 const resetCurrentAnswer = () => {
   const savedAnswer = answers.value[currentQuestionIndex.value];
-  const question = questions.value[currentQuestionIndex.value];
-
-  // Reset all input types first
-  selectedAnswer.value = null;
-  manualAnswer.value = "";
-  multipleAnswers.value = [];
-
-  if (question) {
-    const questionType = question.questionType || "MCQ";
-
-    if (
-      questionType === "MCQ" ||
-      questionType === "True/False" ||
-      questionType === "multiple-choice"
-    ) {
-      if (savedAnswer && savedAnswer.type === "choice") {
-        selectedAnswer.value = savedAnswer.value;
-      }
-    } else if (questionType === "Fill in the blank") {
-      if (savedAnswer && savedAnswer.type === "text") {
-        manualAnswer.value = savedAnswer.value || "";
-      }
-    } else if (questionType === "Multiple blanks") {
-      if (savedAnswer && savedAnswer.type === "multiple") {
-        multipleAnswers.value = savedAnswer.value || [];
-      } else {
-        // Initialize with empty strings for each blank
-        multipleAnswers.value = new Array(blankCount.value).fill("");
-      }
-    }
-  }
+  selectedAnswer.value =
+    savedAnswer && savedAnswer.type === "choice" ? savedAnswer.value : null;
 };
 
 const completeQuiz = () => {
   if (!isAnswerValid.value) return;
 
-  // Calculate score
+  // Calculate score — compare the selected option index with the correct one.
   let correct = 0;
   answers.value.forEach((answer, index) => {
     const question = questions.value[index];
     if (!question || !answer) return;
-
-    const questionType = question.questionType || "MCQ";
-
-    // MCQ or True/False - compare selected index with correct index
-    if (
-      questionType === "MCQ" ||
-      questionType === "True/False" ||
-      questionType === "multiple-choice"
-    ) {
-      if (answer.type === "choice" && answer.value === question.correct) {
-        correct++;
-      }
-    }
-    // Fill in the blank - compare text with correctAnswer field
-    else if (questionType === "Fill in the blank") {
-      const correctAnswer = question.correctAnswer || "";
-      if (answer.type === "text" && answer.value) {
-        // Case-insensitive comparison, trim whitespace
-        if (
-          answer.value.toLowerCase().trim() ===
-          correctAnswer.toLowerCase().trim()
-        ) {
-          correct++;
-        }
-      }
-    }
-    // Multiple blanks - compare each blank answer
-    else if (questionType === "Multiple blanks") {
-      const correctAnswers = (question.correctAnswer || "")
-        .split(",")
-        .map((a) => a.trim().toLowerCase());
-      if (answer.type === "multiple" && answer.value) {
-        const userAnswers = answer.value.map((a) =>
-          (a || "").toLowerCase().trim(),
-        );
-        // Check if all answers match
-        const allCorrect = correctAnswers.every(
-          (ca, i) => userAnswers[i] === ca,
-        );
-        if (allCorrect) {
-          correct++;
-        }
-      }
+    if (answer.type === "choice" && answer.value === question.correct) {
+      correct++;
     }
   });
 
@@ -591,8 +422,9 @@ const completeQuiz = () => {
   score.value = Math.round((correct / questions.value.length) * 100);
   quizCompleted.value = true;
 
-  // Save post-quiz score to localStorage
-  saveQuizScore(substrandRefId, "postQuiz", {
+  // Save post-quiz score to localStorage, keyed the same way the pre-quiz
+  // and progress report key off this substrand.
+  saveQuizScore(`${moduleSlug}-substrand-${substrandDbId}`, "post-quiz", {
     score: score.value,
     correctAnswers: correct,
     totalQuestions: questions.value.length,
@@ -608,8 +440,6 @@ const goBackToSubstrand = () => {
 const retakeQuiz = () => {
   currentQuestionIndex.value = 0;
   selectedAnswer.value = null;
-  manualAnswer.value = "";
-  multipleAnswers.value = [];
   answers.value = new Array(questions.value.length).fill(null);
   quizCompleted.value = false;
   score.value = 0;
@@ -617,68 +447,81 @@ const retakeQuiz = () => {
   resetCurrentAnswer();
 };
 
-// Fetch problem set questions from Strapi
+// Fetch post-quiz questions for every indicator in this substrand and spread
+// TARGET_QUESTION_COUNT evenly across them, mirroring components/SubstrandQuiz.vue.
 const loadQuestions = async () => {
   loading.value = true;
 
   try {
-    // DEBUG ONLY: log all questions from Strapi when Start Quiz is clicked
     await fetchAllQuestionsDebug();
 
     console.log(
-      `[Problem Set] 🚀 Starting to load questions for substrand: ${substrandRefId}`,
+      `[Problem Set] 🚀 Starting to load questions for substrand: ${substrandDbId}`,
     );
     console.log(`[Problem Set] 📍 Current route:`, route.path);
 
-    // The problem set is keyed by the indicator TEXT (same as the pre-quiz),
-    // not a numeric topicId.
-    const indicatorValue = indicators != null ? String(indicators).trim() : "";
+    const { data: indRows, error: indErr } = await client
+      .from("book1_substrand_indicators")
+      .select("indicators")
+      .eq("substrand_ref", substrandDbId);
+    if (indErr) console.error("[Problem Set] indicator lookup failed:", indErr);
 
-    if (!indicatorValue) {
+    const indicatorTexts = (indRows || [])
+      .map((r) => (r.indicators != null ? String(r.indicators).trim() : ""))
+      .filter((t) => t.length > 0);
+
+    if (indicatorTexts.length === 0) {
       console.error(
-        `[Problem Set] ❌ No indicator found for content ${substrandRefId}`,
+        `[Problem Set] ❌ No indicators found for substrand ${substrandDbId}`,
       );
       questions.value = [];
       loading.value = false;
       return;
     }
 
-    // Fetch problem set questions from Strapi
-    console.log(
-      `[Problem Set] 📡 Fetching problem set questions from Strapi for indicator: ${indicatorValue}`,
-    );
-    const strapiQuestions = await fetchProblemSetQuestions(indicatorValue);
+    // Collect every prompt the pre-quiz could show for these indicators, so
+    // the post-quiz never repeats a question the user may have already seen.
+    const preQuizPrompts = new Set();
+    for (const ind of indicatorTexts) {
+      const preQs = await fetchQuizQuestions(ind);
+      if (preQs) {
+        for (const q of preQs) preQuizPrompts.add(normalizePrompt(q.question));
+      }
+    }
 
-    console.log(`[Problem Set] 📊 Strapi fetch result:`, {
-      isNull: strapiQuestions === null,
-      isEmpty: Array.isArray(strapiQuestions) && strapiQuestions.length === 0,
-      hasQuestions: strapiQuestions && strapiQuestions.length > 0,
-      length: strapiQuestions?.length || 0,
-    });
+    const pools = [];
+    for (const ind of indicatorTexts) {
+      const qs = await fetchProblemSetQuestions(ind);
+      if (qs && qs.length) {
+        const nonRepeated = qs.filter(
+          (q) => !preQuizPrompts.has(normalizePrompt(q.question)),
+        );
+        pools.push(...nonRepeated.map((q) => ({ ...q })));
+      }
+    }
 
-    if (strapiQuestions && strapiQuestions.length > 0) {
-      questions.value = strapiQuestions;
+    let chosen = [];
+    if (pools.length > 0) {
+      const byIndicator = new Map();
+      for (const q of pools) {
+        const k = q.indicators != null ? String(q.indicators).trim() : "";
+        if (!byIndicator.has(k)) byIndicator.set(k, []);
+        byIndicator.get(k).push(q);
+      }
+      chosen = capQuestionsEvenly(
+        Array.from(byIndicator.values()),
+        TARGET_QUESTION_COUNT,
+      );
+    }
+
+    if (chosen.length > 0) {
+      questions.value = chosen;
       console.log(
-        `[Problem Set] ✅ Successfully loaded ${strapiQuestions.length} problem set questions from Strapi`,
+        `[Problem Set] ✅ Loaded ${chosen.length} problem set questions across ${indicatorTexts.length} indicators`,
       );
-      console.log(`[Problem Set] Questions:`, questions.value);
-    } else if (strapiQuestions === null) {
-      // Strapi returned null (error occurred)
-      console.error(`[Problem Set] ❌ ❌ ❌ STRAPI REQUEST FAILED ❌ ❌ ❌`);
-      console.error(
-        `[Problem Set] ❌ Strapi returned null - check Strapi connection and topic ID`,
-      );
-      questions.value = [];
     } else {
-      // Strapi returned empty array (no questions found)
       console.error(
-        `[Problem Set] ❌ ❌ ❌ NO QUESTIONS FOUND IN STRAPI ❌ ❌ ❌`,
-      );
-      console.error(
-        `[Problem Set] ❌ No questions found in Strapi for topic ID: ${topicId}`,
-      );
-      console.error(
-        `[Problem Set] Make sure questions are added to this topic in Strapi`,
+        `[Problem Set] ❌ No problem set questions found for substrand: ${substrandDbId}`,
       );
       questions.value = [];
     }
@@ -708,7 +551,7 @@ const loadQuestions = async () => {
       // Audio is muted by default - user can toggle it on if they want
     } else {
       console.warn(
-        `[Problem Set] ⚠️ No questions available for substrand: ${substrandRefId}`,
+        `[Problem Set] ⚠️ No questions available for substrand: ${substrandDbId}`,
       );
     }
   }
@@ -778,7 +621,7 @@ const toggleAudio = async () => {
 // Check if problem set is already completed on mount
 onMounted(() => {
   console.log(
-    `[Problem Set] 🚀 Component mounted for substrand: ${substrandRefId}`,
+    `[Problem Set] 🚀 Component mounted for substrand: ${substrandDbId}`,
   );
   console.log(`[Problem Set] 📍 Route path:`, route.path);
   console.log(`[Problem Set] 📝 Route params:`, route.params);
@@ -792,3 +635,31 @@ onUnmounted(() => {
   stopBackgroundAudio();
 });
 </script>
+
+<style scoped>
+/* Markdown-rendered quiz content (question text + options). Mirrors
+   components/SubstrandQuiz.vue so pre-quiz and post-quiz render consistently. */
+.prose-quiz :deep(img) {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 0.5rem 0;
+}
+.prose-quiz :deep(p) {
+  margin: 0;
+}
+.prose-quiz :deep(ul),
+.prose-quiz :deep(ol) {
+  margin: 0.5rem 0;
+  padding-left: 1.25rem;
+}
+.prose-quiz :deep(strong) {
+  font-weight: 600;
+}
+.prose-quiz :deep(code) {
+  background-color: #f3f4f6;
+  padding: 0.1rem 0.3rem;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+}
+</style>
