@@ -42,7 +42,15 @@ const { data: unsortedSubstrand_ls } = await client
   .select()
   .eq("substrand_ref", substrand_ref_id);
 
-const title = substrand[0].title;
+// Strand display name (e.g. "Number") for the progress report heading.
+const { data: strandRow } = await client
+  .from("assignment_workbook_2")
+  .select("strand_name")
+  .eq("id", strand_ref_id)
+  .maybeSingle();
+const strandName = (strandRow?.strand_name ?? "").trim();
+
+const title = (substrand[0].title ?? "").trim();
 const conceptNote = strands[0].concept_notes;
 const bece = strands[0].BECE_Qquestions;
 
@@ -124,9 +132,22 @@ const totalCount = computed(() => {
 const solveProblem = () => {
   // Only allow access if all quizzes are completed
   if (allQuizzesCompleted.value) {
-    console.log("Opening problem set...");
+    navigateTo(
+      `/learning-modules/assignment_workbook2/strand-${strand_ref_id}/substrand-${substrand_ref}/quiz/problem-set-${substrand_ref_id}`,
+    );
   }
 };
+
+// Query params identify which substrand's scores to compare on the report.
+const progressReportUrl = computed(() => {
+  const params = new URLSearchParams({
+    module: moduleSlug,
+    substrandId: String(substrand_ref_id),
+    strandTitle: strandName,
+    substrandTitle: title,
+  });
+  return `/progress?${params.toString()}`;
+});
 
 // Load state when page mounts
 onMounted(() => {
@@ -194,9 +215,11 @@ watch(
                         </div>
                     </div> -->
         </v-col>
-        <!-- <v-col cols="" lg="4" sm="12" align="right">
-                    <v-btn to="/progress" color="primary">View Progress Report</v-btn>
-                </v-col> -->
+        <v-col cols="" lg="4" sm="12" align="right">
+          <v-btn :to="progressReportUrl" color="primary"
+            >View Progress Report</v-btn
+          >
+        </v-col>
       </v-row>
       <ConceptNotes :concept-note="conceptNote" />
       <div class="mt-10" style="height: auto">
@@ -295,32 +318,7 @@ watch(
               </v-col>
             </v-row>
           </div>
-          <!-- Problem Set Section - Only shown when all quizzes are completed -->
-          <div v-if="allQuizzesCompleted" class="mt-10">
-            <div class="text-h3">Problem Set</div>
-            <p>Time to apply and show the Wow!</p>
-            <br />
-            <v-row>
-              <v-col>
-                <v-img src="/img/problem.png"></v-img>
-              </v-col>
-              <v-col class="mt-15">
-                <p>
-                  Now it’s your turn to apply what you’ve learned. These
-                  problems challenge you to think, connect ideas, and solve
-                  real-world situations using math. There might be more than one
-                  way — so be bold, be creative, and show the wow!
-                </p>
-                <v-btn
-                  @click="solveProblem"
-                  class="mt-5"
-                  color="blue-grey-darken-4"
-                  >Solve Problem Set</v-btn
-                >
-              </v-col>
-            </v-row>
-          </div>
-
+          
         </div>
       </div>
     </div>
