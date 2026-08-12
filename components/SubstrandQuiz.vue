@@ -256,7 +256,16 @@ import "katex/dist/katex.min.css";
 // bold/italic, lists, etc. display correctly. Mirrors the pattern already used
 // in pages/facilitator-resources/ai-assistant/index.vue.
 marked.use({ breaks: true, gfm: true });
-const renderMarkdown = (text) => (text ? marked.parse(text) : "");
+
+// Question/option text sometimes stores raw LaTeX commands (e.g. "\frac{2}{3}")
+// with no math delimiters around them. marked() treats a backslash before "("
+// or ")" as a markdown escape and strips it, which would destroy "\(...\)"
+// delimiters before KaTeX ever sees them — so wrap bare LaTeX runs in "$...$"
+// instead, since "$" isn't a markdown-escapable character and survives parsing.
+const wrapBareLatex = (text) =>
+  text.replace(/\\[a-zA-Z]+(?:\s*\{[^{}]*\})*/g, (match) => `$${match}$`);
+
+const renderMarkdown = (text) => (text ? marked.parse(wrapBareLatex(text)) : "");
 
 // KaTeX auto-render: scans the element's innerHTML (set via v-html above) and
 // typesets $...$, $$...$$, \(...\), \[...\] math delimiters. Runs on mount and
