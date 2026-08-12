@@ -336,7 +336,7 @@ const { fetchProblemSetQuestions, fetchQuizQuestions, fetchAllQuestionsDebug } =
   useStrapiQuiz();
 const { saveQuizScore } = useQuizProgress();
 
-const moduleSlug = "assignment_workbook1";
+const moduleSlug = "preassignment_workbook3";
 const TARGET_QUESTION_COUNT = 10;
 
 // The contentId route segment is the substrand's numeric DB id (same entity
@@ -433,7 +433,7 @@ const completeQuiz = () => {
 
 const goBackToSubstrand = () => {
   router.push(
-    `/learning-modules/assignment_workbook1/strand-${strandId}/substrand-${substrandRoute}`,
+    `/learning-modules/preassignment_workbook3/strand-${strandId}/substrand-${substrandRoute}`,
   );
 };
 
@@ -461,7 +461,7 @@ const loadQuestions = async () => {
     console.log(`[Problem Set] 📍 Current route:`, route.path);
 
     const { data: indRows, error: indErr } = await client
-      .from("book1_substrand_indicators")
+      .from("preassignment_workbook3_substrand_indicators")
       .select("indicators")
       .eq("substrand_ref", substrandDbId);
     if (indErr) console.error("[Problem Set] indicator lookup failed:", indErr);

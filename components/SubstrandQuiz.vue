@@ -247,7 +247,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useQuizProgress } from "~/composables/useQuizProgress";
-import { useStrapiQuiz } from "~/composables/useStrapiQuiz";
+import { useStrapiQuiz, capQuestionsEvenly } from "~/composables/useStrapiQuiz";
 import { marked } from "marked";
 import renderMathInElement from "katex/contrib/auto-render";
 import "katex/dist/katex.min.css";
@@ -256,7 +256,20 @@ import "katex/dist/katex.min.css";
 // bold/italic, lists, etc. display correctly. Mirrors the pattern already used
 // in pages/facilitator-resources/ai-assistant/index.vue.
 marked.use({ breaks: true, gfm: true });
-const renderMarkdown = (text) => (text ? marked.parse(text) : "");
+
+// Question/option text sometimes stores raw LaTeX commands (e.g. "\frac{2}{3}")
+// with no math delimiters around them. marked() treats a backslash before "("
+// or ")" as a markdown escape and strips it, which would destroy "\(...\)"
+// delimiters before KaTeX ever sees them — so wrap bare LaTeX runs in "$...$"
+// instead, since "$" isn't a markdown-escapable character and survives parsing.
+const wrapBareLatex = (text) =>
+  text.replace(/\\[a-zA-Z]+(?:\s*\{[^{}]*\})*/g, (match) => `$${match}$`);
+
+// Trim first: a stray leading tab/4-spaces in the source text (seen in some
+// DB rows) reads as a CommonMark indented code block otherwise, rendering
+// the whole line in a <pre><code> box instead of plain text.
+const renderMarkdown = (text) =>
+  text ? marked.parse(wrapBareLatex(text.trim())) : "";
 
 // KaTeX auto-render: scans the element's innerHTML (set via v-html above) and
 // typesets $...$, $$...$$, \(...\), \[...\] math delimiters. Runs on mount and
@@ -324,6 +337,10 @@ const markAsCompleted = ref(false);
 const TARGET_QUESTION_COUNT = 10;
 
 const questions = ref([]);
+// Resolved inside loadQuestions(); used to key the saved score so it lines up
+// with the substrand-level key the progress report and the once-per-substrand
+// pre-quiz gate both use (`${moduleSlug}-substrand-${substrandDbId}`).
+const substrandDbId = ref(null);
 
 const currentQuestion = computed(() => {
   if (!questions.value || questions.value.length === 0) return null;
@@ -380,7 +397,7 @@ const completeQuiz = () => {
     score.value = Math.round((correct / questions.value.length) * 100);
     quizCompleted.value = true;
 
-    saveQuizScore(props.selectedContentId, "pre-quiz", {
+    saveQuizScore(`${props.moduleSlug}-substrand-${substrandDbId.value}`, "pre-quiz", {
       score: score.value,
       correctAnswers: correct,
       totalQuestions: questions.value.length,
@@ -428,22 +445,6 @@ const retakeQuiz = () => {
   correctAnswers.value = 0;
 };
 
-// Spread `count` questions evenly across the supplied per-indicator pools.
-const capQuestionsEvenly = (pools, count) => {
-  const result = [];
-  let added = true;
-  while (result.length < count && added) {
-    added = false;
-    for (const pool of pools) {
-      if (pool.length > 0 && result.length < count) {
-        result.push(pool.shift());
-        added = true;
-      }
-    }
-  }
-  return result;
-};
-
 const loadQuestions = async () => {
   loading.value = true;
   try {
@@ -457,6 +458,7 @@ const loadQuestions = async () => {
       .limit(1);
     if (subErr) console.error("[Quiz] substrand lookup failed:", subErr);
     const substrandRefId = substrandRows?.[0]?.id ?? null;
+    substrandDbId.value = substrandRefId;
 
     // 2) Gather every indicator TEXT for this substrand.
     const { data: indRows, error: indErr } = await client

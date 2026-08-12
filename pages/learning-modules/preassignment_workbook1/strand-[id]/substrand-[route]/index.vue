@@ -15,8 +15,12 @@ const {
   isQuizCompleted,
   getContentStatus,
   getStatusInfo,
+  hasSeenSubstrandQuiz,
+  markSubstrandQuizSeen,
   loadStateFromStorage,
 } = useQuizProgress();
+
+const moduleSlug = "preassignment_workbook1";
 
 const { data: substrand } = await client
   .from("preassignment_workbook1_strand_substrands_lists")
@@ -24,6 +28,9 @@ const { data: substrand } = await client
   .eq("route", substrand_ref);
 const strand_ref_id = substrand[0].strand_ref;
 const substrand_ref_id = substrand[0].id;
+// One-time gate for the whole-substrand pre-quiz: shown on the first
+// indicator click in this substrand, skipped on every click after that.
+const substrandQuizKey = `${moduleSlug}-substrand-${substrand_ref_id}`;
 
 const { data: strands } = await client
   .from("preassignment_workbook1_substrands_contents")
@@ -35,7 +42,15 @@ const { data: unsortedSubstrand_ls } = await client
   .select()
   .eq("substrand_ref", substrand_ref_id);
 
-const title = substrand[0].title;
+// Strand display name (e.g. "Number") for the progress report heading.
+const { data: strandRow } = await client
+  .from("pre-assignment_Workbook1")
+  .select("strand_name")
+  .eq("id", strand_ref_id)
+  .maybeSingle();
+const strandName = (strandRow?.strand_name ?? "").trim();
+
+const title = (substrand[0].title ?? "").trim();
 const conceptNote = strands[0].concept_notes;
 const bece = strands[0].BECE_Qquestions;
 
@@ -75,17 +90,20 @@ function openBece() {
 // SubstrandQuiz page (components/SubstrandQuiz.vue) on first click.
 
 const handleContentClick = (contentId) => {
-  // First click on an indicator routes to the whole-substrand pre-quiz (10
-  // questions). Once that indicator is started/completed, clicking it opens
-  // the course content directly. Each indicator is tracked independently, so
-  // only the selected one advances; the rest stay "not started".
+  // The pre-quiz is shown only once per substrand, on the first indicator
+  // click. Every indicator click after that (whichever indicator) goes
+  // straight to that indicator's content.
   const key = quizKey(contentId);
-  if (getContentStatus(key) === "not-started") {
+  if (!hasSeenSubstrandQuiz(substrandQuizKey)) {
+    markSubstrandQuizSeen(substrandQuizKey);
     markQuizInProgress(key);
     navigateTo(
       `/learning-modules/preassignment_workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/quiz/${contentId}`,
     );
   } else {
+    if (getContentStatus(key) === "not-started") {
+      markQuizInProgress(key);
+    }
     navigateTo(
       `/learning-modules/preassignment_workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/${contentId}`,
     );
@@ -107,10 +125,22 @@ const totalCount = computed(() => {
 const solveProblem = () => {
   // Only allow access if all quizzes are completed
   if (allQuizzesCompleted.value) {
-    console.log("Opening problem set...");
-    // Add your problem set logic here
+    navigateTo(
+      `/learning-modules/preassignment_workbook1/strand-${strand_ref_id}/substrand-${substrand_ref}/quiz/problem-set-${substrand_ref_id}`,
+    );
   }
 };
+
+// Query params identify which substrand's scores to compare on the report.
+const progressReportUrl = computed(() => {
+  const params = new URLSearchParams({
+    module: moduleSlug,
+    substrandId: String(substrand_ref_id),
+    strandTitle: strandName,
+    substrandTitle: title,
+  });
+  return `/progress?${params.toString()}`;
+});
 
 // Load state when page mounts
 onMounted(() => {
@@ -190,9 +220,11 @@ const substrand_ls = computed(() => {
             </div>
           </div>
         </v-col>
-        <!-- <v-col cols="" lg="4" sm="12" align="right">
-                    <v-btn to="/progress" color="primary">View Progress Report</v-btn>
-                </v-col> -->
+        <v-col cols="" lg="4" sm="12" align="right">
+          <v-btn :to="progressReportUrl" color="primary"
+            >View Progress Report</v-btn
+          >
+        </v-col>
       </v-row>
       <ConceptNotes :concept-note="conceptNote" />
       <div class="mt-10" style="height: auto">
@@ -291,32 +323,7 @@ const substrand_ls = computed(() => {
               </v-col>
             </v-row>
           </div>
-          <!-- Problem Set Section - Only shown when all quizzes are completed -->
-          <div v-if="allQuizzesCompleted" class="mt-10">
-            <div class="text-h3">Problem Set</div>
-            <p>Time to apply and show the Wow!</p>
-            <br />
-            <v-row>
-              <v-col>
-                <v-img src="/img/problem.png"></v-img>
-              </v-col>
-              <v-col class="mt-15">
-                <p>
-                  Now it’s your turn to apply what you’ve learned. These
-                  problems challenge you to think, connect ideas, and solve
-                  real-world situations using math. There might be more than one
-                  way — so be bold, be creative, and show the wow!
-                </p>
-                <v-btn
-                  @click="solveProblem"
-                  class="mt-5"
-                  color="blue-grey-darken-4"
-                  >Solve Problem Set</v-btn
-                >
-              </v-col>
-            </v-row>
-          </div>
-
+          
         </div>
       </div>
     </div>
