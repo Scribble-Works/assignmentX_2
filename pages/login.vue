@@ -14,10 +14,14 @@ const route = useRoute();
 const email = ref("");
 const password = ref("");
 
-// Where to send the user after login (falls back to home)
-const redirectPath = computed(() =>
-  typeof route.query.redirect === "string" ? route.query.redirect : "/",
-);
+// Where to send the user after login (falls back to home).
+// Prefers an explicit ?redirect= query, then the path the auth
+// middleware stashed in a cookie when it bounced an unauthenticated visit.
+const cookieRedirect = useSupabaseCookieRedirect();
+const redirectPath = computed(() => {
+  if (typeof route.query.redirect === "string") return route.query.redirect;
+  return cookieRedirect.path.value || "/";
+});
 // const alert = ref(false);
 
 const rules = {
@@ -47,7 +51,8 @@ const login = async () => {
     } else if (profile.data == null) {
       router.push("/bio");
     } else {
-      router.push("/");
+      router.push(redirectPath.value);
+      cookieRedirect.pluck();
       console.log(user.value);
     }
   } catch (error) {
