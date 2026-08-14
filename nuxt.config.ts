@@ -29,7 +29,16 @@ export default defineNuxtConfig({
       {
         url: process.env.SUPABASE_URL,
         key: process.env.SUPABASE_GEN_KEY,
-        redirect: false,
+        redirect: true,
+        redirectOptions: {
+          login: "/login",
+          callback: "/confirm",
+          // Only gate learning-module content — the module landing page
+          // (/learning-modules) stays public so visitors can browse before purchasing.
+          include: ["/learning-modules/*"],
+          // Remember where the user was headed so login.vue can send them back.
+          saveRedirectToCookie: true,
+        },
       },
     ],
     "@nuxt/fonts",

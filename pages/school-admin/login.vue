@@ -9,8 +9,15 @@ const { auth } = useSupabaseClient();
 const client = useSupabaseClient();
 const user = useSupabaseUser();
 const router = useRouter();
+const route = useRoute();
 const mobile = useMediaQuery("(max-width: 600px)");
 const tablet = useMediaQuery("(min-width: 601px) and (max-width: 1024px)");
+
+const redirectPath = computed(() =>
+  typeof route.query.redirect === "string"
+    ? route.query.redirect
+    : "/school-admin/dashboard",
+);
 
 const email = ref("");
 const password = ref("");
@@ -67,8 +74,8 @@ const login = async () => {
         return;
       }
 
-      // Redirect to admin dashboard
-      router.push("/school-admin/dashboard");
+      // Redirect to admin dashboard (or wherever they were headed)
+      router.push(redirectPath.value);
     } else {
       alert.value = true;
       text.value = "Login failed. Please try again.";
