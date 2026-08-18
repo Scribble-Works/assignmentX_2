@@ -2,6 +2,7 @@
 import compare from "~/components/flipcards/compare.vue";
 import { useQuizProgress } from "~/composables/useQuizProgress";
 import { useVideoRatings } from "~/composables/useVideoRatings";
+import { useWorkedExamples } from "~/composables/useWorkedExamples";
 import { ref, onMounted } from "vue";
 
 // import strand1 from '~/strand1.json';
@@ -96,12 +97,7 @@ const handleGameRating = async (value) => {
 };
 
 const worked_examples = ref(
-  Object.entries(indicators_content[0])
-    .filter(([key, value]) => key.startsWith("worked_examples") && value)
-    .map(([key, url], idx) => ({
-      id: idx + 1,
-      url,
-    })),
+  useWorkedExamples(indicators_content[0].worked_examples),
 );
 
 // const conceptNote = files[0].concept_notes;
