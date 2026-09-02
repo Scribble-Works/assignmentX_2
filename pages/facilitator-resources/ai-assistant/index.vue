@@ -1,29 +1,14 @@
 <script setup>
-import { marked } from "marked";
-import renderMathInElement from "katex/contrib/auto-render";
 import "katex/dist/katex.min.css";
-
-// ─── KaTeX auto-render directive ─────────────────────────────────────────────
-const katexOptions = {
-  delimiters: [
-    { left: "$$", right: "$$", display: true },
-    { left: "$", right: "$", display: false },
-    { left: "\\(", right: "\\)", display: false },
-    { left: "\\[", right: "\\]", display: true },
-  ],
-  throwOnError: false,
-};
-const vMathRender = {
-  mounted: (el) => renderMathInElement(el, katexOptions),
-  updated: (el) => renderMathInElement(el, katexOptions),
-};
+import {
+  renderMarkdown,
+  vMathRender,
+  LESSON_TEMPLATE_CSS,
+} from "~/composables/useLessonTemplate";
 
 definePageMeta({ layout: "resources" });
 const user = useSupabaseUser();
-
-// ─── Markdown ────────────────────────────────────────────────────────────────────
-marked.use({ breaks: true, gfm: true });
-const renderMarkdown = (text) => (text ? marked.parse(text) : "");
+const client = useSupabaseClient();
 
 // ─── State ────────────────────────────────────────────────────────────────────
 const activeTab = ref("chat");
@@ -34,19 +19,28 @@ const chatHistory = ref([]); // { role: 'user'|'assistant', text: string }
 const chatLoading = ref(false);
 const chatError = ref("");
 const chatContainer = ref(null);
-
-// View modes
 const chatViewMode = ref("rendered"); // 'rendered' | 'raw'
-const docViewMode = ref("rendered"); // 'rendered' | 'raw'
 
 // Document generator
-const docTopic = ref("");
-const docLevel = ref("Primary 4");
-const docContent = ref("");
+const docStrand = ref("");
+const docLevel = ref("Basic 4");
+const docIndicatorNumber = ref(1);
+const docIndicatorText = ref("");
+const docMode = ref(""); // 'lesson-notes' | 'lesson-plan'
+const docData = ref(null);
 const docTitle = ref("");
 const docLoading = ref(false);
 const docError = ref("");
 const docHistory = ref([]);
+const docViewMode = ref("rendered"); // 'rendered' | 'raw'
+
+// Teacher profile (populates the template header)
+const teacherName = ref("");
+const schoolName = ref("");
+
+const preparedDate = computed(() =>
+  new Date().toLocaleDateString("en-GB"),
+); // DD/MM/YYYY
 
 const MAX_CHAT_MESSAGES = 100;
 const MAX_DOC_HISTORY = 20;
@@ -70,14 +64,12 @@ const persistDocHistory = () => {
 
 const loadPersistedData = () => {
   if (typeof window === "undefined") return;
-
   try {
     const savedChat = localStorage.getItem(makeStorageKey("chat"));
     chatHistory.value = savedChat ? JSON.parse(savedChat) : [];
   } catch {
     chatHistory.value = [];
   }
-
   try {
     const savedDocs = localStorage.getItem(makeStorageKey("docs"));
     docHistory.value = savedDocs ? JSON.parse(savedDocs) : [];
@@ -86,14 +78,43 @@ const loadPersistedData = () => {
   }
 };
 
-const saveGeneratedDoc = (mode, content) => {
+const loadTeacherProfile = async () => {
+  if (!user.value?.id) return;
+  try {
+    const { data: profile } = await client
+      .from("profiles")
+      .select("firstName, lastName, school, school_id")
+      .eq("id", user.value.id)
+      .single();
+    if (!profile) return;
+    teacherName.value = [profile.firstName, profile.lastName]
+      .filter(Boolean)
+      .join(" ")
+      .trim();
+    schoolName.value = (profile.school || "").trim();
+    if (!schoolName.value && profile.school_id) {
+      const { data: school } = await client
+        .from("schools")
+        .select("name")
+        .eq("id", profile.school_id)
+        .single();
+      schoolName.value = school?.name || "";
+    }
+  } catch {
+    /* profile is optional — the template falls back to blank placeholders */
+  }
+};
+
+const saveGeneratedDoc = () => {
   const entry = {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    mode,
-    topic: docTopic.value,
+    mode: docMode.value,
+    strand: docStrand.value,
     level: docLevel.value,
+    indicatorNumber: docIndicatorNumber.value,
+    indicatorText: docIndicatorText.value,
     title: docTitle.value,
-    content,
+    data: docData.value,
     createdAt: new Date().toISOString(),
   };
   docHistory.value = [entry, ...docHistory.value].slice(0, MAX_DOC_HISTORY);
@@ -101,11 +122,15 @@ const saveGeneratedDoc = (mode, content) => {
 };
 
 const openSavedDoc = (doc) => {
+  if (!doc?.data) return;
   activeTab.value = "docs";
-  docTopic.value = doc.topic || "";
+  docMode.value = doc.mode;
+  docStrand.value = doc.strand || "";
   docLevel.value = doc.level || docLevel.value;
+  docIndicatorNumber.value = doc.indicatorNumber || 1;
+  docIndicatorText.value = doc.indicatorText || "";
   docTitle.value = doc.title || "";
-  docContent.value = doc.content || "";
+  docData.value = doc.data;
   docError.value = "";
 };
 
@@ -115,9 +140,9 @@ const clearDocHistory = () => {
 };
 
 const formatHistoryDate = (isoDate) =>
-  new Date(isoDate).toLocaleString("en-US", {
-    month: "short",
+  new Date(isoDate).toLocaleString("en-GB", {
     day: "numeric",
+    month: "short",
     year: "numeric",
     hour: "numeric",
     minute: "2-digit",
@@ -125,6 +150,7 @@ const formatHistoryDate = (isoDate) =>
 
 onMounted(async () => {
   loadPersistedData();
+  await loadTeacherProfile();
   await nextTick();
   scrollChat();
 });
@@ -133,27 +159,28 @@ watch(
   () => user.value?.id,
   () => {
     loadPersistedData();
+    loadTeacherProfile();
   },
 );
 
 const levels = [
-  "Primary 4",
-  "Primary 5",
-  "Primary 6",
-  "JHS 1",
-  "JHS 2",
-  "JHS 3",
+  "Basic 4",
+  "Basic 5",
+  "Basic 6",
+  "Basic 7 (JHS 1)",
+  "Basic 8 (JHS 2)",
+  "Basic 9 (JHS 3)",
 ];
 
-const suggestedTopics = [
+const suggestedStrands = [
   "Number and Numeration Systems",
   "Number Operations",
   "Fractions, Decimals and Percentages",
   "Ratios and Proportion",
-  "Pattern and Relationships",
+  "Patterns and Relationships",
   "Algebraic Expressions",
   "Variables and Equations",
-  "Shapes and Space",
+  "Shape and Space",
   "Measurement",
   "Position and Transformation",
   "Data",
@@ -180,7 +207,7 @@ const sendMessage = async () => {
       body: {
         mode: "chat",
         message: text,
-        history: chatHistory.value.slice(0, -1), // exclude the message just added
+        history: chatHistory.value.slice(0, -1),
       },
     });
     chatHistory.value.push({ role: "assistant", text: content });
@@ -190,7 +217,7 @@ const sendMessage = async () => {
   } catch (err) {
     chatError.value =
       err?.data?.statusMessage || "Something went wrong. Please try again.";
-    chatHistory.value.pop(); // remove the user message on error
+    chatHistory.value.pop();
     persistChatHistory();
   } finally {
     chatLoading.value = false;
@@ -209,33 +236,33 @@ const scrollChat = () => {
   }
 };
 
-// ─── Document generator actions ───────────────────────────────────────────────
+// ─── Document generator ───────────────────────────────────────────────────────
 const generateDoc = async (mode) => {
-  if (!docTopic.value.trim()) {
-    docError.value = "Please enter a topic.";
+  if (!docStrand.value.trim()) {
+    docError.value = "Please choose a strand or topic.";
     return;
   }
-  docContent.value = "";
+  docData.value = null;
   docError.value = "";
   docLoading.value = true;
+  docMode.value = mode;
   docTitle.value =
-    mode === "lesson-notes"
-      ? `Lesson Notes – ${docTopic.value} (${docLevel.value})`
-      : `Lesson Plan – ${docTopic.value} (${docLevel.value})`;
+    (mode === "lesson-notes" ? "Lesson Notes" : "Lesson Plan") +
+    ` – ${docStrand.value} (${docLevel.value})`;
 
   try {
-    const { content } = await $fetch("/api/ai-assistant/chat", {
+    const { data } = await $fetch("/api/ai-assistant/chat", {
       method: "POST",
-      body: { mode, topic: docTopic.value, level: docLevel.value },
+      body: {
+        mode,
+        strand: docStrand.value,
+        level: docLevel.value,
+        indicatorNumber: Number(docIndicatorNumber.value) || 1,
+        indicatorText: docIndicatorText.value,
+      },
     });
-    if (mode === "lesson-notes" || mode === "lesson-plan") {
-      const logoUrl = `${window.location.origin}/img/logo.png`;
-      const logoBlock = `<p align="center"><img src="${logoUrl}" alt="AssignmentX logo" width="120" /></p>\n\n`;
-      docContent.value = `${logoBlock}${content}`;
-    } else {
-      docContent.value = content;
-    }
-    saveGeneratedDoc(mode, docContent.value);
+    docData.value = data;
+    saveGeneratedDoc();
   } catch (err) {
     docError.value =
       err?.data?.statusMessage || "Failed to generate document. Please retry.";
@@ -244,119 +271,43 @@ const generateDoc = async (mode) => {
   }
 };
 
-const docStyles = `
-  body { font-family: Arial, sans-serif; max-width: 800px; margin: 48px auto; padding: 0 24px; line-height: 1.7; color: #222; }
-  h1, h2, h3, h4 { color: #1b5e20; margin-top: 1.2em; margin-bottom: 0.4em; }
-  h1 { font-size: 1.5rem; border-bottom: 2px solid #1b5e20; padding-bottom: 8px; }
-  h2 { font-size: 1.25rem; }
-  h3 { font-size: 1.1rem; }
-  p { margin-bottom: 0.6em; }
-  ul, ol { padding-left: 1.5em; margin-bottom: 0.6em; }
-  li { margin-bottom: 0.2em; }
-  code { background: #f0f0f0; border-radius: 3px; padding: 0.1em 0.35em; font-family: monospace; font-size: 0.9em; }
-  pre { background: #f5f5f5; border-radius: 6px; padding: 0.75em 1em; overflow-x: auto; margin-bottom: 0.8em; }
-  pre code { background: none; padding: 0; }
-  blockquote { border-left: 3px solid #388e3c; padding-left: 0.8em; color: #555; margin: 0.6em 0; }
-  hr { border: none; border-top: 1px solid #ccc; margin: 1em 0; }
-  table { border-collapse: collapse; width: 100%; margin-bottom: 0.8em; }
-  th, td { border: 1px solid #ccc; padding: 0.4em 0.7em; text-align: left; }
-  th { background: #f0f0f0; font-weight: 700; }
-  @media print { body { margin: 20px; } }
-`;
-
-const docDownloading = ref(false);
-
-// const downloadDoc = async () => {
-//   if (!docContent.value || docDownloading.value) return;
-//   docDownloading.value = true;
-
-//   try {
-//     // Dynamic import keeps this browser-only (safe for Nuxt SSR)
-//     const html2pdf = (await import("html2pdf.js")).default;
-
-//     const safeName = docTitle.value
-//       .replace(/[^a-z0-9\s\-]/gi, "")
-//       .replace(/\s+/g, "_");
-
-//     // Build a temporary off-screen container with styled markdown HTML
-//     const container = document.createElement("div");
-//     container.innerHTML = `<style>
-//       body,div{font-family:Arial,sans-serif;color:#222;line-height:1.7}
-//       h1,h2,h3,h4{color:#1b5e20;margin-top:1.2em;margin-bottom:0.4em}
-//       h1{font-size:22px;border-bottom:2px solid #1b5e20;padding-bottom:8px}
-//       h2{font-size:18px}h3{font-size:16px}
-//       p{margin-bottom:8px}
-//       ul,ol{padding-left:20px;margin-bottom:8px}li{margin-bottom:3px}
-//       code{background:#f0f0f0;border-radius:3px;padding:1px 5px;font-family:monospace;font-size:0.9em}
-//       pre{background:#f5f5f5;border-radius:6px;padding:12px 16px;margin-bottom:12px}
-//       pre code{background:none;padding:0}
-//       blockquote{border-left:3px solid #388e3c;padding-left:12px;color:#555;margin:8px 0}
-//       hr{border:none;border-top:1px solid #ccc;margin:16px 0}
-//       table{border-collapse:collapse;width:100%;margin-bottom:12px}
-//       th,td{border:1px solid #ccc;padding:6px 10px;text-align:left}
-//       th{background:#f0f0f0;font-weight:700}
-//     </style>${renderMarkdown(docContent.value)}`;
-//     container.style.cssText =
-//       "position:absolute;left:-9999px;top:0;width:780px;padding:32px;background:#fff";
-//     document.body.appendChild(container);
-//     renderMathInElement(container, katexOptions);
-
-//     await html2pdf()
-//       .set({
-//         margin: [15, 15, 15, 15],
-//         filename: `${safeName}.pdf`,
-//         image: { type: "jpeg", quality: 0.98 },
-//         html2canvas: { scale: 2, useCORS: true, logging: false },
-//         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-//       })
-//       .from(container)
-//       .save();
-
-//     document.body.removeChild(container);
-//   } finally {
-//     docDownloading.value = false;
-//   }
-// };
-
+// ─── Print / PDF ──────────────────────────────────────────────────────────────
 const printDoc = () => {
-  if (!docContent.value) return;
-  const katexCssUrl =
+  if (!docData.value || typeof window === "undefined") return;
+  const root = document.getElementById("lt-print-root");
+  if (!root) return;
+
+  const origin = window.location.origin;
+  const inner = root.outerHTML.replace(/src="\/img\//g, `src="${origin}/img/`);
+  const katexCss =
     "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css";
-  const katexJsUrl =
-    "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js";
-  const autoRenderUrl =
-    "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js";
+
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>${docTitle.value}</title>
-  <link rel="stylesheet" href="${katexCssUrl}" />
-  <style>${docStyles}</style>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" />
+  <link rel="stylesheet" href="${katexCss}" />
+  <style>
+    body { margin: 24px; background: #fff; }
+    ${LESSON_TEMPLATE_CSS}
+  </style>
 </head>
 <body>
-  ${renderMarkdown(docContent.value)}
-  <script src="${katexJsUrl}"><\/script>
-  <script src="${autoRenderUrl}"><\/script>
+  ${inner}
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      renderMathInElement(document.body, {
-        delimiters: [
-          { left: "$$", right: "$$", display: true },
-          { left: "$", right: "$", display: false },
-          { left: "\\\\(", right: "\\\\)", display: false },
-          { left: "\\\\[", right: "\\\\]", display: true },
-        ],
-        throwOnError: false,
-      });
-      window.print();
+    window.addEventListener("load", function () {
+      setTimeout(function () { window.print(); }, 400);
     });
   <\/script>
 </body>
 </html>`;
+
   const blob = new Blob([html], { type: "text/html" });
   const url = URL.createObjectURL(blob);
   window.open(url, "_blank");
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
 };
 </script>
 
@@ -364,9 +315,7 @@ const printDoc = () => {
   <div>
     <!-- Header -->
     <div class="d-flex align-center gap-3 mb-6">
-      <v-icon size="36" color="green-darken-2"
-        >mdi-robot-excited-outline</v-icon
-      >
+      <v-icon size="36" color="green-darken-2">mdi-robot-excited-outline</v-icon>
       <div>
         <h2 class="text-h5 font-weight-bold">AI Teaching Assistant</h2>
         <p class="text-grey text-body-2">
@@ -393,13 +342,11 @@ const printDoc = () => {
           class="d-flex flex-column"
           style="height: 350px"
         >
-          <!-- Messages -->
           <div
             ref="chatContainer"
             class="flex-grow-1 overflow-y-auto pa-4"
             style="scroll-behavior: smooth"
           >
-            <!-- Welcome state -->
             <div
               v-if="chatHistory.length === 0"
               class="text-center py-10 text-grey"
@@ -416,15 +363,12 @@ const printDoc = () => {
               </p>
             </div>
 
-            <!-- Message bubbles -->
             <div
               v-for="(msg, i) in chatHistory"
               :key="i"
               class="mb-4"
               :class="
-                msg.role === 'user'
-                  ? 'd-flex justify-end'
-                  : 'd-flex justify-start'
+                msg.role === 'user' ? 'd-flex justify-end' : 'd-flex justify-start'
               "
             >
               <div v-if="msg.role === 'assistant'" class="mr-2 mt-1">
@@ -434,16 +378,13 @@ const printDoc = () => {
               </div>
 
               <v-card
-                :color="
-                  msg.role === 'user' ? 'green-darken-2' : 'grey-lighten-4'
-                "
+                :color="msg.role === 'user' ? 'green-darken-2' : 'grey-lighten-4'"
                 :class="msg.role === 'user' ? 'text-white' : ''"
                 rounded="lg"
                 elevation="0"
                 style="max-width: 78%"
                 class="pa-3"
               >
-                <!-- User message: always plain text -->
                 <p
                   v-if="msg.role === 'user'"
                   class="text-body-2 mb-0"
@@ -451,7 +392,6 @@ const printDoc = () => {
                 >
                   {{ msg.text }}
                 </p>
-                <!-- Assistant message: rendered markdown or raw -->
                 <div
                   v-else-if="chatViewMode === 'rendered'"
                   class="text-body-2 mb-0 ai-markdown"
@@ -472,17 +412,11 @@ const printDoc = () => {
               </v-card>
             </div>
 
-            <!-- Thinking indicator -->
             <div v-if="chatLoading" class="d-flex align-center gap-2 mb-4">
               <v-avatar size="28" color="green-darken-2">
                 <v-icon size="16" color="white">mdi-robot-outline</v-icon>
               </v-avatar>
-              <v-card
-                color="grey-lighten-4"
-                rounded="lg"
-                elevation="0"
-                class="pa-3"
-              >
+              <v-card color="grey-lighten-4" rounded="lg" elevation="0" class="pa-3">
                 <div class="d-flex align-center gap-1">
                   <v-progress-circular
                     indeterminate
@@ -498,7 +432,6 @@ const printDoc = () => {
 
           <v-divider />
 
-          <!-- Error -->
           <v-alert
             v-if="chatError"
             type="error"
@@ -509,7 +442,6 @@ const printDoc = () => {
             >{{ chatError }}</v-alert
           >
 
-          <!-- Input area -->
           <div class="pa-3 d-flex align-center gap-2">
             <v-text-field
               v-model="chatInput"
@@ -549,15 +481,8 @@ const printDoc = () => {
               "
             >
               <v-icon>{{
-                chatViewMode === "rendered"
-                  ? "mdi-format-text"
-                  : "mdi-code-tags"
+                chatViewMode === "rendered" ? "mdi-format-text" : "mdi-code-tags"
               }}</v-icon>
-              <v-tooltip activator="parent">{{
-                chatViewMode === "rendered"
-                  ? "Showing rendered markdown"
-                  : "Showing raw text"
-              }}</v-tooltip>
             </v-btn>
           </div>
         </v-card>
@@ -569,41 +494,65 @@ const printDoc = () => {
           <!-- Left panel: form -->
           <v-col cols="12" md="4">
             <v-card rounded="lg" elevation="1" class="pa-4">
-              <p class="text-body-2 font-weight-bold mb-3">Topic</p>
-              <v-text-field
-                v-model="docTopic"
-                label="Enter a mathematics topic"
+              <v-select
+                v-model="docLevel"
+                :items="levels"
+                label="Grade / Class"
                 variant="outlined"
                 density="compact"
                 hide-details
                 class="mb-3"
               />
 
-              <!-- Suggested topics -->
-              <p class="text-caption text-grey mb-2">Quick select:</p>
-              <div class="d-flex flex-wrap gap-1 mb-4">
+              <v-text-field
+                v-model="docStrand"
+                label="Strand / topic"
+                variant="outlined"
+                density="compact"
+                hide-details
+                class="mb-2"
+              />
+              <p class="text-caption text-grey mb-1">Quick select:</p>
+              <div class="d-flex flex-wrap gap-1 mb-3">
                 <v-chip
-                  v-for="t in suggestedTopics"
+                  v-for="t in suggestedStrands"
                   :key="t"
                   size="x-small"
                   variant="tonal"
                   color="green-darken-2"
                   class="cursor-pointer"
-                  @click="docTopic = t"
+                  @click="docStrand = t"
                 >
                   {{ t }}
                 </v-chip>
               </div>
 
-              <v-select
-                v-model="docLevel"
-                :items="levels"
-                label="Class Level"
+              <v-text-field
+                v-model.number="docIndicatorNumber"
+                label="Indicator number"
+                type="number"
+                min="1"
                 variant="outlined"
                 density="compact"
                 hide-details
-                class="mb-4"
+                class="mb-3"
               />
+
+              <v-textarea
+                v-model="docIndicatorText"
+                label="Learning indicator (optional)"
+                placeholder="e.g. Add and subtract whole numbers up to 10,000 using appropriate strategies."
+                variant="outlined"
+                density="compact"
+                rows="3"
+                auto-grow
+                hide-details
+                class="mb-1"
+              />
+              <p class="text-caption text-grey mb-4">
+                Leave blank to let the assistant fill in the NaCCA indicator for
+                this strand and grade.
+              </p>
 
               <v-alert
                 v-if="docError"
@@ -669,7 +618,11 @@ const printDoc = () => {
                   <template #prepend>
                     <v-icon
                       size="18"
-                      :color="doc.mode === 'lesson-notes' ? 'green-darken-2' : 'green-darken-1'"
+                      :color="
+                        doc.mode === 'lesson-notes'
+                          ? 'green-darken-2'
+                          : 'green-darken-1'
+                      "
                     >
                       {{
                         doc.mode === "lesson-notes"
@@ -691,9 +644,8 @@ const printDoc = () => {
 
           <!-- Right panel: output -->
           <v-col cols="12" md="8">
-            <!-- Placeholder -->
             <div
-              v-if="!docContent && !docLoading"
+              v-if="!docData && !docLoading"
               class="text-center py-16 text-grey"
             >
               <v-icon size="64" color="grey-lighten-2" class="mb-4">
@@ -703,17 +655,12 @@ const printDoc = () => {
                 No document generated yet
               </p>
               <p class="text-body-2">
-                Enter a topic and click one of the generate buttons.
+                Choose a grade and strand, then click one of the generate
+                buttons.
               </p>
             </div>
 
-            <!-- Loading skeleton -->
-            <v-card
-              v-else-if="docLoading"
-              rounded="lg"
-              elevation="1"
-              class="pa-4"
-            >
+            <v-card v-else-if="docLoading" rounded="lg" elevation="1" class="pa-4">
               <div class="d-flex align-center gap-2 mb-4">
                 <v-progress-circular
                   indeterminate
@@ -721,22 +668,18 @@ const printDoc = () => {
                   size="20"
                   width="2"
                 />
-                <span class="text-body-2 text-grey"
-                  >Generating with Gemini…</span
-                >
+                <span class="text-body-2 text-grey">Generating with Gemini…</span>
               </div>
               <v-skeleton-loader type="paragraph" class="mb-2" />
               <v-skeleton-loader type="paragraph" class="mb-2" />
               <v-skeleton-loader type="paragraph" />
             </v-card>
 
-            <!-- Generated content -->
             <v-card v-else rounded="lg" elevation="1">
-              <!-- Toolbar -->
               <div
-                class="d-flex align-center justify-space-between px-4 pt-3 pb-2"
+                class="d-flex align-center justify-space-between px-4 pt-3 pb-2 flex-wrap gap-2"
               >
-                <p class="text-body-2 font-weight-bold text-green-darken-2">
+                <p class="text-body-2 font-weight-bold text-green-darken-2 mb-0">
                   {{ docTitle }}
                 </p>
                 <div class="d-flex gap-1 align-center">
@@ -766,38 +709,34 @@ const printDoc = () => {
                   >
                     Print / Download PDF
                   </v-btn>
-                  <!-- <v-btn
-                    size="small"
-                    variant="flat"
-                    color="green-darken-2"
-                    prepend-icon="mdi-download"
-                    :loading="docDownloading"
-                    @click="downloadDoc"
-                  >
-                    Download PDF
-                  </v-btn> -->
                 </div>
               </div>
               <v-divider />
-              <!-- Content -->
-              <div class="pa-4" style="max-height: 520px; overflow-y: auto">
-                <!-- Rendered markdown -->
-                <div
-                  v-if="docViewMode === 'rendered'"
-                  class="ai-markdown"
-                  v-math-render
-                  v-html="renderMarkdown(docContent)"
-                />
-                <!-- Raw text -->
+
+              <div class="pa-4" style="max-height: 640px; overflow: auto">
+                <template v-if="docViewMode === 'rendered'">
+                  <LessonPlanTemplate
+                    v-if="docMode === 'lesson-plan'"
+                    :data="docData"
+                    :teacher="teacherName"
+                    :school="schoolName"
+                    :level="docLevel"
+                    :date="preparedDate"
+                  />
+                  <LessonNoteTemplate
+                    v-else
+                    :data="docData"
+                    :teacher="teacherName"
+                    :school="schoolName"
+                    :level="docLevel"
+                    :date="preparedDate"
+                  />
+                </template>
                 <pre
                   v-else
                   class="text-body-2"
-                  style="
-                    white-space: pre-wrap;
-                    font-family: monospace;
-                    line-height: 1.7;
-                  "
-                  >{{ docContent }}</pre
+                  style="white-space: pre-wrap; font-family: monospace; line-height: 1.6"
+                  >{{ JSON.stringify(docData, null, 2) }}</pre
                 >
               </div>
             </v-card>
@@ -809,7 +748,6 @@ const printDoc = () => {
 </template>
 
 <style scoped>
-/* Markdown rendered output styles */
 :deep(.ai-markdown) {
   line-height: 1.7;
   font-size: 0.875rem;
@@ -843,40 +781,12 @@ const printDoc = () => {
 :deep(.ai-markdown li) {
   margin-bottom: 0.2em;
 }
-:deep(.ai-markdown strong) {
-  font-weight: 700;
-}
-:deep(.ai-markdown em) {
-  font-style: italic;
-}
 :deep(.ai-markdown code) {
   background: rgba(0, 0, 0, 0.07);
   border-radius: 3px;
   padding: 0.1em 0.35em;
   font-family: monospace;
   font-size: 0.85em;
-}
-:deep(.ai-markdown pre) {
-  background: rgba(0, 0, 0, 0.06);
-  border-radius: 6px;
-  padding: 0.75em 1em;
-  overflow-x: auto;
-  margin-bottom: 0.8em;
-}
-:deep(.ai-markdown pre code) {
-  background: none;
-  padding: 0;
-}
-:deep(.ai-markdown blockquote) {
-  border-left: 3px solid #388e3c;
-  padding-left: 0.8em;
-  color: #555;
-  margin: 0.6em 0;
-}
-:deep(.ai-markdown hr) {
-  border: none;
-  border-top: 1px solid #e0e0e0;
-  margin: 0.8em 0;
 }
 :deep(.ai-markdown table) {
   border-collapse: collapse;
