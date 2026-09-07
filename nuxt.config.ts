@@ -1,3 +1,5 @@
+import { fileURLToPath } from "node:url";
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
@@ -80,6 +82,18 @@ export default defineNuxtConfig({
   },
   build: {
     transpile: ["vuetify", "@vuepic/vue-datepicker"],
+  },
+  vite: {
+    resolve: {
+      alias:
+        process.env.NODE_ENV === "development"
+          ? {
+              "#app-manifest": fileURLToPath(
+                new URL("./.nuxt/manifest/meta/dev.json", import.meta.url),
+              ),
+            }
+          : {},
+    },
   },
   devtools: { enabled: true },
 });
