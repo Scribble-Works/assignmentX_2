@@ -22,7 +22,7 @@ const ph = (val, fallback) =>
   val && String(val).trim() ? val : `[${fallback}]`;
 
 const indicatorLabel = computed(
-  () => `Learning Indicator ${props.data?.indicatorNumber ?? 1}`,
+  () => `Learning Indicator ${props.data?.indicatorNumber ?? "1"}`,
 );
 
 const examples = computed(() =>
@@ -49,7 +49,7 @@ const examples = computed(() =>
             {{ (level || "Grade 4").toUpperCase() }} MATHEMATICS &ndash; LESSON NOTE
             <div class="lt-band-sub">
               {{ (data.strand || "Number Operations").toUpperCase() }} &ndash;
-              INDICATOR {{ data.indicatorNumber ?? 1 }}
+              INDICATOR {{ data.indicatorNumber ?? "1" }}
             </div>
           </td>
         </tr>

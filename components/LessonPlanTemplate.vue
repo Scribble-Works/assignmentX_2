@@ -23,7 +23,7 @@ const ph = (val, fallback) =>
   val && String(val).trim() ? val : `[${fallback}]`;
 
 const indicatorLabel = computed(
-  () => `Indicator ${props.data?.indicatorNumber ?? 1}`,
+  () => `Indicator ${props.data?.indicatorNumber ?? "1"}`,
 );
 
 const asList = (val) => (Array.isArray(val) ? val.filter(Boolean) : []);

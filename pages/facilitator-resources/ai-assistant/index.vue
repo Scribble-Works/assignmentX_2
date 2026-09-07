@@ -24,7 +24,7 @@ const chatViewMode = ref("rendered"); // 'rendered' | 'raw'
 // Document generator
 const docStrand = ref("");
 const docLevel = ref("Basic 4");
-const docIndicatorNumber = ref(1);
+const docIndicatorNumber = ref("1");
 const docIndicatorText = ref("");
 const docMode = ref(""); // 'lesson-notes' | 'lesson-plan'
 const docData = ref(null);
@@ -127,7 +127,7 @@ const openSavedDoc = (doc) => {
   docMode.value = doc.mode;
   docStrand.value = doc.strand || "";
   docLevel.value = doc.level || docLevel.value;
-  docIndicatorNumber.value = doc.indicatorNumber || 1;
+  docIndicatorNumber.value = doc.indicatorNumber || "1";
   docIndicatorText.value = doc.indicatorText || "";
   docTitle.value = doc.title || "";
   docData.value = doc.data;
@@ -257,7 +257,7 @@ const generateDoc = async (mode) => {
         mode,
         strand: docStrand.value,
         level: docLevel.value,
-        indicatorNumber: Number(docIndicatorNumber.value) || 1,
+        indicatorNumber: String(docIndicatorNumber.value ?? "").trim() || "1",
         indicatorText: docIndicatorText.value,
       },
     });
@@ -528,10 +528,9 @@ const printDoc = () => {
               </div>
 
               <v-text-field
-                v-model.number="docIndicatorNumber"
-                label="Indicator number"
-                type="number"
-                min="1"
+                v-model="docIndicatorNumber"
+                label="Indicator number / code"
+                placeholder="e.g. 1, 1.2, B4.1.2.1"
                 variant="outlined"
                 density="compact"
                 hide-details

@@ -34,13 +34,13 @@ Produce LESSON NOTES for a Ghanaian basic-school Mathematics facilitator as a si
 Context supplied by the teacher:
 - Grade / Class: {LEVEL}
 - Strand / topic area: {STRAND}
-- Learning indicator number: {INDICATOR_NUMBER}
+- Learning indicator number / code (may be alphanumeric, e.g. "1", "1.2", "B4.1.2.1"): {INDICATOR_NUMBER}
 - Learning indicator (may be blank — if blank, derive the standard NaCCA indicator for this strand and grade): {INDICATOR_TEXT}
 
 Return ONLY minified JSON (no markdown fences, no commentary) with EXACTLY this shape:
 {
   "strand": string,
-  "indicatorNumber": number,
+  "indicatorNumber": string,          // echo back the indicator number / code exactly as supplied
   "indicatorText": string,            // the full learning indicator statement
   "lessonTopic": string,              // concise lesson topic derived from the indicator
   "duration": string,                 // e.g. "60 minutes" — choose based on the depth of content
@@ -61,13 +61,13 @@ Produce a LESSON PLAN for a Ghanaian basic-school Mathematics facilitator as a s
 Context supplied by the teacher:
 - Grade / Class: {LEVEL}
 - Strand / topic area: {STRAND}
-- Learning indicator number: {INDICATOR_NUMBER}
+- Learning indicator number / code (may be alphanumeric, e.g. "1", "1.2", "B4.1.2.1"): {INDICATOR_NUMBER}
 - Learning indicator (may be blank — if blank, derive the standard NaCCA indicator for this strand and grade): {INDICATOR_TEXT}
 
 Return ONLY minified JSON (no markdown fences, no commentary) with EXACTLY this shape:
 {
   "strand": string,
-  "indicatorNumber": number,
+  "indicatorNumber": string,          // echo back the indicator number / code exactly as supplied
   "indicatorText": string,
   "lessonTitle": string,
   "duration": string,                 // total lesson time, chosen from the depth of content, e.g. "60 minutes"
@@ -154,7 +154,7 @@ export default defineEventHandler(async (event) => {
     const prompt = template
       .replace(/\{LEVEL\}/g, level || "Basic 4")
       .replace(/\{STRAND\}/g, strandValue)
-      .replace(/\{INDICATOR_NUMBER\}/g, String(indicatorNumber ?? 1))
+      .replace(/\{INDICATOR_NUMBER\}/g, String(indicatorNumber ?? "1").trim() || "1")
       .replace(/\{INDICATOR_TEXT\}/g, (indicatorText || "").trim() || "(blank)");
 
     try {
@@ -162,7 +162,8 @@ export default defineEventHandler(async (event) => {
       const data = parseJsonDocument(result.response.text());
       // Make sure the teacher's own inputs win over anything the model changed
       data.strand = strandValue;
-      data.indicatorNumber = Number(indicatorNumber ?? data.indicatorNumber ?? 1);
+      data.indicatorNumber =
+        String(indicatorNumber ?? data.indicatorNumber ?? "1").trim() || "1";
       if ((indicatorText || "").trim()) data.indicatorText = indicatorText.trim();
       return { mode, data };
     } catch (err: any) {
