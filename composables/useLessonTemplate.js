@@ -165,6 +165,29 @@ export const LESSON_TEMPLATE_CSS = `
   .lt-doc { max-width: none; font-size: 12px; }
   .lt-table td, .lt-table th { border-color: #64748b; }
   .lt-band td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  tr, .lt-example { break-inside: avoid; }
+
+  /*
+   * Long content rows (Explanation, Examples, Diagrams, Summary) are frequently
+   * taller than a page. Forcing "break-inside: avoid" on every <tr> made the
+   * browser shunt the whole row onto the next page, leaving a half-empty page
+   * behind it. Let those rows flow across the page break instead.
+   */
+  .lt-table, .lt-table tbody, .lt-table tr, .lt-table td { break-inside: auto; }
+
+  /* Keep the short structural rows whole … */
+  .lt-band,
+  .lt-section,
+  .lt-note-section,
+  .lt-delivery tr:first-child,
+  .lt-doc tr:has(> .lt-label) { break-inside: avoid; }
+
+  /* … and keep every section heading attached to the content it introduces. */
+  .lt-band,
+  .lt-section,
+  .lt-note-section,
+  .lt-delivery th { break-after: avoid; }
+
+  /* Don't split an individual worked example or list item unless it can't fit. */
+  .lt-example, .lt-doc li { break-inside: avoid; }
 }
 `;
