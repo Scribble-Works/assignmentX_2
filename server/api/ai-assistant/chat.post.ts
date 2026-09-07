@@ -2,147 +2,264 @@
  * POST /api/ai-assistant/chat
  *
  * Modes:
- *   chat          – conversational concept explanation
- *   lesson-notes  – generates structured lesson notes for a topic
- *   lesson-plan   – generates a full lesson plan for a topic
+ *   chat          – conversational concept explanation (returns { content })
+ *   lesson-notes  – structured lesson notes for a strand/indicator (returns { data })
+ *   lesson-plan   – structured lesson plan for a strand/indicator (returns { data })
  *
  * Required env var:
- *   GEMINI_API_KEY – from https://aistudio.google.com/app/apikey
+ *   NUXT_GEMINI_API_KEY – from https://aistudio.google.com/app/apikey
  */
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 
 // ─── System context ────────────────────────────────────────────────────────────
 const BASE_CONTEXT = `You are an expert Mathematics teaching assistant trained on Ghana's \
-National Curriculum for Basic Schools (Standards-Based Curriculum). \
-You support facilitators (teachers) in Ghanaian JHS (Junior High School) classrooms.
+National Curriculum for Basic Schools (Standards-Based / Common Core Curriculum), \
+published by NaCCA. You support facilitators (teachers) in Ghanaian basic-school classrooms \
+(Primary 4 to JHS 3 / Basic 4 to Basic 9).
 
 Your expertise covers:
-- Ghana Standards-Based Curriculum for Mathematics (Primary 4 - 6)
-- Ghana Standards-Based Curriculum for Mathematics (JHS 1–3)
-- Strands: Number, Algebra, Geometry and Measurement, Data Handling
+- NaCCA Standards-Based Curriculum for Mathematics
+- Strands: Number, Algebra / Patterns & Relationships, Geometry and Measurement, Data Handling
 - BECE (Basic Education Certificate Examination) preparation
 - Pedagogy suited for Ghanaian classrooms and contexts
 
-Always use clear, simple language with step-by-step explanations. \
-Include real-world examples relevant to Ghanaian students where possible.`;
+Always use clear, simple language with step-by-step explanations, and real-world examples \
+relevant to Ghanaian pupils where possible.`;
 
-// ─── Document templates ────────────────────────────────────────────────────────
+// ─── JSON document instructions ────────────────────────────────────────────────
 const LESSON_NOTES_INSTRUCTIONS = `
-Generate comprehensive lesson notes for a Ghanaian JHS Mathematics facilitator.
-Use exactly the following structure:
+Produce LESSON NOTES for a Ghanaian basic-school Mathematics facilitator as a single JSON object.
 
-LESSON NOTES
-============
-Topic: {TOPIC}
-Class: {LEVEL}
-Strand: [identify the correct strand from the Ghana SBC]
-Duration: 60 minutes
+Context supplied by the teacher:
+- Grade / Class: {LEVEL}
+- Strand / topic area: {STRAND}
+- Learning indicator number / code (may be alphanumeric, e.g. "1", "1.2", "B4.1.2.1"): {INDICATOR_NUMBER}
+- Learning indicator (may be blank — if blank, derive the standard NaCCA indicator for this strand and grade): {INDICATOR_TEXT}
 
-1. LEARNING OBJECTIVES
-   By the end of this lesson, students will be able to:
-   (list 3–4 specific, measurable objectives)
-
-2. KEY VOCABULARY
-   (define 5–8 key terms)
-
-3. PREREQUISITE KNOWLEDGE
-   (what students must already know)
-
-4. CONTENT EXPLANATION
-   (thorough explanation of the concept in teacher-friendly language)
-
-5. WORKED EXAMPLES
-   (provide 4–5 fully solved step-by-step examples, numbered)
-
-6. COMMON MISCONCEPTIONS
-   (list typical errors students make and how to correct them)
-
-7. PRACTICE QUESTIONS
-   (provide 8 questions of varying difficulty with full answers)
-
-8. KEY TAKEAWAYS
-   (bullet-point summary of the most important points)
+Return ONLY minified JSON (no markdown fences, no commentary) with EXACTLY this shape:
+{
+  "strand": string,
+  "indicatorNumber": string,          // echo back the indicator number / code exactly as supplied
+  "indicatorText": string,            // the full learning indicator statement
+  "lessonTopic": string,              // concise lesson topic derived from the indicator
+  "duration": string,                 // e.g. "60 minutes" — choose based on the depth of content
+  "keyConcept": string,               // 1–2 sentences stating the main idea
+  "explanation": string,              // thorough teacher-facing explanation, Markdown allowed (headings, lists, tables)
+  "examples": [                        // 3–5 fully worked, step-by-step examples
+    { "title": string, "body": string }  // body is Markdown; show every step
+  ],
+  "diagrams": string,                 // Markdown describing diagrams/number lines/models a teacher should draw, with clear labels
+  "summary": string                   // Markdown bullet list of the key points pupils must remember
+}
+Use $...$ / $$...$$ for any mathematical notation.
 `;
 
 const LESSON_PLAN_INSTRUCTIONS = `
-Generate a detailed lesson plan for a Ghanaian JHS Mathematics facilitator.
-Use exactly the following structure:
+Produce a LESSON PLAN for a Ghanaian basic-school Mathematics facilitator as a single JSON object.
 
-LESSON PLAN
-===========
-Subject:       Mathematics
-Topic:         {TOPIC}
-Class:         {LEVEL}
-Duration:      60 minutes
-Date:          _______________
-Facilitator:   _______________
+Context supplied by the teacher:
+- Grade / Class: {LEVEL}
+- Strand / topic area: {STRAND}
+- Learning indicator number / code (may be alphanumeric, e.g. "1", "1.2", "B4.1.2.1"): {INDICATOR_NUMBER}
+- Learning indicator (may be blank — if blank, derive the standard NaCCA indicator for this strand and grade): {INDICATOR_TEXT}
 
-CURRICULUM ALIGNMENT
-Strand:           [identify correct strand]
-Sub-strand:       [identify correct sub-strand]
-Content Standard: [reference from Ghana SBC]
-Learning Indicators:
-  1. [indicator 1]
-  2. [indicator 2]
-  3. [indicator 3]
-
-LEARNING OBJECTIVES
-By the end of the lesson, students will be able to:
-  1. [objective 1]
-  2. [objective 2]
-  3. [objective 3]
-
-MATERIALS & RESOURCES
-  - [list all teaching materials]
-
-KEY VOCABULARY
-  [5–8 terms with brief definitions]
-
-─────────────────────────────────────────────
-LESSON PROCEDURE
-─────────────────────────────────────────────
-
-PHASE 1 – STARTER / REVIEW (10 minutes)
-  [engaging hook or review activity to activate prior knowledge]
-
-PHASE 2 – INTRODUCTION OF NEW CONCEPT (10 minutes)
-  Teacher actions:  [what the teacher does]
-  Student actions:  [what students do]
-
-PHASE 3 – MAIN ACTIVITY (25 minutes)
-  Teacher actions:  [step-by-step teaching actions]
-  Student actions:  [student engagement and tasks]
-  Key questions to ask:
-    - [question 1]
-    - [question 2]
-    - [question 3]
-
-PHASE 4 – GUIDED PRACTICE (10 minutes)
-  [supervised practice problems with teacher circulating]
-
-PHASE 5 – CLOSURE (5 minutes)
-  [summary activity and exit ticket]
-
-─────────────────────────────────────────────
-ASSESSMENT
-  Formative:   [method used during lesson]
-  Homework:    [assignment with 3–5 problems]
-
-DIFFERENTIATION
-  Support (struggling learners):   [strategies]
-  Extension (advanced learners):   [enrichment tasks]
-
-TEACHER REFLECTION (complete after lesson)
-  What went well:     _______________
-  What to improve:    _______________
-  Follow-up needed:   _______________
+Return ONLY minified JSON (no markdown fences, no commentary) with EXACTLY this shape:
+{
+  "strand": string,
+  "indicatorNumber": string,          // echo back the indicator number / code exactly as supplied
+  "indicatorText": string,
+  "lessonTitle": string,
+  "duration": string,                 // total lesson time, chosen from the depth of content, e.g. "60 minutes"
+  "learningObjectives": [string, string, string],   // 3–4 specific, measurable objectives
+  "resources": [string],              // teaching / learning materials
+  "delivery": [                       // EXACTLY these four phases, in this order
+    { "phase": "1. STARTER (Review & Introduction)", "teacherActivities": string, "pupilActivities": string, "resources": string, "duration": string },
+    { "phase": "2. MAIN (New Learning)",             "teacherActivities": string, "pupilActivities": string, "resources": string, "duration": string },
+    { "phase": "3. PRACTICE (Guided Practice)",      "teacherActivities": string, "pupilActivities": string, "resources": string, "duration": string },
+    { "phase": "4. PLENARY (Review & Conclusion)",   "teacherActivities": string, "pupilActivities": string, "resources": string, "duration": string }
+  ],
+  "assessment": string,               // Markdown — how learning will be assessed, plus 3–5 homework questions
+  "differentiation": string,          // Markdown — support for slow, average and fast learners
+  "reflection": ""                    // leave as an empty string for the teacher to complete after the lesson
+}
+The four phase durations must add up to the total "duration".
+teacherActivities and pupilActivities may use short Markdown lists. Use $...$ / $$...$$ for mathematical notation.
 `;
+
+// ─── Response schemas ─────────────────────────────────────────────────────────
+// Passing a responseSchema puts Gemini into constrained JSON decoding, so the
+// output is guaranteed to be structurally valid JSON (quotes, backslashes from
+// LaTeX, and newlines inside Markdown fields are all escaped correctly).
+const str = { type: SchemaType.STRING } as const;
+
+const LESSON_NOTES_SCHEMA = {
+  type: SchemaType.OBJECT,
+  properties: {
+    strand: str,
+    indicatorNumber: str,
+    indicatorText: str,
+    lessonTopic: str,
+    duration: str,
+    keyConcept: str,
+    explanation: str,
+    examples: {
+      type: SchemaType.ARRAY,
+      items: {
+        type: SchemaType.OBJECT,
+        properties: { title: str, body: str },
+        required: ["title", "body"],
+      },
+    },
+    diagrams: str,
+    summary: str,
+  },
+  required: [
+    "strand",
+    "indicatorNumber",
+    "indicatorText",
+    "lessonTopic",
+    "duration",
+    "keyConcept",
+    "explanation",
+    "examples",
+    "diagrams",
+    "summary",
+  ],
+} as const;
+
+const LESSON_PLAN_SCHEMA = {
+  type: SchemaType.OBJECT,
+  properties: {
+    strand: str,
+    indicatorNumber: str,
+    indicatorText: str,
+    lessonTitle: str,
+    duration: str,
+    learningObjectives: { type: SchemaType.ARRAY, items: str },
+    resources: { type: SchemaType.ARRAY, items: str },
+    delivery: {
+      type: SchemaType.ARRAY,
+      items: {
+        type: SchemaType.OBJECT,
+        properties: {
+          phase: str,
+          teacherActivities: str,
+          pupilActivities: str,
+          resources: str,
+          duration: str,
+        },
+        required: [
+          "phase",
+          "teacherActivities",
+          "pupilActivities",
+          "resources",
+          "duration",
+        ],
+      },
+    },
+    assessment: str,
+    differentiation: str,
+    reflection: str,
+  },
+  required: [
+    "strand",
+    "indicatorNumber",
+    "indicatorText",
+    "lessonTitle",
+    "duration",
+    "learningObjectives",
+    "resources",
+    "delivery",
+    "assessment",
+    "differentiation",
+    "reflection",
+  ],
+} as const;
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+/**
+ * Escape raw control characters (literal newlines, tabs, …) that appear *inside*
+ * JSON string literals. Gemini frequently emits these in the Markdown-bearing
+ * fields (explanation, examples, diagrams, summary), which makes `JSON.parse`
+ * throw "Bad control character in string literal in JSON".
+ */
+const VALID_ESCAPES = new Set(['"', "\\", "/", "b", "f", "n", "r", "t", "u"]);
+
+const escapeControlCharsInStrings = (s: string) => {
+  let out = "";
+  let inString = false;
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+    const code = s.charCodeAt(i);
+    if (!inString) {
+      if (ch === '"') inString = true;
+      out += ch;
+      continue;
+    }
+    if (ch === "\\") {
+      const next = s[i + 1];
+      if (VALID_ESCAPES.has(next)) {
+        // Keep the escape sequence intact (copy both characters)
+        out += ch + next;
+        i++;
+      } else {
+        // Lone backslash (e.g. LaTeX "\frac", "\left") — escape it
+        out += "\\\\";
+      }
+      continue;
+    }
+    if (ch === '"') {
+      out += ch;
+      inString = false;
+      continue;
+    }
+    if (code < 0x20) {
+      if (ch === "\n") out += "\\n";
+      else if (ch === "\r") out += "\\r";
+      else if (ch === "\t") out += "\\t";
+      else if (ch === "\b") out += "\\b";
+      else if (ch === "\f") out += "\\f";
+      else out += "\\u" + code.toString(16).padStart(4, "0");
+      continue;
+    }
+    out += ch;
+  }
+  return out;
+};
+
+const parseJsonDocument = (raw: string) => {
+  let text = (raw || "").trim();
+  // Strip ```json ... ``` fences if the model added them
+  const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  if (fenced) text = fenced[1].trim();
+  // Fall back to the outermost { ... }
+  if (!text.startsWith("{")) {
+    const first = text.indexOf("{");
+    const last = text.lastIndexOf("}");
+    if (first !== -1 && last !== -1) text = text.slice(first, last + 1);
+  }
+  try {
+    return JSON.parse(text);
+  } catch {
+    // Retry after escaping unescaped control characters inside string literals
+    return JSON.parse(escapeControlCharsInStrings(text));
+  }
+};
 
 // ─── Handler ──────────────────────────────────────────────────────────────────
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const { message, mode, topic, level, history } = body ?? {};
+  const {
+    message,
+    mode,
+    topic,
+    strand,
+    level,
+    history,
+    indicatorNumber,
+    indicatorText,
+  } = body ?? {};
 
   const config = useRuntimeConfig();
   const apiKey = config.geminiApiKey as string | undefined;
@@ -150,62 +267,83 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 500,
       statusMessage:
-        "Gemini API key is not configured. Add GEMINI_API_KEY to your .env file.",
+        "Gemini API key is not configured. Add NUXT_GEMINI_API_KEY to your .env file.",
     });
   }
   const genAI = new GoogleGenerativeAI(apiKey);
+
+  const isDocMode = mode === "lesson-notes" || mode === "lesson-plan";
   const model = genAI.getGenerativeModel({
     model: "gemini-2.5-flash",
     systemInstruction: BASE_CONTEXT,
-    generationConfig: { maxOutputTokens: 8192 },
+    generationConfig: {
+      // Lesson docs are long and must be complete JSON — give them plenty of room
+      // (gemini-2.5-flash also spends part of this budget on internal reasoning).
+      maxOutputTokens: isDocMode ? 32768 : 8192,
+      ...(isDocMode
+        ? {
+            responseMimeType: "application/json",
+            responseSchema: (mode === "lesson-notes"
+              ? LESSON_NOTES_SCHEMA
+              : LESSON_PLAN_SCHEMA) as any,
+          }
+        : {}),
+    },
   });
 
-  let prompt: string;
+  if (isDocMode) {
+    const strandValue = (strand || topic || "").trim();
+    if (!strandValue) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: "A strand / topic is required for this document.",
+      });
+    }
+    const template =
+      mode === "lesson-notes"
+        ? LESSON_NOTES_INSTRUCTIONS
+        : LESSON_PLAN_INSTRUCTIONS;
+    const prompt = template
+      .replace(/\{LEVEL\}/g, level || "Basic 4")
+      .replace(/\{STRAND\}/g, strandValue)
+      .replace(/\{INDICATOR_NUMBER\}/g, String(indicatorNumber ?? "1").trim() || "1")
+      .replace(/\{INDICATOR_TEXT\}/g, (indicatorText || "").trim() || "(blank)");
 
-  if (mode === "lesson-notes") {
-    if (!topic?.trim()) {
+    try {
+      const result = await model.generateContent(prompt);
+      const data = parseJsonDocument(result.response.text());
+      // Make sure the teacher's own inputs win over anything the model changed
+      data.strand = strandValue;
+      data.indicatorNumber =
+        String(indicatorNumber ?? data.indicatorNumber ?? "1").trim() || "1";
+      if ((indicatorText || "").trim()) data.indicatorText = indicatorText.trim();
+      return { mode, data };
+    } catch (err: any) {
       throw createError({
-        statusCode: 400,
-        statusMessage: "Topic is required for lesson notes.",
+        statusCode: 502,
+        statusMessage: `Could not generate the document: ${
+          err?.message ?? "unknown error"
+        }`,
       });
     }
-    prompt = LESSON_NOTES_INSTRUCTIONS.replace("{TOPIC}", topic.trim()).replace(
-      "{LEVEL}",
-      level || "JHS",
-    );
-  } else if (mode === "lesson-plan") {
-    if (!topic?.trim()) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: "Topic is required for a lesson plan.",
-      });
-    }
-    prompt = LESSON_PLAN_INSTRUCTIONS.replace("{TOPIC}", topic.trim()).replace(
-      "{LEVEL}",
-      level || "JHS",
-    );
-  } else {
-    // Chat mode — include recent history for multi-turn context
-    if (!message?.trim()) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: "Message is required.",
-      });
-    }
-    const contextLines: string[] = [];
-    if (Array.isArray(history) && history.length > 0) {
-      for (const turn of history.slice(-6)) {
-        // last 3 exchanges
-        contextLines.push(
-          `${turn.role === "user" ? "Teacher" : "Assistant"}: ${turn.text}`,
-        );
-      }
-    }
-    const conversationContext = contextLines.length
-      ? `Previous conversation:\n${contextLines.join("\n")}\n\n`
-      : "";
-    prompt = `${conversationContext}Teacher: ${message.trim()}`;
   }
+
+  // ─── Chat mode ──────────────────────────────────────────────────────────────
+  if (!message?.trim()) {
+    throw createError({ statusCode: 400, statusMessage: "Message is required." });
+  }
+  const contextLines: string[] = [];
+  if (Array.isArray(history) && history.length > 0) {
+    for (const turn of history.slice(-6)) {
+      contextLines.push(
+        `${turn.role === "user" ? "Teacher" : "Assistant"}: ${turn.text}`,
+      );
+    }
+  }
+  const conversationContext = contextLines.length
+    ? `Previous conversation:\n${contextLines.join("\n")}\n\n`
+    : "";
+  const prompt = `${conversationContext}Teacher: ${message.trim()}`;
 
   try {
     const result = await model.generateContent(prompt);
