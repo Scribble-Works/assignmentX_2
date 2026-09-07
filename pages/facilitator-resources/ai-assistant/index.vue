@@ -606,7 +606,11 @@ const printDoc = () => {
               >
                 Your generated lesson notes and plans will appear here.
               </p>
-              <v-list v-else density="compact" class="pa-0">
+              <v-list
+                v-else
+                density="compact"
+                class="pa-0 doc-history-list"
+              >
                 <v-list-item
                   v-for="doc in docHistory"
                   :key="doc.id"
@@ -747,6 +751,20 @@ const printDoc = () => {
 </template>
 
 <style scoped>
+/* Show ~3 recent documents, then scroll the rest so the sidebar stays compact */
+.doc-history-list {
+  max-height: 186px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.doc-history-list::-webkit-scrollbar {
+  width: 6px;
+}
+.doc-history-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
 :deep(.ai-markdown) {
   line-height: 1.7;
   font-size: 0.875rem;
