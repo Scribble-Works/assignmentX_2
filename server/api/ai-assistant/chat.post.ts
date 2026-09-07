@@ -10,7 +10,7 @@
  *   NUXT_GEMINI_API_KEY – from https://aistudio.google.com/app/apikey
  */
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 
 // ─── System context ────────────────────────────────────────────────────────────
 const BASE_CONTEXT = `You are an expert Mathematics teaching assistant trained on Ghana's \
@@ -87,7 +87,147 @@ The four phase durations must add up to the total "duration".
 teacherActivities and pupilActivities may use short Markdown lists. Use $...$ / $$...$$ for mathematical notation.
 `;
 
+// ─── Response schemas ─────────────────────────────────────────────────────────
+// Passing a responseSchema puts Gemini into constrained JSON decoding, so the
+// output is guaranteed to be structurally valid JSON (quotes, backslashes from
+// LaTeX, and newlines inside Markdown fields are all escaped correctly).
+const str = { type: SchemaType.STRING } as const;
+
+const LESSON_NOTES_SCHEMA = {
+  type: SchemaType.OBJECT,
+  properties: {
+    strand: str,
+    indicatorNumber: str,
+    indicatorText: str,
+    lessonTopic: str,
+    duration: str,
+    keyConcept: str,
+    explanation: str,
+    examples: {
+      type: SchemaType.ARRAY,
+      items: {
+        type: SchemaType.OBJECT,
+        properties: { title: str, body: str },
+        required: ["title", "body"],
+      },
+    },
+    diagrams: str,
+    summary: str,
+  },
+  required: [
+    "strand",
+    "indicatorNumber",
+    "indicatorText",
+    "lessonTopic",
+    "duration",
+    "keyConcept",
+    "explanation",
+    "examples",
+    "diagrams",
+    "summary",
+  ],
+} as const;
+
+const LESSON_PLAN_SCHEMA = {
+  type: SchemaType.OBJECT,
+  properties: {
+    strand: str,
+    indicatorNumber: str,
+    indicatorText: str,
+    lessonTitle: str,
+    duration: str,
+    learningObjectives: { type: SchemaType.ARRAY, items: str },
+    resources: { type: SchemaType.ARRAY, items: str },
+    delivery: {
+      type: SchemaType.ARRAY,
+      items: {
+        type: SchemaType.OBJECT,
+        properties: {
+          phase: str,
+          teacherActivities: str,
+          pupilActivities: str,
+          resources: str,
+          duration: str,
+        },
+        required: [
+          "phase",
+          "teacherActivities",
+          "pupilActivities",
+          "resources",
+          "duration",
+        ],
+      },
+    },
+    assessment: str,
+    differentiation: str,
+    reflection: str,
+  },
+  required: [
+    "strand",
+    "indicatorNumber",
+    "indicatorText",
+    "lessonTitle",
+    "duration",
+    "learningObjectives",
+    "resources",
+    "delivery",
+    "assessment",
+    "differentiation",
+    "reflection",
+  ],
+} as const;
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+/**
+ * Escape raw control characters (literal newlines, tabs, …) that appear *inside*
+ * JSON string literals. Gemini frequently emits these in the Markdown-bearing
+ * fields (explanation, examples, diagrams, summary), which makes `JSON.parse`
+ * throw "Bad control character in string literal in JSON".
+ */
+const VALID_ESCAPES = new Set(['"', "\\", "/", "b", "f", "n", "r", "t", "u"]);
+
+const escapeControlCharsInStrings = (s: string) => {
+  let out = "";
+  let inString = false;
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+    const code = s.charCodeAt(i);
+    if (!inString) {
+      if (ch === '"') inString = true;
+      out += ch;
+      continue;
+    }
+    if (ch === "\\") {
+      const next = s[i + 1];
+      if (VALID_ESCAPES.has(next)) {
+        // Keep the escape sequence intact (copy both characters)
+        out += ch + next;
+        i++;
+      } else {
+        // Lone backslash (e.g. LaTeX "\frac", "\left") — escape it
+        out += "\\\\";
+      }
+      continue;
+    }
+    if (ch === '"') {
+      out += ch;
+      inString = false;
+      continue;
+    }
+    if (code < 0x20) {
+      if (ch === "\n") out += "\\n";
+      else if (ch === "\r") out += "\\r";
+      else if (ch === "\t") out += "\\t";
+      else if (ch === "\b") out += "\\b";
+      else if (ch === "\f") out += "\\f";
+      else out += "\\u" + code.toString(16).padStart(4, "0");
+      continue;
+    }
+    out += ch;
+  }
+  return out;
+};
+
 const parseJsonDocument = (raw: string) => {
   let text = (raw || "").trim();
   // Strip ```json ... ``` fences if the model added them
@@ -99,7 +239,12 @@ const parseJsonDocument = (raw: string) => {
     const last = text.lastIndexOf("}");
     if (first !== -1 && last !== -1) text = text.slice(first, last + 1);
   }
-  return JSON.parse(text);
+  try {
+    return JSON.parse(text);
+  } catch {
+    // Retry after escaping unescaped control characters inside string literals
+    return JSON.parse(escapeControlCharsInStrings(text));
+  }
 };
 
 // ─── Handler ──────────────────────────────────────────────────────────────────
@@ -135,7 +280,14 @@ export default defineEventHandler(async (event) => {
       // Lesson docs are long and must be complete JSON — give them plenty of room
       // (gemini-2.5-flash also spends part of this budget on internal reasoning).
       maxOutputTokens: isDocMode ? 32768 : 8192,
-      ...(isDocMode ? { responseMimeType: "application/json" } : {}),
+      ...(isDocMode
+        ? {
+            responseMimeType: "application/json",
+            responseSchema: (mode === "lesson-notes"
+              ? LESSON_NOTES_SCHEMA
+              : LESSON_PLAN_SCHEMA) as any,
+          }
+        : {}),
     },
   });
 
