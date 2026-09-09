@@ -160,6 +160,63 @@ export const LESSON_TEMPLATE_CSS = `
 .lt-example:last-child { margin-bottom: 0; }
 .lt-example-title { font-weight: 700; color: var(--lt-label-fg); margin-bottom: 2px; }
 .lt-muted { color: #64748b; font-style: italic; }
+
+/* ─── Inline editing controls (screen only — never printed) ─────────────── */
+.lt-doc .lt-edit-field {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  color: inherit;
+  background: #fff;
+  border: 1px solid var(--lt-border);
+  border-radius: 4px;
+  padding: 4px 6px;
+}
+.lt-doc .lt-edit-field:focus {
+  outline: none;
+  border-color: var(--lt-band);
+  box-shadow: 0 0 0 2px rgba(31, 58, 99, 0.12);
+}
+.lt-doc textarea.lt-edit-field {
+  display: block;
+  min-height: 60px;
+  resize: vertical;
+  line-height: 1.5;
+  font-family: "Inter", Arial, Helvetica, sans-serif;
+}
+.lt-doc .lt-edit-row {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+.lt-doc .lt-edit-row .lt-edit-field { flex: 1; }
+.lt-doc .lt-edit-btn {
+  font: inherit;
+  font-size: 11px;
+  line-height: 1;
+  padding: 5px 9px;
+  border: 1px solid var(--lt-border);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--lt-label-fg);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.lt-doc .lt-edit-btn:hover { background: var(--lt-label-bg); }
+.lt-doc .lt-edit-btn--danger { color: #b3261e; border-color: #e6b4b0; }
+.lt-doc .lt-edit-btn--danger:hover { background: #fbeceb; }
+.lt-doc .lt-edit-add { margin-top: 4px; }
+.lt-doc .lt-edit-hint {
+  font-size: 10px;
+  color: #6b7280;
+  margin-top: 2px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+@media print {
+  .lt-doc .lt-edit-btn, .lt-doc .lt-edit-add { display: none !important; }
+}
 @media print {
   body { margin: 0; }
   .lt-doc { max-width: none; font-size: 12px; }
