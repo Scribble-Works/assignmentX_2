@@ -24,7 +24,7 @@ const chatViewMode = ref("rendered"); // 'rendered' | 'raw'
 // Document generator
 const docStrand = ref("");
 const docLevel = ref("Basic 4");
-const docIndicatorNumber = ref("1");
+const docIndicatorNumber = ref("");
 const docIndicatorText = ref("");
 const docMode = ref(""); // 'lesson-notes' | 'lesson-plan'
 const docData = ref(null);
@@ -32,15 +32,15 @@ const docTitle = ref("");
 const docLoading = ref(false);
 const docError = ref("");
 const docHistory = ref([]);
-const docViewMode = ref("rendered"); // 'rendered' | 'raw'
+const docViewMode = ref("rendered"); // 'rendered' | 'raw' | 'edit'
+const currentDocId = ref(null); // id of the history entry currently on screen
+const docEditedAt = ref("");
 
 // Teacher profile (populates the template header)
 const teacherName = ref("");
 const schoolName = ref("");
 
-const preparedDate = computed(() =>
-  new Date().toLocaleDateString("en-GB"),
-); // DD/MM/YYYY
+const preparedDate = computed(() => new Date().toLocaleDateString("en-GB")); // DD/MM/YYYY
 
 const MAX_CHAT_MESSAGES = 100;
 const MAX_DOC_HISTORY = 20;
@@ -105,6 +105,10 @@ const loadTeacherProfile = async () => {
   }
 };
 
+// Autosave bookkeeping for inline edits (see the watcher further down)
+let persistEditTimer = null;
+let suppressAutosave = false;
+
 const saveGeneratedDoc = () => {
   const entry = {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
@@ -115,9 +119,14 @@ const saveGeneratedDoc = () => {
     indicatorText: docIndicatorText.value,
     title: docTitle.value,
     data: docData.value,
+    // Pristine copy of the AI output, kept so edits can be reverted
+    generated: JSON.parse(JSON.stringify(docData.value)),
     createdAt: new Date().toISOString(),
+    editedAt: "",
   };
   docHistory.value = [entry, ...docHistory.value].slice(0, MAX_DOC_HISTORY);
+  currentDocId.value = entry.id;
+  docEditedAt.value = "";
   persistDocHistory();
 };
 
@@ -130,8 +139,56 @@ const openSavedDoc = (doc) => {
   docIndicatorNumber.value = doc.indicatorNumber || "1";
   docIndicatorText.value = doc.indicatorText || "";
   docTitle.value = doc.title || "";
+  // Backfill the pristine snapshot for docs saved before edit support existed
+  if (!doc.generated) doc.generated = JSON.parse(JSON.stringify(doc.data));
+  suppressAutosave = true;
+  clearTimeout(persistEditTimer);
   docData.value = doc.data;
+  currentDocId.value = doc.id || null;
+  docEditedAt.value = doc.editedAt || "";
+  docViewMode.value = "rendered";
   docError.value = "";
+  nextTick(() => {
+    suppressAutosave = false;
+  });
+};
+
+// ─── Autosave inline edits ────────────────────────────────────────────────────
+const persistDocEdits = () => {
+  const entry = docHistory.value.find((d) => d.id === currentDocId.value);
+  if (!entry) return;
+  entry.data = docData.value;
+  entry.editedAt = new Date().toISOString();
+  docEditedAt.value = entry.editedAt;
+  persistDocHistory();
+};
+
+watch(
+  docData,
+  () => {
+    if (suppressAutosave || !currentDocId.value || docLoading.value) return;
+    clearTimeout(persistEditTimer);
+    persistEditTimer = setTimeout(persistDocEdits, 500);
+  },
+  { deep: true },
+);
+
+const revertDocEdits = () => {
+  const entry = docHistory.value.find((d) => d.id === currentDocId.value);
+  const source = entry?.generated || entry?.data;
+  if (!source) return;
+  suppressAutosave = true;
+  clearTimeout(persistEditTimer);
+  docData.value = JSON.parse(JSON.stringify(source));
+  if (entry) {
+    entry.data = docData.value;
+    entry.editedAt = "";
+    persistDocHistory();
+  }
+  docEditedAt.value = "";
+  nextTick(() => {
+    suppressAutosave = false;
+  });
 };
 
 const clearDocHistory = () => {
@@ -246,6 +303,9 @@ const generateDoc = async (mode) => {
   docError.value = "";
   docLoading.value = true;
   docMode.value = mode;
+  currentDocId.value = null;
+  docEditedAt.value = "";
+  docViewMode.value = "rendered";
   docTitle.value =
     (mode === "lesson-notes" ? "Lesson Notes" : "Lesson Plan") +
     ` – ${docStrand.value} (${docLevel.value})`;
@@ -257,7 +317,7 @@ const generateDoc = async (mode) => {
         mode,
         strand: docStrand.value,
         level: docLevel.value,
-        indicatorNumber: String(docIndicatorNumber.value ?? "").trim() || "1",
+        indicatorNumber: String(docIndicatorNumber.value ?? "").trim() || "",
         indicatorText: docIndicatorText.value,
       },
     });
@@ -272,8 +332,14 @@ const generateDoc = async (mode) => {
 };
 
 // ─── Print / PDF ──────────────────────────────────────────────────────────────
-const printDoc = () => {
+const printDoc = async () => {
   if (!docData.value || typeof window === "undefined") return;
+  // The edit view renders <textarea>s whose typed values aren't in the HTML —
+  // flip to the rendered document before snapshotting it.
+  if (docViewMode.value !== "rendered") {
+    docViewMode.value = "rendered";
+    await nextTick();
+  }
   const root = document.getElementById("lt-print-root");
   if (!root) return;
 
@@ -315,7 +381,9 @@ const printDoc = () => {
   <div>
     <!-- Header -->
     <div class="d-flex align-center gap-3 mb-6">
-      <v-icon size="36" color="green-darken-2">mdi-robot-excited-outline</v-icon>
+      <v-icon size="36" color="green-darken-2"
+        >mdi-robot-excited-outline</v-icon
+      >
       <div>
         <h2 class="text-h5 font-weight-bold">AI Teaching Assistant</h2>
         <p class="text-grey text-body-2">
@@ -368,7 +436,9 @@ const printDoc = () => {
               :key="i"
               class="mb-4"
               :class="
-                msg.role === 'user' ? 'd-flex justify-end' : 'd-flex justify-start'
+                msg.role === 'user'
+                  ? 'd-flex justify-end'
+                  : 'd-flex justify-start'
               "
             >
               <div v-if="msg.role === 'assistant'" class="mr-2 mt-1">
@@ -378,7 +448,9 @@ const printDoc = () => {
               </div>
 
               <v-card
-                :color="msg.role === 'user' ? 'green-darken-2' : 'grey-lighten-4'"
+                :color="
+                  msg.role === 'user' ? 'green-darken-2' : 'grey-lighten-4'
+                "
                 :class="msg.role === 'user' ? 'text-white' : ''"
                 rounded="lg"
                 elevation="0"
@@ -416,7 +488,12 @@ const printDoc = () => {
               <v-avatar size="28" color="green-darken-2">
                 <v-icon size="16" color="white">mdi-robot-outline</v-icon>
               </v-avatar>
-              <v-card color="grey-lighten-4" rounded="lg" elevation="0" class="pa-3">
+              <v-card
+                color="grey-lighten-4"
+                rounded="lg"
+                elevation="0"
+                class="pa-3"
+              >
                 <div class="d-flex align-center gap-1">
                   <v-progress-circular
                     indeterminate
@@ -481,7 +558,9 @@ const printDoc = () => {
               "
             >
               <v-icon>{{
-                chatViewMode === "rendered" ? "mdi-format-text" : "mdi-code-tags"
+                chatViewMode === "rendered"
+                  ? "mdi-format-text"
+                  : "mdi-code-tags"
               }}</v-icon>
             </v-btn>
           </div>
@@ -588,7 +667,9 @@ const printDoc = () => {
 
               <v-divider class="my-4" />
               <div class="d-flex align-center justify-space-between mb-2">
-                <p class="text-body-2 font-weight-bold mb-0">Recent Documents</p>
+                <p class="text-body-2 font-weight-bold mb-0">
+                  Recent Documents
+                </p>
                 <v-btn
                   icon
                   size="x-small"
@@ -606,11 +687,7 @@ const printDoc = () => {
               >
                 Your generated lesson notes and plans will appear here.
               </p>
-              <v-list
-                v-else
-                density="compact"
-                class="pa-0 doc-history-list"
-              >
+              <v-list v-else density="compact" class="pa-0 doc-history-list">
                 <v-list-item
                   v-for="doc in docHistory"
                   :key="doc.id"
@@ -637,9 +714,10 @@ const printDoc = () => {
                   <v-list-item-title class="text-body-2">{{
                     doc.title
                   }}</v-list-item-title>
-                  <v-list-item-subtitle class="text-caption">{{
-                    formatHistoryDate(doc.createdAt)
-                  }}</v-list-item-subtitle>
+                  <v-list-item-subtitle class="text-caption">
+                    {{ formatHistoryDate(doc.createdAt)
+                    }}<span v-if="doc.editedAt"> &middot; edited</span>
+                  </v-list-item-subtitle>
                 </v-list-item>
               </v-list>
             </v-card>
@@ -663,7 +741,12 @@ const printDoc = () => {
               </p>
             </div>
 
-            <v-card v-else-if="docLoading" rounded="lg" elevation="1" class="pa-4">
+            <v-card
+              v-else-if="docLoading"
+              rounded="lg"
+              elevation="1"
+              class="pa-4"
+            >
               <div class="d-flex align-center gap-2 mb-4">
                 <v-progress-circular
                   indeterminate
@@ -671,7 +754,9 @@ const printDoc = () => {
                   size="20"
                   width="2"
                 />
-                <span class="text-body-2 text-grey">Generating with Gemini…</span>
+                <span class="text-body-2 text-grey"
+                  >Generating with Gemini…</span
+                >
               </div>
               <v-skeleton-loader type="paragraph" class="mb-2" />
               <v-skeleton-loader type="paragraph" class="mb-2" />
@@ -682,9 +767,21 @@ const printDoc = () => {
               <div
                 class="d-flex align-center justify-space-between px-4 pt-3 pb-2 flex-wrap gap-2"
               >
-                <p class="text-body-2 font-weight-bold text-green-darken-2 mb-0">
-                  {{ docTitle }}
-                </p>
+                <div class="d-flex align-center gap-2 flex-wrap">
+                  <p
+                    class="text-body-2 font-weight-bold text-green-darken-2 mb-0"
+                  >
+                    {{ docTitle }}
+                  </p>
+                  <v-chip
+                    v-if="docEditedAt"
+                    size="x-small"
+                    variant="tonal"
+                    color="green-darken-2"
+                  >
+                    Edited {{ formatHistoryDate(docEditedAt) }}
+                  </v-chip>
+                </div>
                 <div class="d-flex gap-1 align-center">
                   <v-btn-toggle
                     v-model="docViewMode"
@@ -698,11 +795,25 @@ const printDoc = () => {
                       <v-icon size="16" class="mr-1">mdi-format-text</v-icon>
                       Preview
                     </v-btn>
+                    <v-btn value="edit" size="small">
+                      <v-icon size="16" class="mr-1">mdi-pencil-outline</v-icon>
+                      Edit
+                    </v-btn>
                     <v-btn value="raw" size="small">
                       <v-icon size="16" class="mr-1">mdi-code-tags</v-icon>
                       Raw
                     </v-btn>
                   </v-btn-toggle>
+                  <v-btn
+                    v-if="docEditedAt"
+                    size="small"
+                    variant="text"
+                    color="grey-darken-1"
+                    prepend-icon="mdi-restore"
+                    @click="revertDocEdits"
+                  >
+                    Revert to AI version
+                  </v-btn>
                   <v-btn
                     size="small"
                     variant="tonal"
@@ -716,8 +827,19 @@ const printDoc = () => {
               </div>
               <v-divider />
 
+              <v-alert
+                v-if="docViewMode === 'edit'"
+                type="info"
+                density="compact"
+                variant="tonal"
+                class="mx-4 mt-3 mb-0 text-caption"
+              >
+                Edits save automatically to this browser. Use Preview to see the
+                formatted result.
+              </v-alert>
+
               <div class="pa-4" style="max-height: 640px; overflow: auto">
-                <template v-if="docViewMode === 'rendered'">
+                <template v-if="docViewMode !== 'raw'">
                   <LessonPlanTemplate
                     v-if="docMode === 'lesson-plan'"
                     :data="docData"
@@ -725,6 +847,7 @@ const printDoc = () => {
                     :school="schoolName"
                     :level="docLevel"
                     :date="preparedDate"
+                    :editable="docViewMode === 'edit'"
                   />
                   <LessonNoteTemplate
                     v-else
@@ -733,12 +856,17 @@ const printDoc = () => {
                     :school="schoolName"
                     :level="docLevel"
                     :date="preparedDate"
+                    :editable="docViewMode === 'edit'"
                   />
                 </template>
                 <pre
                   v-else
                   class="text-body-2"
-                  style="white-space: pre-wrap; font-family: monospace; line-height: 1.6"
+                  style="
+                    white-space: pre-wrap;
+                    font-family: monospace;
+                    line-height: 1.6;
+                  "
                   >{{ JSON.stringify(docData, null, 2) }}</pre
                 >
               </div>
