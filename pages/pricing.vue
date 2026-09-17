@@ -78,6 +78,8 @@ const setBand = (b) => {
 
 /* ───────────────────────── Payment / sign-up handoff ───────────────────────── */
 const router = useRouter();
+const route = useRoute();
+const showMpapUpsell = computed(() => route.query.feature === "mpap");
 
 // School plan is a paid, configurable plan — send the shopper to the
 // dedicated checkout page (where Paystack is wired up) with their choices.
@@ -108,6 +110,7 @@ const startIndividual = () => {
 /* ───────────────────────── Comparison table ───────────────────────── */
 const comparisonRows = [
   { feature: "Premium lesson resources", individual: true, school: true, ngo: true },
+  { feature: "MPAP — Maths Practical Application Package (Grades 7–9)", individual: true, school: true, ngo: true },
   { feature: "Assessment generator", individual: true, school: true, ngo: true },
   { feature: "AI teaching assistant", individual: true, school: true, ngo: true },
   { feature: "Curriculum navigator", individual: true, school: true, ngo: true },
