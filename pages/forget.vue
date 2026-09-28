@@ -43,7 +43,7 @@ const resetPassword = async () => {
 };
 
 const backLogin = () => {
-    router.push('/auth');
+    router.push('/login');
 };
 </script>
 <template>

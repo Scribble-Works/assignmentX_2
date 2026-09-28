@@ -65,17 +65,14 @@ const signUp = async () => {
       return;
     }
 
-    // Check if user already exists
-    // const userExists = await checkUserExists(email.value);
-    // if (userExists) {
-    //   alert.value = true;
-    //   text.value =
-    //     "This email is already registered. Please try logging in instead.";
-    //   setTimeout(() => {
-    //     router.push("/login");
-    //   }, 2000);
-    //   return;
-    // }
+    // Check if user already exists before signing up
+    const userExists = await checkUserExists(email.value);
+    if (userExists) {
+      alert.value = true;
+      text.value =
+        "This email is already registered. Please log in instead.";
+      return;
+    }
 
     const { data: signUpData, error } = await auth.signUp({
       email: email.value,
