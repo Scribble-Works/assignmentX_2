@@ -11,7 +11,7 @@ const { data: workbook } = await client
   .select()
   .eq("id", id);
 const { data: strand1 } = await client
-  .from("book1_strands")
+  .from("book3_strands")
   .select()
   .eq("id", id);
 const substrand_ref = strand1[0].substrand_ref;
