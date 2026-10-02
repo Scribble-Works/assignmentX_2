@@ -19,30 +19,38 @@ const resetPassword = async () => {
         alert.value = true;
         return;
     }
+    if (loading.value) return; // guard against double-submit queuing duplicate emails
     loading.value = true;
     try {
-        const { data, error } = await auth.resetPasswordForEmail(email.value, {
-            redirectTo: window.location.origin + '/newpassword',
-        });
-        console.log('resetPasswordForEmail result:', data, error);
+        // `redirectTo` is REQUIRED. Without it Supabase builds the emailed link against
+        // the project's default Site URL, so the user lands on the home page instead of
+        // the page that can actually set a new password.
+        const { data, error } = await auth.resetPasswordForEmail(
+            email.value.trim().toLowerCase(),
+            { redirectTo: `${window.location.origin}/newpassword` }
+        );
         if (error) {
-            console.error('Password reset error:', error);
             text.value = error.message || 'An error occurred. Please try again later.';
             alert.value = true;
+            console.error('[forget] resetPasswordForEmail failed:', error);
         } else {
-            text.value = 'Password reset email sent! Please check your inbox (and spam folder).';
+            text.value =
+                'Password reset email sent. Please check your inbox — and your Spam/Junk folder, '
+                + 'since the message can be filtered there. The link is valid for one hour and '
+                + 'must be opened in this same browser.';
             alert.value = true;
         }
     } catch (error) {
-        console.error('Password reset exception:', error);
         text.value = error.message || 'An error occurred. Please try again later.';
         alert.value = true;
+        console.error('[forget] resetPasswordForEmail threw:', error);
     } finally {
         loading.value = false;
     }
 };
 
 const backLogin = () => {
+    // '/auth' is a LAYOUT name, not a route — pushing it 404s. The login page is '/login'.
     router.push('/login');
 };
 </script>
@@ -60,7 +68,8 @@ const backLogin = () => {
                                 <v-label>Email</v-label>
                                 <v-text-field variant="outlined" v-model="email" type="email"
                                     placeholder="Enter your email" required></v-text-field>
-                                <v-btn :loading="loading" :disabled="loading" color="grey-darken-3" style="width: 100%;" type="submit">Reset
+                                <v-btn color="grey-darken-3" style="width: 100%;" type="submit" :loading="loading"
+                                    :disabled="loading">Reset
                                     Password</v-btn><br>
                                 <v-btn @click="backLogin" class="mt-5" style="width: 100%;" variant="plain"><v-icon
                                         style="font-size: 2.5em; color: black;">mdi-keyboard-backspace</v-icon> Back to
