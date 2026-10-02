@@ -37,6 +37,7 @@ const allNavItems = [
     value: "/facilitator-resources/bece-past-questions/",
   },
   { label: "Live Sessions", value: "/facilitator-resources/live-sessions" },
+  { label: "MPAP (Premium)", value: "/mpap" },
 ];
 
 const studentNavItems = [

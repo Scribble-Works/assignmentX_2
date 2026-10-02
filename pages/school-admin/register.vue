@@ -166,7 +166,16 @@ const signUp = async () => {
         "School account created successfully! Please check your email for confirmation.";
 
       setTimeout(() => {
-        router.push("/school-admin/dashboard");
+        router.push({
+          path: "/thank-you",
+          query: {
+            plan: paidPlan.value,
+            teachers: paidTeachers.value,
+            billing: paidBilling.value,
+            amount: paidAmount.value,
+            reference: paidReference.value,
+          },
+        });
       }, 2000);
     }
 

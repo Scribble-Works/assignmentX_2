@@ -17,6 +17,7 @@ useHead({
 
 const router = useRouter();
 const route = useRoute();
+const user = useSupabaseUser();
 
 /* ───────────────────────── Plan handed off from the pricing page ───────────────────────── */
 const plan = computed(() => (typeof route.query.plan === "string" ? route.query.plan : "school"));
@@ -73,19 +74,35 @@ const renewalDate = computed(() => {
 const email = ref("");
 
 const onPaymentSuccess = async (response) => {
-  // Hand off to school registration, carrying plan context so the
-  // admin account is created already associated with the paid plan.
-  await router.push({
-    path: "/school-admin/register",
-    query: {
-      plan: plan.value,
-      teachers: String(teachers.value),
-      billing: billingCycle.value,
-      amount: String(total.value),
-      reference: response?.reference || "",
-      email: email.value || "",
-    },
-  });
+  const reference = response?.reference || "";
+  const details = {
+    plan: plan.value,
+    teachers: String(teachers.value),
+    billing: billingCycle.value,
+    amount: String(total.value),
+    reference,
+    email: email.value || "",
+  };
+
+  // Already signed in → their account exists, so skip the signup form.
+  // Grant access (best-effort) and send them straight to the thank-you page.
+  if (user.value?.id) {
+    try {
+      await $fetch("/api/mpap/grant", {
+        method: "POST",
+        body: { userId: user.value.id, reference, source: "school_plan" },
+      });
+    } catch (e) {
+      // Non-blocking: don't hold up the confirmation if the grant fails.
+      console.error("Entitlement grant failed:", e);
+    }
+    await router.push({ path: "/thank-you", query: details });
+    return;
+  }
+
+  // Not signed in → create the school admin account first, carrying plan
+  // context. The register page routes on to /thank-you when it finishes.
+  await router.push({ path: "/school-admin/register", query: details });
 };
 </script>
 

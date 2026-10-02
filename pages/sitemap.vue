@@ -48,7 +48,7 @@
             </li>
             <li>
               <NuxtLink
-                to="/resources"
+                to="/facilitator-resources"
                 class="text-blue-600 hover:text-blue-800 transition flex items-center"
               >
                 <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
@@ -57,11 +57,11 @@
             </li>
             <li>
               <NuxtLink
-                to="/workbook"
+                to="/learning-modules"
                 class="text-blue-600 hover:text-blue-800 transition flex items-center"
               >
                 <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
-                Workbook
+                Learning Modules
               </NuxtLink>
             </li>
           </ul>
@@ -77,7 +77,7 @@
           <ul class="space-y-3">
             <li>
               <NuxtLink
-                to="/auth"
+                to="/login"
                 class="text-blue-600 hover:text-blue-800 transition flex items-center"
               >
                 <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
@@ -86,7 +86,7 @@
             </li>
             <li>
               <NuxtLink
-                to="/register"
+                to="/sign-up"
                 class="text-blue-600 hover:text-blue-800 transition flex items-center"
               >
                 <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
@@ -124,7 +124,7 @@
           <ul class="space-y-3">
             <li>
               <NuxtLink
-                to="/edit-profile"
+                :to="authLink('/edit-profile')"
                 class="text-blue-600 hover:text-blue-800 transition flex items-center"
               >
                 <span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
@@ -133,7 +133,7 @@
             </li>
             <li>
               <NuxtLink
-                to="/editprofile"
+                :to="authLink('/editprofile')"
                 class="text-blue-600 hover:text-blue-800 transition flex items-center"
               >
                 <span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
@@ -142,7 +142,7 @@
             </li>
             <li>
               <NuxtLink
-                to="/bio"
+                :to="authLink('/bio')"
                 class="text-blue-600 hover:text-blue-800 transition flex items-center"
               >
                 <span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
@@ -151,7 +151,7 @@
             </li>
             <li>
               <NuxtLink
-                to="/bookmarks"
+                :to="authLink('/bookmarks')"
                 class="text-blue-600 hover:text-blue-800 transition flex items-center"
               >
                 <span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
@@ -160,7 +160,7 @@
             </li>
             <li>
               <NuxtLink
-                to="/progress"
+                :to="authLink('/progress')"
                 class="text-blue-600 hover:text-blue-800 transition flex items-center"
               >
                 <span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
@@ -169,7 +169,7 @@
             </li>
             <li>
               <NuxtLink
-                to="/completed"
+                :to="authLink('/completed')"
                 class="text-blue-600 hover:text-blue-800 transition flex items-center"
               >
                 <span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
@@ -189,7 +189,7 @@
           <ul class="space-y-3">
             <li>
               <NuxtLink
-                to="/onboarding1"
+                :to="authLink('/onboarding')"
                 class="text-blue-600 hover:text-blue-800 transition flex items-center"
               >
                 <span class="w-2 h-2 bg-orange-500 rounded-full mr-3"></span>
@@ -198,7 +198,7 @@
             </li>
             <li>
               <NuxtLink
-                to="/role"
+                :to="authLink('/role')"
                 class="text-blue-600 hover:text-blue-800 transition flex items-center"
               >
                 <span class="w-2 h-2 bg-orange-500 rounded-full mr-3"></span>
@@ -207,7 +207,7 @@
             </li>
             <li>
               <NuxtLink
-                to="/location"
+                :to="authLink('/location')"
                 class="text-blue-600 hover:text-blue-800 transition flex items-center"
               >
                 <span class="w-2 h-2 bg-orange-500 rounded-full mr-3"></span>
@@ -227,7 +227,7 @@
           <ul class="space-y-3">
             <li>
               <NuxtLink
-                to="/individualtopic"
+                :to="authLink('/individual')"
                 class="text-blue-600 hover:text-blue-800 transition flex items-center"
               >
                 <span class="w-2 h-2 bg-indigo-500 rounded-full mr-3"></span>
@@ -236,20 +236,11 @@
             </li>
             <li>
               <NuxtLink
-                to="/livesession"
+                :to="authLink('/livesession')"
                 class="text-blue-600 hover:text-blue-800 transition flex items-center"
               >
                 <span class="w-2 h-2 bg-indigo-500 rounded-full mr-3"></span>
                 Live Sessions
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink
-                to="/preview"
-                class="text-blue-600 hover:text-blue-800 transition flex items-center"
-              >
-                <span class="w-2 h-2 bg-indigo-500 rounded-full mr-3"></span>
-                Preview
               </NuxtLink>
             </li>
           </ul>
@@ -322,24 +313,57 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h3 class="text-lg font-medium text-gray-700 mb-3">
-              Individual Topics
+              Learning Modules Structure
             </h3>
             <ul class="space-y-2 text-sm text-gray-600">
-              <li>/individualtopic/[id] - Specific topic pages</li>
-              <li>/individualtopic/[id]/index - Topic index pages</li>
+              <li>
+                /learning-modules/[module] - Module pages
+                (assignment_workbook1–3, preassignment_workbook1–3)
+              </li>
+              <li>/learning-modules/[module]/strand-[id] - Strand pages</li>
+              <li>
+                /learning-modules/[module]/strand-[id]/substrand-[route] -
+                Substrand pages
+              </li>
+              <li>
+                /learning-modules/[module]/strand-[id]/substrand-[route]/[id] -
+                Substrand content
+              </li>
+              <li>
+                /learning-modules/[module]/strand-[id]/substrand-[route]/quiz/[contentId]
+                - Quizzes and problem sets
+              </li>
             </ul>
           </div>
           <div>
             <h3 class="text-lg font-medium text-gray-700 mb-3">
-              Workbook Structure
+              Facilitator Resources
             </h3>
             <ul class="space-y-2 text-sm text-gray-600">
-              <li>/workbook/workbook1/strand-[id] - Strand pages</li>
               <li>
-                /workbook/workbook1/strand-[id]/substrand-[route]/[id] -
-                Substrand content
+                /facilitator-resources/curriculum/[route] - Curriculum pages
               </li>
-              <li>/workbookdetail/[name] - Detailed workbook pages</li>
+              <li>
+                /facilitator-resources/bece-past-questions/[route] - BECE past
+                question papers
+              </li>
+              <li>
+                /facilitator-resources/worksheets/[route] - Worksheet
+                collections
+              </li>
+              <li>
+                /facilitator-resources/worksheets/[route]/[slug] - Individual
+                worksheets
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-medium text-gray-700 mb-3">
+              MPAP Premium
+            </h3>
+            <ul class="space-y-2 text-sm text-gray-600">
+              <li>/mpap/grade-[grade] - Grade pages</li>
+              <li>/mpap/lesson-[id] - Lesson pages</li>
             </ul>
           </div>
         </div>
@@ -354,7 +378,7 @@
         </h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
           <div class="bg-blue-50 p-4 rounded-lg">
-            <div class="text-2xl font-bold text-blue-600">25+</div>
+            <div class="text-2xl font-bold text-blue-600">85</div>
             <div class="text-sm text-gray-600">Total Pages</div>
           </div>
           <div class="bg-green-50 p-4 rounded-lg">
@@ -362,11 +386,11 @@
             <div class="text-sm text-gray-600">Main Categories</div>
           </div>
           <div class="bg-purple-50 p-4 rounded-lg">
-            <div class="text-2xl font-bold text-purple-600">8</div>
+            <div class="text-2xl font-bold text-purple-600">11</div>
             <div class="text-sm text-gray-600">Dynamic Routes</div>
           </div>
           <div class="bg-orange-50 p-4 rounded-lg">
-            <div class="text-2xl font-bold text-orange-600">3</div>
+            <div class="text-2xl font-bold text-orange-600">4</div>
             <div class="text-sm text-gray-600">Layouts</div>
           </div>
         </div>
@@ -376,6 +400,12 @@
 </template>
 
 <script setup>
+// Pages that need a signed-in user send visitors to login first; login.vue
+// honours ?redirect= and returns them to the page they picked.
+const user = useSupabaseUser();
+const authLink = (path) =>
+  user.value ? path : { path: "/login", query: { redirect: path } };
+
 definePageMeta({
   layout: "default",
 });

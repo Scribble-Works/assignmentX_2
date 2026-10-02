@@ -1,4 +1,5 @@
 <script setup>
+import { onMounted } from 'vue';
 definePageMeta({
     layout: 'auth',
 });
@@ -8,6 +9,8 @@ const router = useRouter();
 
 const alert = ref(false);
 const passwordText = ref('');
+const loading = ref(false);
+const readyToReset = ref(false);
 
 const newPassword = ref('');
 
@@ -16,7 +19,33 @@ const confirmNewPassword = ref('');
 const backLogin = () => {
     router.push('/auth');
 };
+
+// Wait for the Supabase client to finish processing the magic-link token
+// from the URL (e.g. /newpassword?token=...&type=recovery) before we allow
+// the user to submit a new password. Until the session is detected, the
+// "Create New Password" button stays disabled.
+const init = async () => {
+    // Give the auth plugin a moment to read the token from the search params
+    // and establish the session.
+    for (let i = 0; i < 20; i++) {
+        await new Promise((r) => setTimeout(r, 300));
+        if (user.value) {
+            readyToReset.value = true;
+            return;
+        }
+    }
+    // Fallback: try a direct check after the loop.
+    readyToReset.value = !!user.value;
+};
+
+onMounted(init);
+
 const resetPassword = async () => {
+    if (!readyToReset.value) {
+        passwordText.value = 'Please wait while we verify your reset link…';
+        alert.value = true;
+        return;
+    }
     if (newPassword.value !== confirmNewPassword.value) {
         passwordText.value = 'Passwords do not match';
         alert.value = true;
@@ -27,9 +56,10 @@ const resetPassword = async () => {
         alert.value = true;
         return;
     }
+    loading.value = true;
     try {
         const { error } = await auth.updateUser({
-            password: newPassword.value
+            password: newPassword.value,
         });
         if (error) {
             passwordText.value = 'An error occurred. Please try again later.';
@@ -44,6 +74,8 @@ const resetPassword = async () => {
         passwordText.value = 'An error occurred. Please try again later.';
         alert.value = true;
         console.error(error);
+    } finally {
+        loading.value = false;
     }
 };
 
@@ -74,7 +106,7 @@ const rules = {
                                 @click:append-inner="show = !show" :rules="[rules.required, rules.min]"
                                 :type="show ? 'text' : 'password'" v-model="confirmNewPassword"></v-text-field>
                             <br>
-                            <v-btn style="width: 100%;" color="grey-darken-3" type="submit">Create New
+                            <v-btn :loading="loading" :disabled="!readyToReset || loading" style="width: 100%;" color="grey-darken-3" type="submit">Create New
                                 Password</v-btn><br>
                             <v-btn @click="backLogin" class="mt-5" style="width: 100%;" variant="plain"><v-icon
                                     style="font-size: 2.5em; color: black;">mdi-keyboard-backspace</v-icon> Back to

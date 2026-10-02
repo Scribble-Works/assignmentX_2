@@ -231,9 +231,20 @@ onMounted(async () => {
           {{ school?.name || "School" }}
         </p>
       </div>
-      <v-btn variant="tonal" color="blue-darken-1" @click="loadDashboard">
-        Refresh
-      </v-btn>
+      <div class="d-flex ga-2">
+        <NuxtLink
+          v-if="canManageTeachers"
+          to="/school-admin/dashboard/mpap-tracker"
+          class="text-decoration-none"
+        >
+          <v-btn variant="tonal" color="indigo" prepend-icon="mdi-chart-box-outline">
+            MPAP Facilitator Tracker
+          </v-btn>
+        </NuxtLink>
+        <v-btn variant="tonal" color="blue-darken-1" @click="loadDashboard">
+          Refresh
+        </v-btn>
+      </div>
     </div>
 
     <v-alert

@@ -10,6 +10,7 @@ const router = useRouter();
 const email = ref('');
 const alert = ref(false);
 const text = ref('');
+const loading = ref(false);
 const resetPassword = async () => {
     // Simple email validation
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -18,27 +19,31 @@ const resetPassword = async () => {
         alert.value = true;
         return;
     }
+    loading.value = true;
     try {
-        const { data, error } = await auth.resetPasswordForEmail(email.value);
-        console.log(data);
+        const { data, error } = await auth.resetPasswordForEmail(email.value, {
+            redirectTo: window.location.origin + '/newpassword',
+        });
+        console.log('resetPasswordForEmail result:', data, error);
         if (error) {
+            console.error('Password reset error:', error);
             text.value = error.message || 'An error occurred. Please try again later.';
             alert.value = true;
-            console.error(error);
         } else {
-            text.value = 'Password reset email sent! Please check your inbox.';
+            text.value = 'Password reset email sent! Please check your inbox (and spam folder).';
             alert.value = true;
-            // router.push('/auth');
         }
     } catch (error) {
+        console.error('Password reset exception:', error);
         text.value = error.message || 'An error occurred. Please try again later.';
         alert.value = true;
-        console.error(error);
+    } finally {
+        loading.value = false;
     }
 };
 
 const backLogin = () => {
-    router.push('/auth');
+    router.push('/login');
 };
 </script>
 <template>
@@ -55,7 +60,7 @@ const backLogin = () => {
                                 <v-label>Email</v-label>
                                 <v-text-field variant="outlined" v-model="email" type="email"
                                     placeholder="Enter your email" required></v-text-field>
-                                <v-btn color="grey-darken-3" style="width: 100%;" type="submit">Reset
+                                <v-btn :loading="loading" :disabled="loading" color="grey-darken-3" style="width: 100%;" type="submit">Reset
                                     Password</v-btn><br>
                                 <v-btn @click="backLogin" class="mt-5" style="width: 100%;" variant="plain"><v-icon
                                         style="font-size: 2.5em; color: black;">mdi-keyboard-backspace</v-icon> Back to
