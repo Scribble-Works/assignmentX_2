@@ -33,12 +33,19 @@ export default defineNuxtPlugin({
 
     const isRecoveryUrl = () => {
       const h = hashParams();
-      if (h.get("type") === "recovery" && h.get("access_token")) return true;
       const q = new URLSearchParams(window.location.search);
+      if (h.get("type") === "recovery" && h.get("access_token")) return true;
       if (q.get("type") === "recovery" && (q.get("token_hash") || q.get("token"))) return true;
-      // An expired/invalid recovery link reports itself via error params.
-      if (h.get("error_code") || h.get("error_description")) {
-        return h.get("error_description")?.toLowerCase().includes("link") ?? false;
+      if (q.get("code")) return true;
+      // An expired/invalid recovery link reports itself via error params, which can
+      // arrive in EITHER the hash (implicit) or the query string (PKCE). Forward
+      // those too, so /newpassword can explain the failure and offer a new link
+      // instead of dumping the user on the home page with no feedback.
+      const errCode = h.get("error_code") || q.get("error_code");
+      const errDesc = h.get("error_description") || q.get("error_description");
+      if (errCode || errDesc) {
+        const blob = `${errCode ?? ""} ${errDesc ?? ""}`.toLowerCase();
+        return blob.includes("link") || blob.includes("otp") || blob.includes("expired");
       }
       return false;
     };

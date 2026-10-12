@@ -55,45 +55,63 @@ const scrubUrl = () => {
 
 let unsubscribe = null;
 
+const EXPIRED_MESSAGE =
+    'This reset link is no longer valid. Reset links can only be opened once, and some '
+    + 'email providers (Outlook/Microsoft Safe Links, corporate scanners, antivirus link '
+    + 'checking) silently open them first, which uses the link up before you click it. '
+    + 'Request a new link below and open it as soon as it arrives.';
+
+const NO_TOKEN_MESSAGE =
+    'We could not find a reset token in this link. Please request a new password reset '
+    + 'email and open the link directly from your inbox in this same browser.';
+
+/**
+ * A recovery token is SINGLE-USE. Exchanging it twice makes the second attempt
+ * fail with `otp_expired`, so the exchange must run exactly once per page load —
+ * a double mount, an HMR re-run or a re-entrant call would otherwise burn a
+ * perfectly good token and show the user an "expired" error.
+ */
+let exchangeStarted = false;
+
+const markReady = () => {
+    status.value = 'ready';
+    scrubUrl();
+};
+
+/**
+ * Never downgrade a live session back to 'invalid'. `onAuthStateChange` and the
+ * explicit exchange below race each other; whichever loses must not stomp the
+ * winner, or a successful recovery renders as an expired link.
+ */
+const markInvalid = (message) => {
+    if (status.value === 'ready') return;
+    status.value = 'invalid';
+    statusMessage.value = message;
+};
+
+const hasSession = async () => {
+    const { data } = await auth.getSession();
+    return !!data?.session;
+};
+
 const establishSession = async () => {
+    if (exchangeStarted) return;
+    exchangeStarted = true;
+
     const q = route.query;
     const hash = parseHash();
 
-    // 0. Supabase reports a rejected link via error params on the redirect.
-    const errCode = q.error_code || hash.error_code;
-    const errDesc = q.error_description || hash.error_description;
-    if (errCode || errDesc) {
-        status.value = 'invalid';
-        statusMessage.value = decodeURIComponent(
-            String(errDesc || errCode).replace(/\+/g, ' ')
-        );
-        return;
-    }
-
     // 1. The Nuxt Supabase plugin may already have consumed the token
     //    (detectSessionInUrl is on in the browser). Cheapest path first.
-    const { data: existing } = await auth.getSession();
-    if (existing?.session) {
-        status.value = 'ready';
-        scrubUrl();
+    if (await hasSession()) {
+        markReady();
         return;
     }
 
-    // 2. PKCE flow: ?code=<uuid> must be exchanged for a session. This only
-    //    succeeds in the SAME browser that requested the reset, because the
-    //    code_verifier lives in that browser's storage.
-    if (q.code) {
-        const { error } = await auth.exchangeCodeForSession(String(q.code));
-        if (!error) {
-            status.value = 'ready';
-            scrubUrl();
-            return;
-        }
-        console.error('[newpassword] exchangeCodeForSession failed:', error);
-    }
-
-    // 3. token_hash flow (?token_hash=...&type=recovery). Works in any browser,
-    //    so it is the reliable fallback when the user opens the mail elsewhere.
+    // 2. token_hash flow (?token_hash=...&type=recovery). Tried FIRST because the
+    //    token is only spent when this code calls verifyOtp — nothing is consumed
+    //    by merely loading the page, so a scanner that prefetches the link cannot
+    //    burn it. This is the shape the email template should use.
     const tokenHash = q.token_hash || q.token;
     if (tokenHash) {
         const { error } = await auth.verifyOtp({
@@ -101,11 +119,22 @@ const establishSession = async () => {
             token_hash: String(tokenHash),
         });
         if (!error) {
-            status.value = 'ready';
-            scrubUrl();
+            markReady();
             return;
         }
         console.error('[newpassword] verifyOtp failed:', error);
+    }
+
+    // 3. PKCE flow: ?code=<uuid> must be exchanged for a session. This only
+    //    succeeds in the SAME browser that requested the reset, because the
+    //    code_verifier lives in that browser's storage.
+    if (q.code) {
+        const { error } = await auth.exchangeCodeForSession(String(q.code));
+        if (!error) {
+            markReady();
+            return;
+        }
+        console.error('[newpassword] exchangeCodeForSession failed:', error);
     }
 
     // 4. Implicit flow: tokens arrive in the hash fragment.
@@ -115,35 +144,43 @@ const establishSession = async () => {
             refresh_token: hash.refresh_token,
         });
         if (!error) {
-            status.value = 'ready';
-            scrubUrl();
+            markReady();
             return;
         }
         console.error('[newpassword] setSession failed:', error);
     }
 
-    // 5. Last resort: the plugin can finish its own exchange a tick after mount.
+    // 5. Supabase reports a rejected link via error params on the redirect. These
+    //    are only trusted AFTER every real exchange path has failed: a scanner can
+    //    burn the redirect link (producing otp_expired here) while a token_hash in
+    //    the same URL is still perfectly usable.
+    const errCode = q.error_code || hash.error_code;
+    const errDesc = q.error_description || hash.error_description;
+    if (errCode || errDesc) {
+        const raw = decodeURIComponent(String(errDesc || errCode).replace(/\+/g, ' '));
+        console.error('[newpassword] link rejected by Supabase:', errCode, raw);
+        markInvalid(/expired|invalid/i.test(raw) ? EXPIRED_MESSAGE : raw);
+        return;
+    }
+
+    // 6. Last resort: the plugin can finish its own exchange a tick after mount.
     //    Poll briefly instead of declaring failure immediately.
     for (let i = 0; i < 20; i++) {
         await new Promise((r) => setTimeout(r, 300));
-        if (user.value) {
-            status.value = 'ready';
-            scrubUrl();
+        if (user.value || (await hasSession())) {
+            markReady();
             return;
         }
     }
 
-    status.value = 'invalid';
-    statusMessage.value =
-        'This password reset link is invalid, expired, or has already been used. '
-        + 'Reset links last one hour and work only once. Please request a new one.';
+    markInvalid(NO_TOKEN_MESSAGE);
 };
 
 onMounted(() => {
     // Supabase fires PASSWORD_RECOVERY once it consumes a recovery token.
     const { data } = auth.onAuthStateChange((event, session) => {
         if ((event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') && session) {
-            status.value = 'ready';
+            markReady();
         }
     });
     unsubscribe = data?.subscription;

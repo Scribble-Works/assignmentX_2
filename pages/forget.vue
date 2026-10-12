@@ -36,8 +36,8 @@ const resetPassword = async () => {
         } else {
             text.value =
                 'Password reset email sent. Please check your inbox — and your Spam/Junk folder, '
-                + 'since the message can be filtered there. The link is valid for one hour and '
-                + 'must be opened in this same browser.';
+                + 'since the message can be filtered there. Open the link as soon as it arrives: '
+                + 'it expires after one hour and can only be opened once.';
             alert.value = true;
         }
     } catch (error) {
