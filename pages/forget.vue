@@ -4,8 +4,8 @@ const mobile = useMediaQuery('(max-width: 600px)');
 definePageMeta({
     layout: 'auth',
 });
-const { auth } = useSupabaseClient();
-const user = useSupabaseUser();
+// NOTE: the Supabase client is deliberately NOT used to send the recovery mail —
+// see the comment in resetPassword() for why the REST endpoint is called directly.
 const router = useRouter();
 const email = ref('');
 const alert = ref(false);
@@ -25,10 +25,42 @@ const resetPassword = async () => {
         // `redirectTo` is REQUIRED. Without it Supabase builds the emailed link against
         // the project's default Site URL, so the user lands on the home page instead of
         // the page that can actually set a new password.
-        const { data, error } = await auth.resetPasswordForEmail(
-            email.value.trim().toLowerCase(),
-            { redirectTo: `${window.location.origin}/newpassword` }
+        //
+        // The recovery request is sent WITHOUT a PKCE code_challenge on purpose.
+        // @supabase/ssr's createBrowserClient hardcodes `flowType: 'pkce'` (it is applied
+        // after the caller's auth options, so it cannot be overridden), which makes
+        // resetPasswordForEmail attach a code_challenge and send a `?code=` link. That
+        // code can ONLY be exchanged in the browser that requested it, because the
+        // code_verifier lives in that browser's storage. Users routinely open the email
+        // on a phone or in a webmail/in-app viewer, where there is no verifier — the
+        // exchange then fails with "both auth code and code verifier should be non-empty"
+        // and the reset page has no usable token at all.
+        //
+        // Calling /auth/v1/recover directly with no code_challenge yields the implicit
+        // shape (#access_token&refresh_token), which `setSession` accepts on ANY device.
+        const targetEmail = email.value.trim().toLowerCase();
+        const redirectTo = `${window.location.origin}/newpassword`;
+        const { public: { supabase: supabaseConfig } } = useRuntimeConfig();
+
+        const response = await fetch(
+            `${supabaseConfig.url}/auth/v1/recover?redirect_to=${encodeURIComponent(redirectTo)}`,
+            {
+                method: 'POST',
+                headers: {
+                    apikey: supabaseConfig.key,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: targetEmail }),
+            }
         );
+
+        // Supabase deliberately returns 200 for unknown addresses (anti-enumeration),
+        // so a success here does not confirm the account exists.
+        let error = null;
+        if (!response.ok) {
+            const body = await response.json().catch(() => ({}));
+            error = new Error(body.msg || body.error_description || `Request failed (${response.status})`);
+        }
         if (error) {
             text.value = error.message || 'An error occurred. Please try again later.';
             alert.value = true;

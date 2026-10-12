@@ -65,6 +65,11 @@ const NO_TOKEN_MESSAGE =
     'We could not find a reset token in this link. Please request a new password reset '
     + 'email and open the link directly from your inbox in this same browser.';
 
+const SAME_BROWSER_MESSAGE =
+    'This reset link was issued to a different browser or device, so it cannot be used here. '
+    + 'Request a new link below and open it on THIS device — or request it from the same '
+    + 'browser you plan to open the email in.';
+
 /**
  * A recovery token is SINGLE-USE. Exchanging it twice makes the second attempt
  * fail with `otp_expired`, so the exchange must run exactly once per page load —
@@ -127,7 +132,9 @@ const establishSession = async () => {
 
     // 3. PKCE flow: ?code=<uuid> must be exchanged for a session. This only
     //    succeeds in the SAME browser that requested the reset, because the
-    //    code_verifier lives in that browser's storage.
+    //    code_verifier lives in that browser's storage. /forget now requests the
+    //    implicit flow precisely to avoid this, but a link from an older email
+    //    (or another client) can still arrive in this shape.
     if (q.code) {
         const { error } = await auth.exchangeCodeForSession(String(q.code));
         if (!error) {
@@ -135,6 +142,13 @@ const establishSession = async () => {
             return;
         }
         console.error('[newpassword] exchangeCodeForSession failed:', error);
+        // A missing code_verifier is not a corrupt link — it means the email was
+        // opened somewhere other than the browser that asked for the reset. Say
+        // that, instead of the generic "no token found" dead end.
+        if (/code verifier|code_verifier/i.test(error.message || '')) {
+            markInvalid(SAME_BROWSER_MESSAGE);
+            return;
+        }
     }
 
     // 4. Implicit flow: tokens arrive in the hash fragment.
