@@ -1,75 +1,51 @@
 <script setup>
 import { useMediaQuery } from '@vueuse/core';
-const mobile = useMediaQuery('(max-width: 600px)');
+
 definePageMeta({
     layout: 'auth',
 });
-// NOTE: the Supabase client is deliberately NOT used to send the recovery mail —
-// see the comment in resetPassword() for why the REST endpoint is called directly.
+
+const mobile = useMediaQuery('(max-width: 600px)');
 const router = useRouter();
+const { auth } = useSupabaseClient();
+
 const email = ref('');
 const alert = ref(false);
 const text = ref('');
 const loading = ref(false);
+const emailSent = ref(false);
+
+const rules = {
+    required: (v) => !!v || 'Email is required',
+    email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) || 'Please enter a valid email address',
+};
+
 const resetPassword = async () => {
-    // Simple email validation
+    // Validate email
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.value || !emailPattern.test(email.value)) {
         text.value = 'Please enter a valid email address.';
         alert.value = true;
         return;
     }
-    if (loading.value) return; // guard against double-submit queuing duplicate emails
+
+    if (loading.value) return;
     loading.value = true;
+
     try {
-        // `redirectTo` is REQUIRED. Without it Supabase builds the emailed link against
-        // the project's default Site URL, so the user lands on the home page instead of
-        // the page that can actually set a new password.
-        //
-        // The recovery request is sent WITHOUT a PKCE code_challenge on purpose.
-        // @supabase/ssr's createBrowserClient hardcodes `flowType: 'pkce'` (it is applied
-        // after the caller's auth options, so it cannot be overridden), which makes
-        // resetPasswordForEmail attach a code_challenge and send a `?code=` link. That
-        // code can ONLY be exchanged in the browser that requested it, because the
-        // code_verifier lives in that browser's storage. Users routinely open the email
-        // on a phone or in a webmail/in-app viewer, where there is no verifier — the
-        // exchange then fails with "both auth code and code verifier should be non-empty"
-        // and the reset page has no usable token at all.
-        //
-        // Calling /auth/v1/recover directly with no code_challenge yields the implicit
-        // shape (#access_token&refresh_token), which `setSession` accepts on ANY device.
-        const targetEmail = email.value.trim().toLowerCase();
-        const redirectTo = `${window.location.origin}/newpassword`;
-        const { public: { supabase: supabaseConfig } } = useRuntimeConfig();
+        const redirectUrl = `${window.location.origin}/newpassword`;
+        
+        const { error } = await auth.resetPasswordForEmail(email.value.trim().toLowerCase(), {
+            redirectTo: redirectUrl,
+        });
 
-        const response = await fetch(
-            `${supabaseConfig.url}/auth/v1/recover?redirect_to=${encodeURIComponent(redirectTo)}`,
-            {
-                method: 'POST',
-                headers: {
-                    apikey: supabaseConfig.key,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email: targetEmail }),
-            }
-        );
-
-        // Supabase deliberately returns 200 for unknown addresses (anti-enumeration),
-        // so a success here does not confirm the account exists.
-        let error = null;
-        if (!response.ok) {
-            const body = await response.json().catch(() => ({}));
-            error = new Error(body.msg || body.error_description || `Request failed (${response.status})`);
-        }
         if (error) {
             text.value = error.message || 'An error occurred. Please try again later.';
             alert.value = true;
             console.error('[forget] resetPasswordForEmail failed:', error);
         } else {
-            text.value =
-                'Password reset email sent. Please check your inbox — and your Spam/Junk folder, '
-                + 'since the message can be filtered there. Open the link as soon as it arrives: '
-                + 'it expires after one hour and can only be opened once.';
+            emailSent.value = true;
+            text.value = 'Password reset email sent! Please check your inbox (and spam/junk folder). The link expires in 1 hour.';
             alert.value = true;
         }
     } catch (error) {
@@ -82,39 +58,90 @@ const resetPassword = async () => {
 };
 
 const backLogin = () => {
-    // '/auth' is a LAYOUT name, not a route — pushing it 404s. The login page is '/login'.
     router.push('/login');
 };
+
+const closeAlert = () => {
+    alert.value = false;
+};
 </script>
+
 <template>
     <div class="body">
         <v-container>
             <v-row>
-                <v-col cols="" lg="6" md="12" sm="12" class="mt-16 pt-16">
-                    <form @submit.prevent="resetPassword">
-                        <v-container>
-                            <h3 class="text-h3" style="font-family: 'Inter', sans-serif;">Forgot password?</h3><br>
-                            <p style="font-family: 'Inter', sans-serif;">No worries, we'll send you reset instructions
-                            </p>
-                            <div class="mt-10">
-                                <v-label>Email</v-label>
-                                <v-text-field variant="outlined" v-model="email" type="email"
-                                    placeholder="Enter your email" required></v-text-field>
-                                <v-btn color="grey-darken-3" style="width: 100%;" type="submit" :loading="loading"
-                                    :disabled="loading">Reset
-                                    Password</v-btn><br>
-                                <v-btn @click="backLogin" class="mt-5" style="width: 100%;" variant="plain"><v-icon
-                                        style="font-size: 2.5em; color: black;">mdi-keyboard-backspace</v-icon> Back to
-                                    Login</v-btn>
-                            </div>
-                        </v-container>
-                    </form>
+                <v-col cols="12" lg="6" md="12" sm="12" class="mt-16 pt-16">
+                    <v-container>
+                        <h3 class="text-h3" style="font-family: 'Inter', sans-serif; font-weight: bold;">
+                            Forgot password?
+                        </h3>
+                        <br>
+                        <p style="font-family: 'Inter', sans-serif;">
+                            No worries, we'll send you reset instructions
+                        </p>
+
+                        <div v-if="emailSent" class="mt-10">
+                            <v-alert type="success" variant="tonal" class="mb-6">
+                                <div class="font-weight-bold mb-2">Check your email</div>
+                                <div>
+                                    We've sent a password reset link to <strong>{{ email }}</strong>.
+                                    Click the link in the email to reset your password.
+                                </div>
+                                <div class="mt-3 text-caption">
+                                    Didn't receive the email? Check your spam folder or 
+                                    <a href="#" @click.prevent="emailSent = false; email = ''" class="text-primary">
+                                        try again
+                                    </a>
+                                </div>
+                            </v-alert>
+                            <v-btn 
+                                @click="backLogin" 
+                                color="grey-darken-3" 
+                                style="width: 100%;"
+                            >
+                                <v-icon start>mdi-keyboard-backspace</v-icon>
+                                Back to Login
+                            </v-btn>
+                        </div>
+
+                        <form v-else @submit.prevent="resetPassword" class="mt-10">
+                            <v-label>Email</v-label>
+                            <v-text-field 
+                                v-model="email" 
+                                variant="outlined" 
+                                type="email"
+                                placeholder="Enter your email"
+                                :rules="[rules.required, rules.email]"
+                                :disabled="loading"
+                                class="mb-4"
+                            ></v-text-field>
+
+                            <v-btn 
+                                color="grey-darken-3" 
+                                style="width: 100%;" 
+                                type="submit" 
+                                :loading="loading"
+                                :disabled="loading"
+                            >
+                                Reset Password
+                            </v-btn>
+                            <br>
+                            <v-btn 
+                                @click="backLogin" 
+                                class="mt-5" 
+                                style="width: 100%;" 
+                                variant="plain"
+                            >
+                                <v-icon style="font-size: 2em; color: black;">mdi-keyboard-backspace</v-icon>
+                                Back to Login
+                            </v-btn>
+                        </form>
+                    </v-container>
                 </v-col>
-                <v-col cols="" lg="6" md="12" sm="12">
-                    <img v-if="!mobile" src="/img/forget.png" alt="Forget Password">
+                <v-col cols="12" lg="6" md="12" sm="12">
+                    <img v-if="!mobile" src="/img/forget.png" alt="Forget Password" style="max-width: 100%;">
                 </v-col>
             </v-row>
-
 
             <v-dialog v-model="alert" max-width="400">
                 <v-card>
@@ -122,15 +149,17 @@ const backLogin = () => {
                     <v-card-text>{{ text }}</v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" text @click="alert = false">OK</v-btn>
+                        <v-btn color="primary" variant="text" @click="closeAlert">OK</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
         </v-container>
     </div>
 </template>
-<style>
+
+<style scoped>
 .body {
     background: white;
+    min-height: 100vh;
 }
 </style>
