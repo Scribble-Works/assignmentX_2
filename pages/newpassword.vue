@@ -95,7 +95,9 @@ const initializeRecovery = async () => {
                 token_hash: String(tokenHash),
             });
             if (error) throw error;
-            
+
+            // Token is single-use — drop it from the address bar/history.
+            window.history.replaceState({}, document.title, window.location.pathname);
             status.value = 'ready';
             return;
         }
