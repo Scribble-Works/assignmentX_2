@@ -22,8 +22,9 @@ const menu = ref(false);
 const fName = ref("");
 const lName = ref("");
 const school = ref("");
+const MIN_AGE = 8;
 const maxDob = new Date();
-maxDob.setFullYear(maxDob.getFullYear() - 6);
+maxDob.setFullYear(maxDob.getFullYear() - MIN_AGE);
 const maxDobDate = new Date(maxDob);
 const dob = ref(null);
 const dobDisplay = ref("");
@@ -43,29 +44,42 @@ const rules = {
 // for both existing and non-existing users, causing false positives.
 // Instead, we rely on the signUp API's own duplicate-email error.
 
+// Format a Date as YYYY-MM-DD in local time (toISOString can shift the day)
+const formatDate = (d) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+    d.getDate()
+  ).padStart(2, "0")}`;
+
+const dobRules = {
+  required: (value) => !!value || "Date of birth is required.",
+  minAge: (value) =>
+    !value ||
+    (typeof value === "string" ? value : formatDate(value)) <=
+      formatDate(maxDobDate) ||
+    `You must be at least ${MIN_AGE} years old.`,
+};
+
+// Returns the first failing rule's message, or "" when valid
+const validateDob = (value) => {
+  for (const rule of Object.values(dobRules)) {
+    const result = rule(value);
+    if (result !== true) return result;
+  }
+  return "";
+};
+
 const onDobSelect = (val) => {
   menu.value = false;
+  if (!val) return;
   const selected = val instanceof Date ? val : new Date(val);
-  dobDisplay.value = selected.toISOString().substring(0, 10);
-  if (selected > maxDobDate) {
-    dobError.value = "You must be at least 6 years old.";
-  } else {
-    dobError.value = "";
-  }
+  dobDisplay.value = formatDate(selected);
+  dobError.value = validateDob(selected);
 };
 
 const signUp = async () => {
   try {
-    // Validate DOB
-    if (!dobDisplay.value) {
-      dobError.value = "Date of birth is required.";
-      return;
-    }
-    const selectedDob = new Date(dobDisplay.value);
-    if (selectedDob > maxDobDate) {
-      dobError.value = "You must be at least 6 years old.";
-      return;
-    }
+    dobError.value = validateDob(dobDisplay.value);
+    if (dobError.value) return;
 
     if (password.value !== confPassword.value) {
       alert.value = true;
@@ -117,18 +131,16 @@ const signUp = async () => {
 
         // Only insert if profile doesn't exist
         if (!existingProfile) {
-          const { error: profileError } = await client
-            .from("profiles")
-            .insert({
-              firstName: fName.value,
-              lastName: lName.value,
-              school: school.value,
-              DOB: dobDisplay.value,
-              gender: gender.value,
-              phone: phone.value,
-              email: email.value,
-              id: signUpData.user.id,
-            });
+          const { error: profileError } = await client.from("profiles").insert({
+            firstName: fName.value,
+            lastName: lName.value,
+            school: school.value,
+            DOB: dobDisplay.value,
+            gender: gender.value,
+            phone: phone.value,
+            email: email.value,
+            id: signUpData.user.id,
+          });
 
           if (profileError) {
             console.error("Profile creation error:", profileError);
@@ -299,19 +311,18 @@ const closeAlert = () => {
               <v-col cols="12" md="6">
                 <v-label>Date of Birth</v-label><br /><br />
                 <v-menu v-model="menu" :close-on-content-click="false">
-                  <template v-slot:activator="{ props }">
+                  <template v-slot:activator="{ props: menuProps }">
                     <v-text-field
-                      v-model="dobDisplay"
+                      :model-value="dobDisplay"
                       placeholder="Select your date of birth"
                       readonly
-                      v-bind="props"
+                      v-bind="menuProps"
                       variant="outlined"
                       :error-messages="dobError"
                     ></v-text-field>
                   </template>
                   <v-date-picker
                     v-model="dob"
-                    :max="maxDobDate"
                     @update:model-value="onDobSelect"
                   ></v-date-picker>
                 </v-menu>
