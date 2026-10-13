@@ -22,7 +22,22 @@ const menu = ref(false);
 const fName = ref("");
 const lName = ref("");
 const school = ref("");
-const dob = ref(new Date().toISOString().substring(0, 10));
+const maxDob = new Date();
+maxDob.setFullYear(maxDob.getFullYear() - 6);
+const maxDobDate = new Date(maxDob);
+const dob = ref(null);
+const dobDisplay = ref("");
+const dobTouched = ref(false);
+const dobRules = computed(() => {
+  if (!dobTouched.value) return [];
+  return [
+    (v) => !!v || "Date of birth is required.",
+    (v) => {
+      const d = new Date(v);
+      return d <= maxDobDate || "You must be at least 6 years old.";
+    },
+  ];
+});
 const gender = ref("");
 const phone = ref("");
 
@@ -34,43 +49,32 @@ const rules = {
   emailMatch: () => `The email and password you entered don't match`,
 };
 
-const checkUserExists = async (emailToCheck) => {
-  try {
-    // Try to sign in with a dummy password
-    const { error } = await auth.signInWithPassword({
-      email: emailToCheck,
-      password: "dummy_crheck_12345!@#$%",
-    });
+// Removed unreliable checkUserExists — Supabase returns "Invalid login credentials"
+// for both existing and non-existing users, causing false positives.
+// Instead, we rely on the signUp API's own duplicate-email error.
 
-    // If we get specific errors, it means the user exists
-    if (
-      error?.message.includes("Invalid login credentials") ||
-      error?.message.includes("Email not confirmed")
-    ) {
-      return true; // User exists
-    }
-
-    return false; // User doesn't exist
-  } catch (error) {
-    console.error("Error checking user existence:", error);
-    return false;
-  }
+const onDobSelect = (val) => {
+  menu.value = false;
+  dobTouched.value = true;
+  const selected = val instanceof Date ? val : new Date(val);
+  dobDisplay.value = selected.toISOString().substring(0, 10);
 };
 
 const signUp = async () => {
   try {
-    if (password.value !== confPassword.value) {
-      alert.value = true;
-      text.value = "Passwords do not match";
+    // Validate DOB
+    dobTouched.value = true;
+    if (!dobDisplay.value) {
+      return;
+    }
+    const selectedDob = new Date(dobDisplay.value);
+    if (selectedDob > maxDobDate) {
       return;
     }
 
-    // Check if user already exists before signing up
-    const userExists = await checkUserExists(email.value);
-    if (userExists) {
+    if (password.value !== confPassword.value) {
       alert.value = true;
-      text.value =
-        "This email is already registered. Please log in instead.";
+      text.value = "Passwords do not match";
       return;
     }
 
@@ -83,7 +87,7 @@ const signUp = async () => {
           firstName: fName.value,
           lastName: lName.value,
           school: school.value,
-          dob: dob.value,
+          dob: dobDisplay.value,
           gender: gender.value,
           phone: phone.value,
         },
@@ -114,7 +118,7 @@ const signUp = async () => {
           .from("profiles")
           .select("id")
           .eq("id", signUpData.user.id)
-          .single();
+          .maybeSingle();
 
         // Only insert if profile doesn't exist
         if (!existingProfile) {
@@ -124,13 +128,12 @@ const signUp = async () => {
               firstName: fName.value,
               lastName: lName.value,
               school: school.value,
-              DOB: dob.value,
+              DOB: dobDisplay.value,
               gender: gender.value,
               phone: phone.value,
               email: email.value,
               id: signUpData.user.id,
-            })
-            .single();
+            });
 
           if (profileError) {
             console.error("Profile creation error:", profileError);
@@ -303,16 +306,18 @@ const closeAlert = () => {
                 <v-menu v-model="menu" :close-on-content-click="false">
                   <template v-slot:activator="{ props }">
                     <v-text-field
-                      v-model="dob"
+                      v-model="dobDisplay"
                       placeholder="Select your date of birth"
                       readonly
                       v-bind="props"
                       variant="outlined"
+                      :rules="dobRules"
                     ></v-text-field>
                   </template>
                   <v-date-picker
                     v-model="dob"
-                    @update:model-value="menu = false"
+                    :max="maxDobDate"
+                    @update:model-value="onDobSelect"
                   ></v-date-picker>
                 </v-menu>
               </v-col>
