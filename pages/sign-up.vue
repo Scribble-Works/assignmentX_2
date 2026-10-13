@@ -27,17 +27,7 @@ maxDob.setFullYear(maxDob.getFullYear() - 6);
 const maxDobDate = new Date(maxDob);
 const dob = ref(null);
 const dobDisplay = ref("");
-const dobTouched = ref(false);
-const dobRules = computed(() => {
-  if (!dobTouched.value) return [];
-  return [
-    (v) => !!v || "Date of birth is required.",
-    (v) => {
-      const d = new Date(v);
-      return d <= maxDobDate || "You must be at least 6 years old.";
-    },
-  ];
-});
+const dobError = ref("");
 const gender = ref("");
 const phone = ref("");
 
@@ -55,20 +45,25 @@ const rules = {
 
 const onDobSelect = (val) => {
   menu.value = false;
-  dobTouched.value = true;
   const selected = val instanceof Date ? val : new Date(val);
   dobDisplay.value = selected.toISOString().substring(0, 10);
+  if (selected > maxDobDate) {
+    dobError.value = "You must be at least 6 years old.";
+  } else {
+    dobError.value = "";
+  }
 };
 
 const signUp = async () => {
   try {
     // Validate DOB
-    dobTouched.value = true;
     if (!dobDisplay.value) {
+      dobError.value = "Date of birth is required.";
       return;
     }
     const selectedDob = new Date(dobDisplay.value);
     if (selectedDob > maxDobDate) {
+      dobError.value = "You must be at least 6 years old.";
       return;
     }
 
@@ -311,7 +306,7 @@ const closeAlert = () => {
                       readonly
                       v-bind="props"
                       variant="outlined"
-                      :rules="dobRules"
+                      :error-messages="dobError"
                     ></v-text-field>
                   </template>
                   <v-date-picker
